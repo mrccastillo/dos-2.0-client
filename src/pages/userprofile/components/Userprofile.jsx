@@ -108,8 +108,8 @@ export default function Userprofile({ userLoggedIn }) {
     return (
       <>
         <Helmet>
-          <title>{`DOS - ${user.username}`}</title>
-          <meta property="og:title" content={`${user.fullname}`} />
+          <title>{user.username}</title>
+          <meta property="og:title" content={user.fullname} />
         </Helmet>
 
         <div className="container">
