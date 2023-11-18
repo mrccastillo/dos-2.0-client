@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import Error404 from "../../pagenotfound/components/Error404";
 import Post from "../../../reusable-components/post/Post";
 import Announce from "../../../reusable-components/announcement/Announce";
@@ -106,7 +106,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   if (userFound)
     return (
-      <>
+      <HelmetProvider>
         <Helmet>
           <title>{user.username}</title>
           <meta property="og:title" content={user.fullname} />
@@ -230,16 +230,16 @@ export default function Userprofile({ userLoggedIn }) {
             }}
           />
         )}
-      </>
+      </HelmetProvider>
     );
   else
     return (
-      <>
+      <HelmetProvider>
         <Helmet>
           <title>DOS</title>
           <meta property="og:title" content="Not Found" />
         </Helmet>
         <Error404 />;
-      </>
+      </HelmetProvider>
     );
 }

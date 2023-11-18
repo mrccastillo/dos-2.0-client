@@ -3,7 +3,7 @@ import Announcements from "./Announcement";
 import Home from "./Home";
 import "../stylesheets/Dashboard.css";
 import { useState, useEffect } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 export default function Dashboard({ user, onDecodeUser }) {
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function Dashboard({ user, onDecodeUser }) {
   }, []);
 
   return (
-    <>
+    <HelmetProvider>
       <Helmet>
         <title>DOSBoard</title>
         <meta property="og:title" content={`${user.fullname}`} />
@@ -48,6 +48,6 @@ export default function Dashboard({ user, onDecodeUser }) {
           </div>
         </div>
       </div>
-    </>
+    </HelmetProvider>
   );
 }

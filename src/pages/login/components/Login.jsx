@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "../stylesheets/Login.css";
 import axios from "axios";
-import { Helmet } from "react-helmet";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 
 export default function Login({ onDecodeUser }) {
   const storedValue = localStorage.getItem("isInSignInPage");
@@ -218,7 +218,7 @@ export default function Login({ onDecodeUser }) {
     return (location.href = "/");
   } else {
     return (
-      <>
+      <HelmetProvider>
         <Helmet>
           <title>DOS</title>
           <meta property="og:title" content="Login or Sign up" />
@@ -486,7 +486,7 @@ export default function Login({ onDecodeUser }) {
             </div>
           </div>
         </div>
-      </>
+      </HelmetProvider>
     );
   }
 }
