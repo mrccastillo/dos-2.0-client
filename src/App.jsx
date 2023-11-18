@@ -53,7 +53,7 @@ function App() {
         <Route
           path="/"
           element={token ? <Dashboard user={user} /> : <Login />}
-        ></Route>
+        />
         <Route
           path="/dashboard"
           element={token ? <Dashboard user={user} /> : <Login />}
@@ -63,10 +63,10 @@ function App() {
           element={token ? <Dashboard user={user} /> : <Login />}
         />
         <Route
-          path="/user/:username"
+          path="/:username"
           element={token ? <Userprofile userLoggedIn={user} /> : <Login />}
         />
-        <Route path="*" element={<Error404 />} />
+        <Route element={<Error404 />} />
       </Routes>
     </Router>
   );
