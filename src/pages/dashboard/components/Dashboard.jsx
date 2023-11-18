@@ -2,7 +2,6 @@ import Nav from "../../nav/components/Nav";
 import Announcements from "./Announcement";
 import Home from "./Home";
 import "../stylesheets/Dashboard.css";
-import { jwtDecode } from "jwt-decode";
 import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 
@@ -18,30 +17,37 @@ export default function Dashboard({ user, onDecodeUser }) {
   }, []);
 
   return (
-    <div className="container">
-      <Nav user={user.username} onDecodeUser={onDecodeUser} />
-      <div className="dashboard">
-        <div className="header">
-          <div className="dosboard-and-search-container">
-            <h2 className="--big-h2">DOSBoard</h2>
+    <>
+      <Helmet>
+        <title>DOSBoard</title>
+        <meta property="og:title" content={`${user.fullname}`} />
+      </Helmet>
+
+      <div className="container">
+        <Nav user={user.username} onDecodeUser={onDecodeUser} />
+        <div className="dashboard">
+          <div className="header">
+            <div className="dosboard-and-search-container">
+              <h2 className="--big-h2">DOSBoard</h2>
+            </div>
+            <h2 className="--big-h2">
+              Hello, <span className="--highlight">{user.username}!</span>
+            </h2>
           </div>
-          <h2 className="--big-h2">
-            Hello, <span className="--highlight">{user.username}!</span>
-          </h2>
-        </div>
-        <div className="posts-announcements-container">
-          <Announcements
-            fullname={user.fullname}
-            username={user.username}
-            userId={user._id}
-          />
-          <Home
-            fullname={user.fullname}
-            username={user.username}
-            userId={user._id}
-          />
+          <div className="posts-announcements-container">
+            <Announcements
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+            />
+            <Home
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
