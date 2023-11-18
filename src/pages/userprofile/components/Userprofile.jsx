@@ -9,9 +9,10 @@ import CreatePost from "../../../reusable-components/post/CreatePost";
 import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Userprofile({ userLoggedIn }) {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const { username } = useParams();
   const [user, setUser] = useState([]);
   const [userFound, setUserFound] = useState(true);

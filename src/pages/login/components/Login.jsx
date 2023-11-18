@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import "../stylesheets/Login.css";
 import axios from "axios";
 import { Helmet } from "react-helmet";
@@ -88,7 +89,7 @@ export default function Login({ onDecodeUser }) {
           );
           if (res.data.message === "Signed Up Successfully") {
             setUserId(res.data.id);
-            localStorage.setItem("tempToken", res.data.token);
+            Cookies.set("tempToken", res.data.token);
           }
         } catch (err) {
           console.error(err);
@@ -123,11 +124,11 @@ export default function Login({ onDecodeUser }) {
             user,
             {
               headers: {
-                Authorization: localStorage.getItem("tempToken"),
+                Authorization: Cookies.get("tempToken"),
               },
             }
           );
-          localStorage.setItem("tempToken", res.data.token);
+          localStorage.Cookies("tempToken", res.data.token);
           if (res.data.message === "Account Successfully Updated") {
             const emailRes = await axios.put(`
               https://backend.dosshs.online/api/mail/signup/${userId}
@@ -159,8 +160,8 @@ export default function Login({ onDecodeUser }) {
         `);
 
         if (verifyRes.data.message === "Email Successfully Verified") {
-          localStorage.setItem("token", localStorage.getItem("tempToken"));
-          localStorage.removeItem("tempToken");
+          Cookies.set("token", localStorage.getItem("tempToken"));
+          Cookies.remove("tempToken");
           setIsLoggedIn(true);
         }
       }
@@ -195,7 +196,7 @@ export default function Login({ onDecodeUser }) {
         "https://backend.dosshs.online/api/auth/login",
         user
       );
-      localStorage.setItem("token", res.data.token);
+      Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
 
       setIsLoggedIn(true);
     } catch (err) {
