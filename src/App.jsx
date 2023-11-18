@@ -66,7 +66,7 @@ function App() {
           path="/:username"
           element={token ? <Userprofile userLoggedIn={user} /> : <Login />}
         />
-        <Route element={<Error404 />} />
+        <Route path="*" element={<Error404 />} />
       </Routes>
     </Router>
   );

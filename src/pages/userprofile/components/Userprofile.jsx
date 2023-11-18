@@ -14,6 +14,7 @@ export default function Userprofile({ userLoggedIn }) {
   const token = localStorage.getItem("token");
   const { username } = useParams();
   const [user, setUser] = useState([]);
+  const [userFound, setUserFound] = useState(true);
   const [posts, setPosts] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
@@ -35,6 +36,7 @@ export default function Userprofile({ userLoggedIn }) {
         }
       );
     } catch (err) {
+      setUserFound(false);
       return console.error(err);
     }
 
@@ -101,8 +103,7 @@ export default function Userprofile({ userLoggedIn }) {
     };
   }, [username]);
 
-  if (user.length !== 0) {
-    console.log(user);
+  if (userFound)
     return (
       <>
         <Helmet>
@@ -230,10 +231,14 @@ export default function Userprofile({ userLoggedIn }) {
         )}
       </>
     );
-  } else {
-    {
-      console.log("loaded");
-    }
-    return <Error404 />;
-  }
+  else
+    return (
+      <>
+        <Helmet>
+          <title>DOS</title>
+          <meta property="og:title" content="Not Found" />
+        </Helmet>
+        <Error404 />;
+      </>
+    );
 }

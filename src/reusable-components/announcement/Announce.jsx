@@ -10,7 +10,7 @@ export default function Announce({ fullname, username, content }) {
             <div className="post-author">
               <p className="display-name">{fullname}</p>
               <p className="username">
-                <Link to={`/user/${username}`}>@{username}</Link>
+                <Link to={`/${username}`}>@{username}</Link>
               </p>
             </div>
           </div>
