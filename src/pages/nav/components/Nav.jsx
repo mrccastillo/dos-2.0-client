@@ -45,7 +45,7 @@ export default function Nav({ user }) {
           >
             <div className={isNavLinkOpen ? "links-active" : "links"}>
               {user ? (
-                <Link to={`/user/${user}`} className="link">
+                <Link to={`/${user}`} className="link">
                   Profile
                 </Link>
               ) : (
