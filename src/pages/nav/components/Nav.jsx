@@ -1,13 +1,26 @@
 import { Link } from "react-router-dom";
 import "../stylesheets/Nav.css";
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 export default function Nav({ user }) {
+  const token = Cookies.get("token");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
-  const logOut = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("firstLoad");
-    location.href = "/";
+  const logOut = async () => {
+    try {
+      const res = await axios.post(
+        `https://backend.dosshs.online/api/auth/logout?token=${token}`
+      );
+
+      if (res.data.message === "Logged Out Successfully") {
+        Cookies.remove("token");
+        localStorage.removeItem("firstLoad");
+        location.href = "/";
+      }
+    } catch (err) {
+      return console.error(err);
+    }
   };
 
   useEffect(() => {

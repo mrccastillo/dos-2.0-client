@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./CreatePost.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function CreatePost({
   fullname,
@@ -29,7 +30,7 @@ export default function CreatePost({
 
     try {
       setIsPosting("Posting...");
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       await axios.post("https://backend.dosshs.online/api/post", post, {
         headers: {
           Authorization: token,

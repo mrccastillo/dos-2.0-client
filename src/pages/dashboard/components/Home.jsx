@@ -3,6 +3,7 @@ import CreatePost from "../../../reusable-components/post/CreatePost";
 import "../stylesheets/Home.css";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 
 export default function Home({ fullname, username, userId }) {
   const [posts, setPosts] = useState([]);
@@ -11,7 +12,7 @@ export default function Home({ fullname, username, userId }) {
 
   const fetchPosts = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       const post = await axios.get("https://backend.dosshs.online/api/post", {
         headers: {
           Authorization: token,

@@ -5,10 +5,11 @@ import Login from "./pages/login/components/Login";
 import Error404 from "./pages/pagenotfound/components/Error404";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
+import Cookies from "js-cookie";
 import axios from "axios";
 
 function App() {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   const [user, setUser] = useState([]);
 
   //test push
@@ -25,7 +26,7 @@ function App() {
         err.response.request.status === 401 ||
         err.response.request.status === 403
       ) {
-        localStorage.removeItem("token");
+        Cookies.remove("token");
         location.href = "/login";
         return console.error(err.response.data.message);
       } else return console.error(err.response.data.message);

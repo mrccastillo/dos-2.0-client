@@ -3,6 +3,7 @@ import Announce from "../../../reusable-components/announcement/Announce";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
 import "../stylesheets/Announcement.css";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Announcements({ fullname, username, userId }) {
   const [announcements, setAnnouncements] = useState([]);
@@ -10,7 +11,7 @@ export default function Announcements({ fullname, username, userId }) {
 
   const fetchPosts = async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = Cookies.get("token");
       const announcement = await axios.get(
         "https://backend.dosshs.online/api/announcement",
         {
