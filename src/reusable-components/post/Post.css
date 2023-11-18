@@ -1,0 +1,67 @@
+.post {
+  display: flex;
+  flex-direction: column;
+  border-radius: 1rem;
+  min-height: 10rem;
+  width: 100%;
+  background-color: #0cbfdf31;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  animation: postPopUp 300ms ease-out;
+}
+
+.post-content-container {
+  height: 85%;
+  width: 100%;
+}
+
+.post-details {
+  width: 100%;
+  /* background-color: rgb(208, 233, 255); */
+}
+
+.post-author-info {
+  display: flex;
+  align-items: center;
+}
+
+.username,
+.date {
+  font-size: 0.7rem;
+}
+
+.display-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.post-content {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(123, 123, 123);
+}
+
+.report-post-container {
+  width: 5rem;
+}
+
+.post-interaction {
+  height: 2rem;
+  width: 100%;
+  background-color: rgb(209, 234, 255);
+}
+
+@keyframes postPopUp {
+  0% {
+    transform: scale(0.7);
+  }
+
+  70% {
+    transform: scale(1.05);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
