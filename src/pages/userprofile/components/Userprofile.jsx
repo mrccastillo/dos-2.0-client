@@ -98,7 +98,7 @@ export default function Userprofile({ userLoggedIn }) {
     };
 
     fetchData();
-
+    // console.log(announcements);
     return () => {
       isMounted = false;
     };
@@ -171,6 +171,7 @@ export default function Userprofile({ userLoggedIn }) {
                         fullname={filteredAnnounce.fullname}
                         username={filteredAnnounce.username}
                         content={filteredAnnounce.content}
+                        date={filteredAnnounce.dateCreated}
                       />
                     ))
                   ) : (
