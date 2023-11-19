@@ -233,14 +233,5 @@ export default function Userprofile({ userLoggedIn }) {
         )}
       </HelmetProvider>
     );
-  else
-    return (
-      <HelmetProvider>
-        <Helmet>
-          <title>DOS</title>
-          <meta property="og:title" content="Not Found" />
-        </Helmet>
-        <Error404 />;
-      </HelmetProvider>
-    );
+  else return <Error404 />;
 }

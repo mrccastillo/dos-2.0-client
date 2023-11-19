@@ -1,18 +1,68 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import "./Post.css";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Post({
+  userUsername,
+  userUserId,
+  postId,
   fullname,
   username,
   content,
   date,
   category,
   isAnonymous,
+  liked,
+  likeCount,
+  likeId,
+  commentCount,
 }) {
-  const [isLiked, setIsLiked] = useState(false);
-  function handleLike() {
-    setIsLiked(!isLiked);
+  const token = Cookies.get("token");
+  const [isLiked, setIsLiked] = useState(liked);
+  let [likeCounts, setIlikeCounts] = useState(likeCount);
+  let [postLikeId, setLikeId] = useState(likeId);
+  async function handleLike() {
+    if (!isLiked) {
+      try {
+        const likePost = {
+          postId: postId,
+          userId: userUserId,
+          username: userUsername,
+        };
+        const likeRes = await axios.post(
+          "https://backend.dosshs.online/api/post/like",
+          likePost,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(likeRes.data.like._id);
+        setIsLiked(!isLiked);
+        setIlikeCounts((likeCounts += 1));
+      } catch (err) {
+        return console.error(err);
+      }
+    } else {
+      try {
+        await axios.delete(
+          `https://backend.dosshs.online/api/post/like/${postLikeId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(null);
+        setIsLiked(!isLiked);
+        setIlikeCounts((likeCounts -= 1));
+      } catch (err) {
+        return console.error(err);
+      }
+    }
   }
 
   const newDate = date.slice(0, 10);
@@ -62,11 +112,11 @@ export default function Post({
             // }}
             onClick={handleLike}
           ></div>
-          <p className="like-count">1000</p>
+          <p className="like-count">{likeCounts}</p>
         </div>
         <div className="comment-container">
           <div className="comment-icon"></div>
-          <p className="comment-count">50 Comments</p>
+          <p className="comment-count">{commentCount} Comments</p>
         </div>
         <div className="report-post"></div>
       </div>

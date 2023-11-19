@@ -6,12 +6,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function Announcements({ fullname, username, userId }) {
+  const token = Cookies.get("token");
+  const userUsername = Cookies.get("username");
   const [announcements, setAnnouncements] = useState([]);
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
 
   const fetchPosts = async () => {
     try {
-      const token = Cookies.get("token");
       const announcement = await axios.get(
         "https://backend.dosshs.online/api/announcement",
         {
@@ -21,7 +22,48 @@ export default function Announcements({ fullname, username, userId }) {
         }
       );
 
-      setAnnouncements(announcement.data.reverse());
+      const getLikesPromises = announcement.data.map(async (announcement) => {
+        const likeCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/announcement/like/count/${announcement._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const liked = likeCountResponse.data.likes.some(
+          (like) => like.username === userUsername
+        );
+
+        const likedId = likeCountResponse.data.likes
+          .filter((like) => like.username === userUsername)
+          .map((like) => like._id);
+
+        const [likeCount] = await Promise.all([likeCountResponse]);
+
+        const commentCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/announcement/comment/count/${announcement._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const [commentCount] = await Promise.all([commentCountResponse]);
+
+        return {
+          ...announcement,
+          likeCount: likeCountResponse.data.likeCount,
+          liked: liked,
+          likeId: likedId,
+          commentCount: commentCount.data.commentCount,
+        };
+      });
+
+      const announcementsWithCounts = await Promise.all(getLikesPromises);
+      setAnnouncements(announcementsWithCounts.reverse());
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -33,7 +75,6 @@ export default function Announcements({ fullname, username, userId }) {
 
   useEffect(() => {
     fetchPosts();
-    console.log(announcements);
   }, []);
 
   return (
@@ -60,15 +101,24 @@ export default function Announcements({ fullname, username, userId }) {
               </button>
             </div>
             <div className="announcement-list">
-              {announcements.map((el) => (
-                <Announce
-                  key={el._id}
-                  fullname={el.fullname}
-                  username={el.username}
-                  content={el.content}
-                  date={el.dateCreated}
-                />
-              ))}
+              {announcements.length === 0
+                ? "Loading..."
+                : announcements.map((el) => (
+                    <Announce
+                      key={el._id}
+                      announceId={el._id}
+                      fullname={el.fullname}
+                      username={el.username}
+                      content={el.content}
+                      date={el.dateCreated}
+                      liked={el.liked}
+                      likeCount={el.likeCount}
+                      likeId={el.likeId}
+                      commentCount={el.commentCount}
+                      userUsername={username}
+                      userUserId={userId}
+                    />
+                  ))}
             </div>
           </div>
         </div>

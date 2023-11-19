@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import "../stylesheets/Login.css";
 import axios from "axios";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login({ onDecodeUser }) {
   const storedValue = localStorage.getItem("isInSignInPage");
@@ -196,7 +197,13 @@ export default function Login({ onDecodeUser }) {
         "https://backend.dosshs.online/api/auth/login",
         user
       );
+      const User = jwtDecode(res.data.token);
+      const parsedUser = JSON.parse(User.user);
       Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
+      Cookies.set("username", parsedUser.username, {
+        expires: 30 * 24 * 60 * 60,
+      }); // 30 day expiration
+      Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
 
       setIsLoggedIn(true);
     } catch (err) {

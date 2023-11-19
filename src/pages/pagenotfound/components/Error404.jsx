@@ -4,28 +4,28 @@ export default function Error404() {
   const randomEmoticon = () => {
     const randomNumber = Math.floor(Math.random() * 10) + 1;
     console.log(randomNumber);
-    // switch (randomNumber) {
-    //   case 1:
-    //     return "(⁠っ⁠˘̩⁠╭⁠╮⁠˘̩⁠)⁠っ";
-    //   case 2:
-    //     return ".⁠·⁠´⁠¯⁠`⁠(⁠>⁠▂⁠<⁠)⁠´⁠¯⁠`⁠·⁠.";
-    //   case 3:
-    //     return "(⁠ ⁠≧⁠Д⁠≦⁠)";
-    //   case 4:
-    //     return "｡⁠:ﾟ⁠(⁠;⁠´⁠∩⁠`⁠;⁠)ﾟ⁠:⁠｡";
-    //   case 5:
-    //     return "(⁠๑⁠´⁠•⁠.̫⁠ ⁠•⁠ ⁠`⁠๑)⁠";
-    //   case 6:
-    //     return "(⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠_⁠_⁠_⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠)";
-    //   case 7:
-    //     return "༎ຶ⁠‿⁠༎ຶ";
-    //   case 8:
-    //     return "(⁠｡⁠ﾉ⁠ω⁠＼⁠｡⁠)";
-    //   case 9:
-    //     return "(⁠｡⁠•́⁠︿⁠•̀⁠｡⁠)";
-    //   case 10:
-    //     return "(⁠〒⁠﹏⁠〒⁠)";
-    // }
+    switch (randomNumber) {
+      case 1:
+        return "(⁠っ⁠˘̩⁠╭⁠╮⁠˘̩⁠)⁠っ";
+      case 2:
+        return ".⁠·⁠´⁠¯⁠`⁠(⁠>⁠▂⁠<⁠)⁠´⁠¯⁠`⁠·⁠.";
+      case 3:
+        return "(⁠ ⁠≧⁠Д⁠≦⁠)";
+      case 4:
+        return "｡⁠:ﾟ⁠(⁠;⁠´⁠∩⁠`⁠;⁠)ﾟ⁠:⁠｡";
+      case 5:
+        return "(⁠๑⁠´⁠•⁠.̫⁠ ⁠•⁠ ⁠`⁠๑)⁠";
+      case 6:
+        return "(⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠_⁠_⁠_⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠-̩̩̩⁠)";
+      case 7:
+        return "༎ຶ⁠‿⁠༎ຶ";
+      case 8:
+        return "(⁠｡⁠ﾉ⁠ω⁠＼⁠｡⁠)";
+      case 9:
+        return "(⁠｡⁠•́⁠︿⁠•̀⁠｡⁠)";
+      case 10:
+        return "(⁠〒⁠﹏⁠〒⁠)";
+    }
   };
 
   return (
