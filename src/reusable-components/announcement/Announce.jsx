@@ -1,11 +1,67 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-export default function Announce({ fullname, username, content, date }) {
-  const [isAnnounceLiked, setIsAnnounceLiked] = useState(false);
+export default function Announce({
+  announceId,
+  fullname,
+  username,
+  content,
+  date,
+  liked,
+  likeCount,
+  likeId,
+  commentCount,
+  userUserId,
+  userUsername,
+}) {
+  const token = Cookies.get("token");
+  const [isLiked, setIsLiked] = useState(liked);
+  let [likeCounts, setIlikeCounts] = useState(likeCount);
+  let [announceLikeId, setLikeId] = useState(likeId);
 
-  function handleLike() {
-    setIsAnnounceLiked(!isAnnounceLiked);
+  async function handleLike() {
+    if (!isLiked) {
+      try {
+        const likeAnnounce = {
+          announcementId: announceId,
+          userId: userUserId,
+          username: userUsername,
+        };
+
+        const likeRes = await axios.post(
+          "https://backend.dosshs.online/api/announcement/like",
+          likeAnnounce,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(likeRes.data.like._id);
+        setIsLiked(!isLiked);
+        setIlikeCounts((likeCounts += 1));
+      } catch (err) {
+        return console.error(err);
+      }
+    } else {
+      try {
+        await axios.delete(
+          `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(null);
+        setIsLiked(!isLiked);
+        setIlikeCounts((likeCounts -= 1));
+      } catch (err) {
+        return console.error(err);
+      }
+    }
   }
   const formattedDate = date.slice(0, 10);
 
@@ -34,7 +90,7 @@ export default function Announce({ fullname, username, content, date }) {
         <div className="like-container">
           <div
             className={
-              isAnnounceLiked
+              isLiked
                 ? "announcement-like --isAnnouncementLiked"
                 : "announcement-like"
             }
@@ -45,7 +101,7 @@ export default function Announce({ fullname, username, content, date }) {
             onClick={handleLike}
           ></div>
           <p className="announce-like-count" style={{ marginTop: "0.3rem" }}>
-            1000
+            {likeCounts}
           </p>
         </div>
         <div className="comment-container">
@@ -57,7 +113,7 @@ export default function Announce({ fullname, username, content, date }) {
             }}
           ></div>
           <p className="announce-comment-count" style={{ marginTop: "0.3rem" }}>
-            50 Comments
+            {commentCount} Comments
           </p>
         </div>
       </div>

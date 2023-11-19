@@ -6,55 +6,66 @@ import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
 export default function Home({ fullname, username, userId }) {
+  const token = Cookies.get("token");
+  const userUsername = Cookies.get("username");
   const [posts, setPosts] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [postFilter, setPostFilter] = useState();
 
   const fetchPosts = async () => {
     try {
-      const token = Cookies.get("token");
       const post = await axios.get("https://backend.dosshs.online/api/post", {
         headers: {
           Authorization: token,
         },
       });
-      // const sortedPosts = postsResponse.data.sort(
-      //   (a, b) => new Date(a.dateCreated) - new Date(b.dateCreated)
-      // );
 
-      // const getLikesPromises = sortedPosts.map(async (post) => {
-      //   const likeCountResponse = axios.get(
-      //     `https://backend.dosshs.online/api/post/like/count/${post._id}`,
-      //     {
-      //       headers: {
-      //         Authorization: token,
-      //       },
-      //     }
-      //   );
+      const getLikesPromises = post.data.map(async (post) => {
+        const likeCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/post/like/count/${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
 
-      //   const commentCountResponse = axios.get(
-      //     `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
-      //     {
-      //       headers: {
-      //         Authorization: token,
-      //       },
-      //     }
-      //   );
+        const liked = likeCountResponse.data.likes.some(
+          (like) => like.username === userUsername
+        );
 
-      //   const [likeCount, commentCount] = await Promise.all([
-      //     likeCountResponse,
-      //     commentCountResponse,
-      //   ]);
+        const likedId = likeCountResponse.data.likes
+          .filter((like) => like.username === userUsername)
+          .map((like) => like._id);
 
-      //   return {
-      //     ...post,
-      //     likeCount: likeCount.data.likeCount,
-      //     commentCount: commentCount.data.commentCount,
-      //   };
+        const [likeCount] = await Promise.all([likeCountResponse]);
+
+        const commentCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const [commentCount] = await Promise.all([commentCountResponse]);
+
+        return {
+          ...post,
+          likeCount: likeCount.data.likeCount,
+          liked: liked,
+          likeId: likedId,
+          commentCount: commentCount.data.commentCount,
+        };
+      });
+
+      //
+
       // });
 
-      // const postsWithCounts = await Promise.all(postsResponse.data);
-      setPosts(post.data.reverse());
+      const postsWithCounts = await Promise.all(getLikesPromises);
+      setPosts(postsWithCounts.reverse());
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -152,12 +163,19 @@ export default function Home({ fullname, username, userId }) {
                 ? posts.map((el) => (
                     <Post
                       key={el._id}
+                      postId={el._id}
                       fullname={el.fullname}
                       username={el.username}
                       content={el.content}
                       date={el.dateCreated}
                       category={el.category}
                       isAnonymous={el.isAnonymous}
+                      likeCount={el.likeCount}
+                      liked={el.liked}
+                      likeId={el.likeId}
+                      commentCount={el.commentCount}
+                      userUsername={username}
+                      userUserId={userId}
                     />
                   ))
                 : posts
@@ -165,14 +183,22 @@ export default function Home({ fullname, username, userId }) {
                     .map((el) => (
                       <Post
                         key={el._id}
+                        postId={el._id}
                         fullname={el.fullname}
                         username={el.username}
                         content={el.content}
                         date={el.dateCreated}
                         category={el.category}
                         isAnonymous={el.isAnonymous}
+                        likeCount={el.likeCount}
+                        liked={el.liked}
+                        likeId={el.likeId}
+                        commentCount={el.commentCount}
+                        userUsername={username}
+                        userUserId={userId}
                       />
                     ))}
+              {posts.length === 0 ? "Loading..." : null}
             </div>
           </div>
         </div>
