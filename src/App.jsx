@@ -56,6 +56,18 @@ function App() {
           element={token ? <Dashboard user={user} /> : <Login />}
         />
         <Route
+          path="/login"
+          element={token ? <Dashboard user={user} /> : <Login />}
+        />
+        <Route
+          path="/signup"
+          element={token ? <Dashboard user={user} /> : <Login />}
+        />
+        <Route
+          path="/home"
+          element={token ? <Dashboard user={user} /> : <Login />}
+        />
+        <Route
           path="/dashboard"
           element={token ? <Dashboard user={user} /> : <Login />}
         />
