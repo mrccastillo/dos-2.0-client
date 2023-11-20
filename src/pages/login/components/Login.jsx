@@ -237,8 +237,8 @@ export default function Login({ onDecodeUser }) {
         setErrorMsg("");
       }
     } catch (err) {
+      setLoginBtnMsg("LOG IN");
       return setErrorMsg(err.response.data.message);
-      // console.log(err.response.data.message);
     }
     setUsernameOrEmail("");
     setPassword("");
