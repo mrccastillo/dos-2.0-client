@@ -21,17 +21,37 @@ export default function Post({
 }) {
   const token = Cookies.get("token");
   const [isLiked, setIsLiked] = useState(liked);
-  let [likeCounts, setIlikeCounts] = useState(likeCount);
-  let [postLikeId, setLikeId] = useState(likeId);
+  const [likeCounts, setIlikeCounts] = useState(likeCount);
+  const [postLikeId, setLikeId] = useState(likeId);
+  const [likeInProgress, setLikeInProgress] = useState(false);
+
   async function handleLike() {
-    if (!isLiked) {
-      try {
+    if (likeInProgress) return;
+
+    setLikeInProgress(true);
+
+    try {
+      if (isLiked) {
+        const res = await axios.delete(
+          `https://backend.dosshs.online/api/post/like/${postLikeId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        if (res.status === 200) {
+          setLikeId(null);
+          setIsLiked(!isLiked);
+          setIlikeCounts((likeCounts) => likeCounts - 1);
+        }
+      } else {
         const likePost = {
           postId: postId,
           userId: userUserId,
           username: userUsername,
         };
-        const likeRes = await axios.post(
+        const res = await axios.post(
           "https://backend.dosshs.online/api/post/like",
           likePost,
           {
@@ -40,32 +60,72 @@ export default function Post({
             },
           }
         );
-        setLikeId(likeRes.data.like._id);
-        setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts += 1));
-      } catch (err) {
-        return console.error(err);
+        if (res.status === 200) {
+          setLikeId(res.data.like._id);
+          setIsLiked(!isLiked);
+          setIlikeCounts((likeCounts) => likeCounts + 1);
+        }
       }
-    } else {
-      try {
-        await axios.delete(
-          `https://backend.dosshs.online/api/post/like/${postLikeId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        setLikeId(null);
-        setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts -= 1));
-      } catch (err) {
-        return console.error(err);
-      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLikeInProgress(false);
     }
   }
 
-  const newDate = date.slice(0, 10);
+  const formatDate = (inputDate) => {
+    const postDate = new Date(inputDate);
+    const currentDate = new Date();
+    const timeDifference = Math.abs(currentDate - postDate) / 1000;
+
+    const timeIntervals = {
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
+
+    let timeAgo = Math.floor(timeDifference);
+    let timeUnit = "";
+
+    for (let interval in timeIntervals) {
+      if (timeAgo >= timeIntervals[interval]) {
+        timeUnit = interval;
+        timeAgo = Math.floor(timeAgo / timeIntervals[interval]);
+        break;
+      }
+    }
+
+    if (timeUnit === "day" && timeAgo >= 1) {
+      if (timeAgo === 1) {
+        const options = {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return `Yesterday at ${postDate.toLocaleTimeString(
+          undefined,
+          options
+        )}`;
+      } else {
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return postDate.toLocaleString(undefined, options);
+      }
+    }
+
+    if (timeUnit === "") {
+      return "Just now";
+    }
+
+    return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
+  };
+
   return (
     <div className="post">
       <div className="post-content-container">
@@ -80,7 +140,7 @@ export default function Post({
                 <p className="username">
                   {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>}
                 </p>
-                <p className="date">{newDate}</p>
+                <p className="date">{formatDate(date)}</p>
               </div>
             </div>
             <div className="delete"></div>

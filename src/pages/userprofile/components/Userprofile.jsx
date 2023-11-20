@@ -58,7 +58,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchPosts = async () => {
     try {
-      const announcementResponse = await axios.get(
+      const announcement = await axios.get(
         "https://backend.dosshs.online/api/announcement",
         {
           headers: {
@@ -67,17 +67,105 @@ export default function Userprofile({ userLoggedIn }) {
         }
       );
 
-      setAnnouncements(announcementResponse.data.reverse());
+      const getAnnouncementLikesPromises = announcement.data.map(
+        async (announcement) => {
+          const likeCountResponse = await axios.get(
+            `https://backend.dosshs.online/api/announcement/like/count/${announcement._id}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
 
-      const postResponse = await axios.get(
-        "https://backend.dosshs.online/api/post",
-        {
-          headers: {
-            Authorization: token,
-          },
+          const liked = likeCountResponse.data.likes.some(
+            (like) => like.username === userLoggedIn.username
+          );
+
+          const likedId = likeCountResponse.data.likes
+            .filter((like) => like.username === userLoggedIn.username)
+            .map((like) => like._id);
+
+          const [likeCount] = await Promise.all([likeCountResponse]);
+
+          const commentCountResponse = await axios.get(
+            `https://backend.dosshs.online/api/announcement/comment/count/${announcement._id}`,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+
+          const [commentCount] = await Promise.all([commentCountResponse]);
+
+          return {
+            ...announcement,
+            likeCount: likeCountResponse.data.likeCount,
+            liked: liked,
+            likeId: likedId,
+            commentCount: commentCount.data.commentCount,
+          };
         }
       );
-      setPosts(postResponse.data.reverse());
+
+      const announcementsWithCounts = await Promise.all(
+        getAnnouncementLikesPromises
+      );
+      setAnnouncements(announcementsWithCounts.reverse());
+
+      const post = await axios.get("https://backend.dosshs.online/api/post", {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      const getPostLikesPromises = post.data.map(async (post) => {
+        const likeCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/post/like/count/${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const liked = likeCountResponse.data.likes.some(
+          (like) => like.username === userLoggedIn.username
+        );
+
+        const likedId = likeCountResponse.data.likes
+          .filter((like) => like.username === userLoggedIn.username)
+          .map((like) => like._id);
+
+        const [likeCount] = await Promise.all([likeCountResponse]);
+
+        const commentCountResponse = await axios.get(
+          `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        const [commentCount] = await Promise.all([commentCountResponse]);
+
+        return {
+          ...post,
+          likeCount: likeCount.data.likeCount,
+          liked: liked,
+          likeId: likedId,
+          commentCount: commentCount.data.commentCount,
+        };
+      });
+
+      //
+
+      // });
+
+      const postsWithCounts = await Promise.all(getPostLikesPromises);
+      setPosts(postsWithCounts.reverse());
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -165,13 +253,20 @@ export default function Userprofile({ userLoggedIn }) {
               <div className="user-post-and-announcements">
                 <div className="user-announcement">
                   {filteredAnnouncements.length > 0 ? (
-                    filteredAnnouncements.map((filteredAnnounce) => (
+                    filteredAnnouncements.map((el) => (
                       <Announce
-                        key={filteredAnnounce._id}
-                        fullname={filteredAnnounce.fullname}
-                        username={filteredAnnounce.username}
-                        content={filteredAnnounce.content}
-                        date={filteredAnnounce.dateCreated}
+                        key={el._id}
+                        announceId={el._id}
+                        fullname={el.fullname}
+                        username={el.username}
+                        content={el.content}
+                        date={el.dateCreated}
+                        liked={el.liked}
+                        likeCount={el.likeCount}
+                        likeId={el.likeId}
+                        commentCount={el.commentCount}
+                        userUsername={userLoggedIn.username}
+                        userUserId={userLoggedIn._id}
                       />
                     ))
                   ) : (
@@ -186,15 +281,22 @@ export default function Userprofile({ userLoggedIn }) {
                   {filteredPosts.length > 0 ? (
                     filteredPosts
                       .filter((filteredPost) => !filteredPost.isAnonymous)
-                      .map((filteredPost) => (
+                      .map((el) => (
                         <Post
-                          key={filteredPost._id}
-                          fullname={filteredPost.fullname}
-                          username={filteredPost.username}
-                          content={filteredPost.content}
-                          date={filteredPost.dateCreated}
-                          category={filteredPost.category}
-                          isAnonymous={filteredPost.isAnonymous}
+                          key={el._id}
+                          postId={el._id}
+                          fullname={el.fullname}
+                          username={el.username}
+                          content={el.content}
+                          date={el.dateCreated}
+                          category={el.category}
+                          isAnonymous={el.isAnonymous}
+                          likeCount={el.likeCount}
+                          liked={el.liked}
+                          likeId={el.likeId}
+                          commentCount={el.commentCount}
+                          userUsername={userLoggedIn.username}
+                          userUserId={userLoggedIn._id}
                         />
                       ))
                   ) : (
@@ -224,7 +326,7 @@ export default function Userprofile({ userLoggedIn }) {
           <CreateAnnouncement
             fullname={user.fullname}
             username={user.username}
-            userId={user.userId}
+            userId={user._id}
             onAnnouncementCreated={handlePostCreated}
             onModalClose={() => {
               setIsCreateAnnounceOpen(!isCreateAnnounceOpen);
