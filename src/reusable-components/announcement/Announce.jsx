@@ -19,11 +19,14 @@ export default function Announce({
   const token = Cookies.get("token");
   const [isLiked, setIsLiked] = useState(liked);
   let [likeCounts, setIlikeCounts] = useState(likeCount);
-  let [announceLikeId, setLikeId] = useState(likeId);
+  const [announceLikeId, setLikeId] = useState(likeId);
+  const [likeInProgress, setLikeInProgress] = useState(false);
 
   async function handleLike() {
-    if (!isLiked) {
-      try {
+    if (likeInProgress) return;
+    setLikeInProgress(true);
+    try {
+      if (!isLiked) {
         const likeAnnounce = {
           announcementId: announceId,
           userId: userUserId,
@@ -42,11 +45,7 @@ export default function Announce({
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setIlikeCounts((likeCounts += 1));
-      } catch (err) {
-        return console.error(err);
-      }
-    } else {
-      try {
+      } else {
         await axios.delete(
           `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
           {
@@ -58,12 +57,66 @@ export default function Announce({
         setLikeId(null);
         setIsLiked(!isLiked);
         setIlikeCounts((likeCounts -= 1));
-      } catch (err) {
-        return console.error(err);
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLikeInProgress(false);
     }
   }
-  const formattedDate = date.slice(0, 10);
+
+  const formatDate = (inputDate) => {
+    const postDate = new Date(inputDate);
+    const currentDate = new Date();
+    const timeDifference = Math.abs(currentDate - postDate) / 1000;
+
+    const timeIntervals = {
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
+
+    let timeAgo = Math.floor(timeDifference);
+    let timeUnit = "";
+
+    for (let interval in timeIntervals) {
+      if (timeAgo >= timeIntervals[interval]) {
+        timeUnit = interval;
+        timeAgo = Math.floor(timeAgo / timeIntervals[interval]);
+        break;
+      }
+    }
+
+    if (timeUnit === "day" && timeAgo >= 1) {
+      if (timeAgo === 1) {
+        const options = {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return `Yesterday at ${postDate.toLocaleTimeString(
+          undefined,
+          options
+        )}`;
+      } else {
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return postDate.toLocaleString(undefined, options);
+      }
+    }
+
+    if (timeUnit === "") {
+      return "Just now";
+    }
+
+    return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
+  };
 
   return (
     <div className="post">
@@ -117,7 +170,7 @@ export default function Announce({
           </p>
         </div>
       </div>
-      <div className="date announcement-date">{formattedDate}</div>
+      <div className="date announcement-date">{formatDate(date)}</div>
     </div>
   );
 }
