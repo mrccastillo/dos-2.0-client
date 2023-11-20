@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ExpandedPost from "./ExpandedPost";
 import "./Post.css";
 import axios from "axios";
@@ -24,7 +24,7 @@ export default function Post({
   const token = Cookies.get("token");
   const [isLiked, setIsLiked] = useState(liked);
   const [isPostOpen, setIsPostOpen] = useState(false);
-  let [likeCounts, setIlikeCounts] = useState(likeCount);
+  const [likeCounts, setlikeCounts] = useState(likeCount);
   const [postLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
 
@@ -51,7 +51,7 @@ export default function Post({
         );
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts += 1));
+        setlikeCounts(likeCounts + 1);
       } else {
         await axios.delete(
           `https://backend.dosshs.online/api/post/like/${postLikeId}`,
@@ -63,7 +63,7 @@ export default function Post({
         );
         setLikeId(null);
         setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts -= 1));
+        setlikeCounts(likeCounts - 1);
       }
     } catch (err) {
       console.error(err);
@@ -205,6 +205,9 @@ export default function Post({
             onCloseExpandedPost={() => {
               setIsPostOpen(!isPostOpen);
             }}
+            liked={isLiked}
+            likeId={postLikeId}
+            likeCount={likeCounts}
           />{" "}
           <div className="overlay"></div>
         </>

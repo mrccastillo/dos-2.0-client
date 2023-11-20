@@ -1,5 +1,58 @@
 import "./Reply.css";
-export default function Reply({ fullname, username, content }) {
+export default function Reply({ fullname, username, content, date }) {
+  const formatDate = (inputDate) => {
+    const postDate = new Date(inputDate);
+    const currentDate = new Date();
+    const timeDifference = Math.abs(currentDate - postDate) / 1000;
+
+    const timeIntervals = {
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
+
+    let timeAgo = Math.floor(timeDifference);
+    let timeUnit = "";
+
+    for (let interval in timeIntervals) {
+      if (timeAgo >= timeIntervals[interval]) {
+        timeUnit = interval;
+        timeAgo = Math.floor(timeAgo / timeIntervals[interval]);
+        break;
+      }
+    }
+
+    if (timeUnit === "day" && timeAgo >= 1) {
+      if (timeAgo === 1) {
+        const options = {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return `Yesterday at ${postDate.toLocaleTimeString(
+          undefined,
+          options
+        )}`;
+      } else {
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return postDate.toLocaleString(undefined, options);
+      }
+    }
+
+    if (timeUnit === "") {
+      return "Just now";
+    }
+
+    return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
+  };
+
   return (
     <div className="reply">
       <div className="post-header">
@@ -16,7 +69,7 @@ export default function Reply({ fullname, username, content }) {
             {/* {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>} */}
             @{username}
           </p>
-          {/* <p className="date">{date}</p> */}
+          <p className="date">{formatDate(date)}</p>
         </div>
       </div>
       <p

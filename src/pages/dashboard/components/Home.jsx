@@ -59,10 +59,6 @@ export default function Home({ fullname, username, userId }) {
         };
       });
 
-      //
-
-      // });
-
       const postsWithCounts = await Promise.all(getLikesPromises);
       setPosts(postsWithCounts.reverse());
     } catch (error) {
