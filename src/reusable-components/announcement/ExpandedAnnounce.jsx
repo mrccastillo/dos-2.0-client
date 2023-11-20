@@ -1,31 +1,28 @@
-import "./ExpandedPost.css";
-import Reply from "./Reply";
+import "./ExpandedAnnounce.css";
+import Reply from "../post/Reply";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-export default function ExpandedPost({
+export default function ExpandedAnnounce({
   token,
-  postId,
+  announceId,
   userUserId,
   userUsername,
   userFullName,
-  category,
   content,
   username,
   date,
-  isAnonymous,
   fullname,
   onCloseExpandedPost,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
-
   const [comments, setComments] = useState([]);
 
   const fetchComments = async () => {
     const commentsRes = await axios.get(
-      `https://backend.dosshs.online/api/post/comment/${postId}`,
+      `https://backend.dosshs.online/api/announcement/comment/${announceId}`,
       {
         headers: {
           Authorization: token,
@@ -45,12 +42,12 @@ export default function ExpandedPost({
       userId: userUserId,
       fullname: userFullName,
       username: userUsername,
-      postId: postId,
+      announcementId: announceId,
       content: comment,
     };
     try {
       await axios.post(
-        "https://backend.dosshs.online/api/post/comment",
+        "https://backend.dosshs.online/api/announcement/comment",
         commentObj,
         {
           headers: {
@@ -59,7 +56,7 @@ export default function ExpandedPost({
         }
       );
     } catch (err) {
-      console.error(err);
+      return console.error(err);
     } finally {
       setComment("");
       setCommenting(false);
@@ -81,11 +78,9 @@ export default function ExpandedPost({
                 style={{ width: "3.5rem", height: "3.5rem" }}
               ></div>
               <div className="post-author">
-                <p className="display-name">
-                  {isAnonymous ? "Anonymous" : fullname}
-                </p>
+                <p className="display-name">{fullname}</p>
                 <p className="username">
-                  {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>}
+                  {<Link to={`/${username}`}>@{username}</Link>}
                 </p>
                 <p className="date">{date}</p>
               </div>
@@ -96,16 +91,6 @@ export default function ExpandedPost({
         </div>
         <div className="post-content" style={{ padding: "1rem 0" }}>
           <div className="contents">
-            <p className="category">
-              #
-              {category === 0
-                ? "General"
-                : category === 1
-                ? "PUP"
-                : category === 2
-                ? "Question"
-                : category === 3 && "Rant"}
-            </p>
             <p style={{ fontSize: "0.95rem" }}>{content}</p>
           </div>
           <div

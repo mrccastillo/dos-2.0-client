@@ -106,6 +106,9 @@ export default function Announcements({ fullname, username, userId }) {
                 : announcements.map((el) => (
                     <Announce
                       key={el._id}
+                      userUsername={username}
+                      userUserId={userId}
+                      userFullName={fullname}
                       announceId={el._id}
                       fullname={el.fullname}
                       username={el.username}
@@ -115,8 +118,6 @@ export default function Announcements({ fullname, username, userId }) {
                       likeCount={el.likeCount}
                       likeId={el.likeId}
                       commentCount={el.commentCount}
-                      userUsername={username}
-                      userUserId={userId}
                     />
                   ))}
             </div>

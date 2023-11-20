@@ -6,9 +6,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function Post({
+  postId,
   userUsername,
   userUserId,
-  postId,
+  userFullName,
   fullname,
   username,
   content,
@@ -24,11 +25,16 @@ export default function Post({
   const [isLiked, setIsLiked] = useState(liked);
   const [isPostOpen, setIsPostOpen] = useState(false);
   let [likeCounts, setIlikeCounts] = useState(likeCount);
-  let [postLikeId, setLikeId] = useState(likeId);
+  const [postLikeId, setLikeId] = useState(likeId);
+  const [likeInProgress, setLikeInProgress] = useState(false);
 
   async function handleLike() {
-    if (!isLiked) {
-      try {
+    if (likeInProgress) return;
+
+    setLikeInProgress(true);
+
+    try {
+      if (!isLiked) {
         const likePost = {
           postId: postId,
           userId: userUserId,
@@ -46,11 +52,7 @@ export default function Post({
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setIlikeCounts((likeCounts += 1));
-      } catch (err) {
-        return console.error(err);
-      }
-    } else {
-      try {
+      } else {
         await axios.delete(
           `https://backend.dosshs.online/api/post/like/${postLikeId}`,
           {
@@ -62,13 +64,67 @@ export default function Post({
         setLikeId(null);
         setIsLiked(!isLiked);
         setIlikeCounts((likeCounts -= 1));
-      } catch (err) {
-        return console.error(err);
       }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLikeInProgress(false);
     }
   }
 
-  const newDate = date.slice(0, 10);
+  const formatDate = (inputDate) => {
+    const postDate = new Date(inputDate);
+    const currentDate = new Date();
+    const timeDifference = Math.abs(currentDate - postDate) / 1000;
+
+    const timeIntervals = {
+      day: 86400,
+      hour: 3600,
+      minute: 60,
+    };
+
+    let timeAgo = Math.floor(timeDifference);
+    let timeUnit = "";
+
+    for (let interval in timeIntervals) {
+      if (timeAgo >= timeIntervals[interval]) {
+        timeUnit = interval;
+        timeAgo = Math.floor(timeAgo / timeIntervals[interval]);
+        break;
+      }
+    }
+
+    if (timeUnit === "day" && timeAgo >= 1) {
+      if (timeAgo === 1) {
+        const options = {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return `Yesterday at ${postDate.toLocaleTimeString(
+          undefined,
+          options
+        )}`;
+      } else {
+        const options = {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
+        return postDate.toLocaleString(undefined, options);
+      }
+    }
+
+    if (timeUnit === "") {
+      return "Just now";
+    }
+
+    return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
+  };
+
   return (
     <>
       <div className="post">
@@ -86,7 +142,7 @@ export default function Post({
                       <Link to={`/${username}`}>@{username}</Link>
                     )}
                   </p>
-                  <p className="date">{newDate}</p>
+                  <p className="date">{formatDate(date)}</p>
                 </div>
               </div>
               <div className="delete"></div>
@@ -135,11 +191,16 @@ export default function Post({
       {isPostOpen && (
         <>
           <ExpandedPost
+            token={token}
+            postId={postId}
+            userUserId={userUserId}
+            userUsername={userUsername}
+            userFullName={userFullName}
             category={category}
             content={content}
             username={username}
             isAnonymous={isAnonymous}
-            date={newDate}
+            date={formatDate(date)}
             fullname={fullname}
             onCloseExpandedPost={() => {
               setIsPostOpen(!isPostOpen);

@@ -1,5 +1,5 @@
 import "./Reply.css";
-export default function Reply() {
+export default function Reply({ fullname, username, content }) {
   return (
     <div className="reply">
       <div className="post-header">
@@ -9,11 +9,12 @@ export default function Reply() {
         ></div>
         <div className="post-author">
           <p className="display-name">
-            {/*isAnonymous ? "Anonymous" : fullname*/}MARCC
+            {/*isAnonymous ? "Anonymous" : fullname*/}
+            {fullname}
           </p>
           <p className="username">
             {/* {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>} */}
-            MARC
+            @{username}
           </p>
           {/* <p className="date">{date}</p> */}
         </div>
@@ -25,7 +26,7 @@ export default function Reply() {
           marginLeft: "3.5rem",
         }}
       >
-        Reply content
+        {content}
       </p>
       <div
         className="post-interaction"
@@ -34,9 +35,9 @@ export default function Reply() {
           padding: "1.5rem 2.5rem",
         }}
       >
-        <div className="like-container">
+        {/*<div className="like-container">
           <div
-            className={/*isLiked ? "like-icon --isLiked" : */ "like-icon"}
+            className={/*isLiked ? "like-icon --isLiked" :  "like-icon"}
             // style={{
             //   background-image: isLiked
             //     ? "url(../../assets/images/heart-filled.png)"
@@ -51,8 +52,8 @@ export default function Reply() {
             // onClick={() => {
             //   setIsPostOpen(!isPostOpen);
             // }}
-          ></div>
-        </div>
+      ></div>
+        </div>*/}
       </div>
     </div>
   );
