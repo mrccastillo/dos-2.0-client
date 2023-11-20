@@ -39,7 +39,6 @@ export default function Home({ fullname, username, userId }) {
           .map((like) => like._id);
 
         const [likeCount] = await Promise.all([likeCountResponse]);
-
         const commentCountResponse = await axios.get(
           `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
           {
@@ -77,6 +76,7 @@ export default function Home({ fullname, username, userId }) {
 
   useEffect(() => {
     fetchPosts();
+
     // console.log(posts);
   }, []);
 
