@@ -90,7 +90,9 @@ export default function Login({ onDecodeUser }) {
           );
           if (res.data.message === "Signed Up Successfully") {
             setUserId(res.data.id);
-            Cookies.set("tempToken", res.data.token);
+            Cookies.set("tempToken", res.data.token, {
+              expires: 24 * 60 * 60,
+            }); // 1 day expiration
           }
         } catch (err) {
           console.error(err);
@@ -128,7 +130,9 @@ export default function Login({ onDecodeUser }) {
               },
             }
           );
-          Cookies.set("tempToken", res.data.token);
+          Cookies.set("tempToken", res.data.token, {
+            expires: 24 * 60 * 60,
+          }); // 1 day expiration
           if (res.data.message === "Account Successfully Updated") {
             const emailRes = await axios.put(`
               https://backend.dosshs.online/api/mail/signup/${userId}
@@ -136,8 +140,6 @@ export default function Login({ onDecodeUser }) {
             setVerificationCode(emailRes.data.verificationToken);
             setSteps((prevStep) => prevStep + 1);
           }
-          // localStorage.setItem("token", res.data.token);
-          // setIsLoggedIn(true);
         } catch (err) {
           setSignUpBtnMsg("NEXT");
           setErrorMsg(err);
@@ -209,7 +211,7 @@ export default function Login({ onDecodeUser }) {
       } else if (!parsedUser.nameValid) {
         Cookies.set("tempToken", res.data.token, {
           expires: 24 * 60 * 60,
-        }); // 30 day expiration
+        }); // 1 day expiration
         setUserId(parsedUser._id);
         setIsInSignInPage(!isInSignInPage);
         setSteps(1);
@@ -219,7 +221,7 @@ export default function Login({ onDecodeUser }) {
       } else if (!parsedUser.emailValid) {
         Cookies.set("tempToken", res.data.token, {
           expires: 24 * 60 * 60,
-        }); // 30 day expiration
+        }); // 1 day expiration
         setUserId(parsedUser._id);
         try {
           const emailRes = await axios.put(`
