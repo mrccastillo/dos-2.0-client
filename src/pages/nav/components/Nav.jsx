@@ -15,6 +15,8 @@ export default function Nav({ user }) {
 
       if (res.data.message === "Logged Out Successfully") {
         Cookies.remove("token");
+        Cookies.remove("username");
+        Cookies.remove("userId");
         localStorage.removeItem("firstLoad");
         location.href = "/";
       }

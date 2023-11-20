@@ -105,7 +105,6 @@ export default function Login({ onDecodeUser }) {
       setSteps((prevStep) => prevStep + 1);
       setSignUpBtnMsg("NEXT");
     } else if (steps === 1) {
-      console.log(section);
       if (!firstName || !lastName || section === undefined)
         return setErrorMsg("Please fill out the fields");
       else if (firstName.length < 2 || lastName.length < 2) {
@@ -129,7 +128,7 @@ export default function Login({ onDecodeUser }) {
               },
             }
           );
-          localStorage.Cookies("tempToken", res.data.token);
+          Cookies.set("tempToken", res.data.token);
           if (res.data.message === "Account Successfully Updated") {
             const emailRes = await axios.put(`
               https://backend.dosshs.online/api/mail/signup/${userId}
@@ -161,7 +160,7 @@ export default function Login({ onDecodeUser }) {
         `);
 
         if (verifyRes.data.message === "Email Successfully Verified") {
-          Cookies.set("token", localStorage.getItem("tempToken"));
+          Cookies.set("token", Cookies.get("tempToken"));
           Cookies.remove("tempToken");
           setIsLoggedIn(true);
         }
@@ -199,13 +198,44 @@ export default function Login({ onDecodeUser }) {
       );
       const User = jwtDecode(res.data.token);
       const parsedUser = JSON.parse(User.user);
-      Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
-      Cookies.set("username", parsedUser.username, {
-        expires: 30 * 24 * 60 * 60,
-      }); // 30 day expiration
-      Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
 
-      setIsLoggedIn(true);
+      if (parsedUser.nameValid && parsedUser.emailValid) {
+        Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
+        Cookies.set("username", parsedUser.username, {
+          expires: 30 * 24 * 60 * 60,
+        }); // 30 day expiration
+        Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
+        setIsLoggedIn(true);
+      } else if (!parsedUser.nameValid) {
+        Cookies.set("tempToken", res.data.token, {
+          expires: 24 * 60 * 60,
+        }); // 30 day expiration
+        setUserId(parsedUser._id);
+        setIsInSignInPage(!isInSignInPage);
+        setSteps(1);
+        setEmail(parsedUser.email);
+        setUsername(parsedUser.username);
+        setErrorMsg("");
+      } else if (!parsedUser.emailValid) {
+        Cookies.set("tempToken", res.data.token, {
+          expires: 24 * 60 * 60,
+        }); // 30 day expiration
+        setUserId(parsedUser._id);
+        try {
+          const emailRes = await axios.put(`
+              https://backend.dosshs.online/api/mail/signup/${userId}
+            `);
+          setVerificationCode(emailRes.data.verificationToken);
+        } catch (err) {
+          return console.error(err);
+        }
+        setIsInSignInPage(!isInSignInPage);
+        setSteps(2);
+        setEmail(parsedUser.email);
+        setUsername(parsedUser.username);
+        setCode("");
+        setErrorMsg("");
+      }
     } catch (err) {
       return setErrorMsg(err.response.data.message);
       // console.log(err.response.data.message);
@@ -376,7 +406,6 @@ export default function Login({ onDecodeUser }) {
                         value={section}
                         onChange={(e) => {
                           setSection(e.target.value);
-                          console.log(e.target.value);
                         }}
                       >
                         <option value={null}>Section</option>
