@@ -1,0 +1,108 @@
+.nav {
+  display: inline-block;
+  width: 11rem;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.nav-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  background-color: #e6d283;
+  border-radius: 2rem;
+  padding: 2rem 0.5rem;
+}
+
+.logo-navlinks {
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 5rem;
+  width: 5rem;
+  background: url("../../../assets/logo/doslogotransparent/android-chrome-192x192.png");
+  background-size: cover;
+}
+
+.navlinks-container {
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-profile-and-links-container {
+  position: relative;
+  background-color: rgba(255, 255, 255, 0);
+  height: 6rem;
+  width: 6rem;
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.navlink {
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.bell-icon {
+  background: url("../../../assets/images/bell.png");
+  background-size: cover;
+}
+.announcement-icon {
+  background: url("../../../assets/images/announcement.png");
+  background-size: cover;
+}
+.settings-icon {
+  background: url("../../../assets/images/settings.png");
+  background-size: cover;
+}
+.home-icon {
+  background: url("../../../assets/images/home.png");
+  background-size: cover;
+}
+
+.navlink-active {
+  width: 12rem;
+  height: 17rem;
+  transform: translateX(3rem);
+  background-color: #fff;
+}
+
+.links {
+  opacity: 0;
+  height: 0;
+  width: 0;
+}
+
+.links-active {
+  opacity: 1;
+}
+
+.link {
+  display: block;
+  text-decoration: none;
+  background-color: #bac0c8;
+  padding: 0.2rem 0;
+  border-radius: 0.5rem;
+  color: #000;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.--logout {
+  background-color: #f4bfbf;
+}
