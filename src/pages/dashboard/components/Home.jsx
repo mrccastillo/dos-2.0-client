@@ -164,6 +164,9 @@ export default function Home({ fullname, username, userId }) {
                     <Post
                       key={el._id}
                       postId={el._id}
+                      userUsername={username}
+                      userUserId={userId}
+                      userFullName={fullname}
                       fullname={el.fullname}
                       username={el.username}
                       content={el.content}
@@ -174,8 +177,6 @@ export default function Home({ fullname, username, userId }) {
                       liked={el.liked}
                       likeId={el.likeId}
                       commentCount={el.commentCount}
-                      userUsername={username}
-                      userUserId={userId}
                     />
                   ))
                 : posts
@@ -184,6 +185,9 @@ export default function Home({ fullname, username, userId }) {
                       <Post
                         key={el._id}
                         postId={el._id}
+                        userUsername={username}
+                        userUserId={userId}
+                        userFullName={fullname}
                         fullname={el.fullname}
                         username={el.username}
                         content={el.content}
@@ -194,8 +198,6 @@ export default function Home({ fullname, username, userId }) {
                         liked={el.liked}
                         likeId={el.likeId}
                         commentCount={el.commentCount}
-                        userUsername={username}
-                        userUserId={userId}
                       />
                     ))}
               {posts.length === 0 ? "Loading..." : null}
