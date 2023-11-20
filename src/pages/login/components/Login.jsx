@@ -411,8 +411,10 @@ export default function Login({ onDecodeUser }) {
                         }}
                       >
                         <option value={null}>Section</option>
+                        <option value={0}>PUPian</option>
                         <option value={1}>ICT 12 - 1</option>
                         <option value={2}>ICT 12 - 2</option>
+                        <option value={3}>Outsider</option>
                       </select>
                     </>
                   ) : (

@@ -21,7 +21,7 @@ export default function Announce({
   const token = Cookies.get("token");
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
-  let [likeCounts, setIlikeCounts] = useState(likeCount);
+  const [likeCounts, setIlikeCounts] = useState(likeCount);
   const [announceLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
 
@@ -47,7 +47,7 @@ export default function Announce({
         );
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts += 1));
+        setIlikeCounts(likeCounts + 1);
       } else {
         await axios.delete(
           `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
@@ -59,7 +59,7 @@ export default function Announce({
         );
         setLikeId(null);
         setIsLiked(!isLiked);
-        setIlikeCounts((likeCounts -= 1));
+        setIlikeCounts(likeCounts - 1);
       }
     } catch (err) {
       console.error(err);
@@ -197,6 +197,9 @@ export default function Announce({
             onCloseExpandedPost={() => {
               setIsPostOpen(!isPostOpen);
             }}
+            liked={isLiked}
+            likeId={announceLikeId}
+            likeCount={likeCounts}
           />{" "}
           <div className="overlay"></div>
         </>
