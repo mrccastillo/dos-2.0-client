@@ -6,6 +6,7 @@ import Announce from "../../../reusable-components/announcement/Announce";
 import Nav from "../../nav/components/Nav";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
 import CreatePost from "../../../reusable-components/post/CreatePost";
+import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -201,7 +202,12 @@ export default function Userprofile({ userLoggedIn }) {
         </Helmet>
 
         <div className="container">
-          <Nav user={userLoggedIn.username} />
+          <Nav
+            user={userLoggedIn.username}
+            email={userLoggedIn.email}
+            bio={userLoggedIn.bio}
+            fullname={userLoggedIn.fullname}
+          />
           <div className="dashboard --userprofile">
             <h2 className="--big-h2">Profile</h2>
             <div className="userprofile-container">
@@ -311,6 +317,7 @@ export default function Userprofile({ userLoggedIn }) {
             </div>
           </div>
         </div>
+
         {isCreatePostOpen && (
           <CreatePost
             fullname={user.fullname}

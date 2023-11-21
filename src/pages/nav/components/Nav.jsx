@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import "../stylesheets/Nav.css";
 import { useEffect, useState } from "react";
+import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export default function Nav({ user }) {
+export default function Nav({ user, email, bio, fullname }) {
   const token = Cookies.get("token");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const logOut = async () => {
     try {
       const res = await axios.post(
@@ -49,7 +51,13 @@ export default function Nav({ user }) {
                 style={{ textDecoration: "none" }}
                 className="navlink home-icon"
               ></Link>
-              <p className="navlink settings-icon"></p>
+              <p
+                className="navlink settings-icon"
+                onClick={() => {
+                  setIsSettingsOpen(!isSettingsOpen);
+                  console.log(user);
+                }}
+              ></p>
             </div>
           </div>
           <div
@@ -86,7 +94,19 @@ export default function Nav({ user }) {
           </div>
         </div>
       </nav>
-      {isNavLinkOpen && <div className="overlay"></div>}
+      {isSettingsOpen && (
+        <EditUserInfo
+          fullname={fullname}
+          username={user}
+          bio={bio}
+          email={email}
+          onCloseSettings={() => {
+            setIsSettingsOpen(!isSettingsOpen);
+          }}
+        />
+      )}
+
+      {(isNavLinkOpen || isSettingsOpen) && <div className="overlay"></div>}
     </>
   );
 }

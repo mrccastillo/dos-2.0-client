@@ -108,6 +108,7 @@ export default function Reply({ fullname, username, content, date }) {
       ></div>
         </div>*/}
       </div>
+      {/* <Reply /> */}
     </div>
   );
 }

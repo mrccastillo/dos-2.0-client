@@ -1,0 +1,62 @@
+.edit-userinfo-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 40rem;
+  height: 30rem;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  z-index: 2;
+}
+
+.credentials {
+  position: relative;
+  background-color: #c5e7ed;
+  width: 100%;
+  height: 15rem;
+  border-radius: 1rem;
+}
+
+.email-pass-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* background-color: #177282; */
+  /* width: 23rem; */
+  /* height: 10rem; */
+}
+
+.username-container {
+  margin-bottom: 2rem;
+}
+
+.--credential-info {
+  background-color: #213555;
+  color: white;
+  /* margin-bottom: 1rem; */
+  padding: 0.5rem 2rem;
+  width: 20rem;
+  text-align: center;
+  border-radius: 1rem;
+}
+
+.credential-label {
+  font-weight: 700;
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 0.2rem;
+}
+
+.edit-info {
+  margin-top: 0.5rem;
+  margin-bottom: 0.2rem;
+  padding: 0.2rem 0.5rem;
+  width: 20rem;
+}
+
+.edit-info:focus {
+  outline: 0;
+}

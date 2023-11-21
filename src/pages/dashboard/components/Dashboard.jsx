@@ -24,7 +24,12 @@ export default function Dashboard({ user, onDecodeUser }) {
       </Helmet>
 
       <div className="container">
-        <Nav user={user.username} onDecodeUser={onDecodeUser} />
+        <Nav
+          user={user.username}
+          email={user.email}
+          bio={user.bio}
+          fullname={user.fullname}
+        />
         <div className="dashboard">
           <div className="header">
             <div className="dosboard-and-search-container">

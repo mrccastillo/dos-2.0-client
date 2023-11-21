@@ -135,6 +135,22 @@ a {
   margin-bottom: 0.3rem;
 }
 
+.--edit-user-details {
+  padding: 0;
+  padding-left: 10rem;
+  background: 0;
+  height: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.--edit-user-details svg {
+  margin-left: 0.2rem;
+  font-size: medium;
+  cursor: pointer;
+}
+
 .overlay {
   position: fixed;
   top: 0;
