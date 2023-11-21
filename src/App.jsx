@@ -35,11 +35,13 @@ function App() {
 
   const decodeUser = () => {
     verifyToken();
-    // const token = localStorage.getItem("token");
     const User = jwtDecode(token);
     const parsedUser = JSON.parse(User.user);
 
     setUser(parsedUser);
+    // Cookies.set("username", parsedUser.username, {
+    //   expires: 30 * 24 * 60 * 60,
+    // }); // 30 day expiration
   };
 
   useEffect(() => {

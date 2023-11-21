@@ -11,6 +11,7 @@ export default function EditUserInfo({
   email,
   onCloseSettings,
 }) {
+  const token = Cookies.get("token");
   const [fullnameEdit, setFullnameEdit] = useState(fullname);
   const [usernameEdit, setUsernameEdit] = useState(username);
   const [bioEdit, setbioEdit] = useState(bio);
@@ -29,12 +30,27 @@ export default function EditUserInfo({
     };
 
     try {
+      const res = await axios.get(
+        `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (res.data.other) return alert("Username is taken");
+    } catch (err) {
+      return console.error(err);
+    }
+
+    try {
       const res = await axios.put(
         `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
         user,
         {
           headers: {
-            Authorization: Cookies.get("token"),
+            Authorization: token,
           },
         }
       );
@@ -42,6 +58,7 @@ export default function EditUserInfo({
         expires: 30 * 24 * 60 * 60,
       }); // 30 day expiration
       alert(res.data.message);
+      window.location.reload();
     } catch (err) {
       return console.error(err);
     } finally {

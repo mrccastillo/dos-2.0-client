@@ -90,7 +90,7 @@ export default function Userprofile({ userLoggedIn }) {
           const [likeCount] = await Promise.all([likeCountResponse]);
 
           const commentCountResponse = await axios.get(
-            `https://backend.dosshs.online/api/announcement/comment/count/${announcement._id}`,
+            `https://backend.dosshs.online/api/announcement/comment/count?announcementId=${announcement._id}`,
             {
               headers: {
                 Authorization: token,
@@ -142,7 +142,7 @@ export default function Userprofile({ userLoggedIn }) {
         const [likeCount] = await Promise.all([likeCountResponse]);
 
         const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
+          `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
           {
             headers: {
               Authorization: token,
