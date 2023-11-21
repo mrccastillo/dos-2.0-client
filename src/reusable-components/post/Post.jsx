@@ -160,7 +160,11 @@ export default function Post({
                 ? "Question"
                 : category === 3 && "Rant"}
             </p>
-            <p style={{ fontSize: "0.95rem" }}>{content}</p>
+            {content.split("\n").map((line, index) => (
+              <p key={index} style={{ fontSize: "0.95rem" }}>
+                {line}
+              </p>
+            ))}
           </div>
         </div>
         <div className="post-interaction">

@@ -55,7 +55,6 @@ export default function Nav({ user, email, bio, fullname }) {
                 className="navlink settings-icon"
                 onClick={() => {
                   setIsSettingsOpen(!isSettingsOpen);
-                  console.log(user);
                 }}
               ></p>
             </div>

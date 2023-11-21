@@ -1,67 +1,16 @@
-.expanded-post-modal-background {
-  width: 70vw;
-  height: 80vh;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #4f709c;
-  z-index: 2;
-  padding: 1.5rem;
-  border-radius: 2rem;
+.announcement-like {
+  background: url("../../assets/images/fist.png");
+  background-size: cover;
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+  transition: 200ms;
+  cursor: pointer;
 }
 
-.expanded-post-modal {
-  height: 100%;
-  width: 100%;
-  border-radius: 2rem;
-  background-color: white;
-  padding: 2rem;
-  overflow-y: scroll;
-}
-
-.expanded-post-modal::-webkit-scrollbar-thumb {
-  background: rgba(7, 7, 7, 0);
-  border-radius: 10px;
-}
-
-.contents {
-  /* margin-bottom: 1rem; */
-  border-bottom: 1px solid rgb(93, 93, 93);
-  padding: 0 1rem 1rem 1rem;
-}
-
-.reply-to-post {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2rem 1rem;
-  border-bottom: 1px solid rgb(93, 93, 93);
-}
-
-.user-reply {
-  display: flex;
-}
-
-.reply-textarea {
-  resize: none;
-  width: 30rem;
-  height: 3rem;
-  border: none;
-}
-
-.reply-textarea:focus {
-  outline: 0;
-}
-
-.reply-btn {
-  width: 4rem;
-  height: 1.8rem;
-  border: none;
-  border-radius: 0.9rem;
-  background-color: #e6d283;
-}
-
-.reply-textarea::placeholder {
-  transform: translateY(55%);
+.--isAnnouncementLiked {
+  background: url("../../assets/images/fist-colored.png");
+  width: 2rem;
+  height: 2rem;
+  background-size: cover;
 }
