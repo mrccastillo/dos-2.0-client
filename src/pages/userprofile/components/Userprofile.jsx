@@ -219,7 +219,15 @@ export default function Userprofile({ userLoggedIn }) {
                 {" "}
                 @{user.username}
               </p>
-              {user.bio ? <p className="bio">"{user.bio}"</p> : null}
+              {user.bio ? (
+                <p className="bio">
+                  {user.bio.split("\n").map((line, index) => (
+                    <p key={index} style={{ fontSize: "0.95rem" }}>
+                      "{line}"
+                    </p>
+                  ))}
+                </p>
+              ) : null}
             </div>
             <div className="userpost-container">
               <div className="userpost-container-header">

@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 
 export default function Home({ fullname, username, userId }) {
   const token = Cookies.get("token");
-  const userUsername = Cookies.get("username");
+  const userUserId = Cookies.get("userId");
   const [posts, setPosts] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [postFilter, setPostFilter] = useState();
@@ -31,16 +31,16 @@ export default function Home({ fullname, username, userId }) {
         );
 
         const liked = likeCountResponse.data.likes.some(
-          (like) => like.username === userUsername
+          (like) => like.userId === userUserId
         );
 
         const likedId = likeCountResponse.data.likes
-          .filter((like) => like.username === userUsername)
+          .filter((like) => like.userId === userUserId)
           .map((like) => like._id);
 
         const [likeCount] = await Promise.all([likeCountResponse]);
         const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
+          `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
           {
             headers: {
               Authorization: token,

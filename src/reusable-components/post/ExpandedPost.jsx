@@ -75,7 +75,7 @@ export default function ExpandedPost({
 
   const fetchComments = async () => {
     const commentsRes = await axios.get(
-      `https://backend.dosshs.online/api/post/comment/${postId}`,
+      `https://backend.dosshs.online/api/post/comment/c?postId=${postId}`,
       {
         headers: {
           Authorization: token,
@@ -157,7 +157,11 @@ export default function ExpandedPost({
                 ? "Question"
                 : category === 3 && "Rant"}
             </p>
-            <p style={{ fontSize: "0.95rem" }}>{content}</p>
+            {content.split("\n").map((line, index) => (
+              <p key={index} style={{ fontSize: "0.95rem" }}>
+                {line}
+              </p>
+            ))}
           </div>
           <div
             className="post-interaction"

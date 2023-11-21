@@ -1,5 +1,7 @@
 import "./EditUserInfo.css";
 import EditIcon from "@mui/icons-material/Edit";
+import axios from "axios";
+import Cookies from "js-cookie";
 import { useState } from "react";
 
 export default function EditUserInfo({
@@ -12,10 +14,40 @@ export default function EditUserInfo({
   const [fullnameEdit, setFullnameEdit] = useState(fullname);
   const [usernameEdit, setUsernameEdit] = useState(username);
   const [bioEdit, setbioEdit] = useState(bio);
+  const [updating, setUpdating] = useState(false);
 
   const [isFullnameEditOpen, setIsFullnameEditOpen] = useState(false);
   const [isUsernameEditOpen, setIsUsernameEditOpen] = useState(false);
   const [isBioEditOpen, setIsBioEditOpen] = useState(false);
+
+  async function handleUserUpdate() {
+    if (updating) return;
+    setUpdating(true);
+    const user = {
+      username: usernameEdit,
+      bio: bioEdit,
+    };
+
+    try {
+      const res = await axios.put(
+        `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
+        user,
+        {
+          headers: {
+            Authorization: Cookies.get("token"),
+          },
+        }
+      );
+      Cookies.set("token", res.data.token, {
+        expires: 30 * 24 * 60 * 60,
+      }); // 30 day expiration
+      alert(res.data.message);
+    } catch (err) {
+      return console.error(err);
+    } finally {
+      setUpdating(false);
+    }
+  }
 
   return (
     <div className="edit-userinfo-modal">
@@ -35,7 +67,15 @@ export default function EditUserInfo({
           ></EditIcon>
         </p>
         {isFullnameEditOpen && (
-          <input type="text" placeholder={fullname} className="edit-info" />
+          <input
+            type="text"
+            // placeholder={fullname}
+            className="edit-info"
+            value={"BAWAL PA"}
+            onChange={(e) => {
+              setFullnameEdit(e.target.value);
+            }}
+          />
         )}
         <p className="username" style={{ fontSize: "1rem" }}>
           @{username}{" "}
@@ -48,12 +88,20 @@ export default function EditUserInfo({
           ></EditIcon>
         </p>
         {isUsernameEditOpen && (
-          <input type="text" placeholder={username} className="edit-info" />
+          <input
+            type="text"
+            // placeholder={username}
+            className="edit-info"
+            value={usernameEdit}
+            onChange={(e) => {
+              setUsernameEdit(e.target.value);
+            }}
+          />
         )}
-        {bio ? (
+        {
           <>
             <p className="bio">
-              "{bio}"{" "}
+              "{bio ? bio : "Edit Bio"}"
               <EditIcon
                 onClick={() => {
                   setIsBioEditOpen(!isBioEditOpen);
@@ -63,10 +111,18 @@ export default function EditUserInfo({
               ></EditIcon>
             </p>
             {isBioEditOpen && (
-              <input type="text" placeholder={bio} className="edit-info" />
+              <input
+                type="text"
+                placeholder={bio}
+                className="edit-info"
+                value={bioEdit}
+                onChange={(e) => {
+                  setbioEdit(e.target.value);
+                }}
+              />
             )}
           </>
-        ) : null}
+        }
 
         <div
           className="delete"
@@ -92,6 +148,7 @@ export default function EditUserInfo({
           </div>
         </div>
       </div>
+      <button onClick={handleUserUpdate}>Save Changes</button>
     </div>
   );
 }

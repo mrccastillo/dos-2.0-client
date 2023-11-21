@@ -140,7 +140,11 @@ export default function Announce({
             </div>
           </div>
           <div className="post-content --announce">
-            <p>{content}</p>
+            {content.split("\n").map((line, index) => (
+              <p key={index} style={{ fontSize: "0.95rem" }}>
+                {line}
+              </p>
+            ))}
           </div>
         </div>
         <div className="post-interaction">

@@ -71,16 +71,19 @@ export default function Reply({ fullname, username, content, date }) {
           </p>
           <p className="date">{formatDate(date)}</p>
         </div>
-      </div>
-      <p
-        style={{
-          fontSize: "0.85rem",
-          marginTop: "0.1rem",
-          marginLeft: "3.5rem",
-        }}
-      >
-        {content}
-      </p>
+      </div>{" "}
+      {content.split("\n").map((line, index) => (
+        <p
+          key={index}
+          style={{
+            fontSize: "0.85rem",
+            marginTop: "0.1rem",
+            marginLeft: "3.5rem",
+          }}
+        >
+          {line}
+        </p>
+      ))}
       <div
         className="post-interaction"
         style={{
