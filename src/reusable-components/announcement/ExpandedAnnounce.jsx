@@ -35,7 +35,7 @@ export default function ExpandedAnnounce({
     try {
       if (!isLiked) {
         const likePost = {
-          postId: postId,
+          announcementId: announceId,
           userId: userUserId,
           username: userUsername,
         };
@@ -73,7 +73,7 @@ export default function ExpandedAnnounce({
 
   const fetchComments = async () => {
     const commentsRes = await axios.get(
-      `https://backend.dosshs.online/api/announcement/comment/${announceId}`,
+      `https://backend.dosshs.online/api/announcement/comment/c?announcementId=${announceId}`,
       {
         headers: {
           Authorization: token,
@@ -140,9 +140,13 @@ export default function ExpandedAnnounce({
           </div>
           <div className="report-post-container"></div>
         </div>
-        <div className="post-content" style={{ padding: "1rem 0" }}>
+        <div className="post-content" style={{ padding: "1rem 0 0" }}>
           <div className="contents">
-            <p style={{ fontSize: "0.95rem" }}>{content}</p>
+            {content.split("\n").map((line, index) => (
+              <p key={index} style={{ fontSize: "0.95rem" }}>
+                {line}
+              </p>
+            ))}
           </div>
           <div
             className="post-interaction"
@@ -153,7 +157,11 @@ export default function ExpandedAnnounce({
           >
             <div className="like-container">
               <div
-                className={isLiked ? "like-icon --isLiked" : "like-icon"}
+                className={
+                  isLiked
+                    ? "announcement-like --isAnnouncementLiked"
+                    : "announcement-like"
+                }
                 // style={{
                 //   background-image: isLiked
                 //     ? "url(../../assets/images/heart-filled.png)"

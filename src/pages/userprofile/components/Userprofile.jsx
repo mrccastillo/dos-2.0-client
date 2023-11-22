@@ -90,7 +90,7 @@ export default function Userprofile({ userLoggedIn }) {
           const [likeCount] = await Promise.all([likeCountResponse]);
 
           const commentCountResponse = await axios.get(
-            `https://backend.dosshs.online/api/announcement/comment/count/${announcement._id}`,
+            `https://backend.dosshs.online/api/announcement/comment/count?announcementId=${announcement._id}`,
             {
               headers: {
                 Authorization: token,
@@ -142,7 +142,7 @@ export default function Userprofile({ userLoggedIn }) {
         const [likeCount] = await Promise.all([likeCountResponse]);
 
         const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/comment/count/${post._id}`,
+          `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
           {
             headers: {
               Authorization: token,
@@ -219,7 +219,15 @@ export default function Userprofile({ userLoggedIn }) {
                 {" "}
                 @{user.username}
               </p>
-              {user.bio ? <p className="bio">"{user.bio}"</p> : null}
+              {user.bio ? (
+                <p className="bio">
+                  {user.bio.split("\n").map((line, index) => (
+                    <p key={index} style={{ fontSize: "0.95rem" }}>
+                      "{line}"
+                    </p>
+                  ))}
+                </p>
+              ) : null}
             </div>
             <div className="userpost-container">
               <div className="userpost-container-header">

@@ -203,9 +203,6 @@ export default function Login({ onDecodeUser }) {
 
       if (parsedUser.nameValid && parsedUser.emailValid) {
         Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
-        Cookies.set("username", parsedUser.username, {
-          expires: 30 * 24 * 60 * 60,
-        }); // 30 day expiration
         Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
         setIsLoggedIn(true);
       } else if (!parsedUser.nameValid) {

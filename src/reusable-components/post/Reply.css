@@ -1,8 +1,11 @@
 .replies-container {
-  padding: 1rem 2rem;
+  padding: 1.5rem 2rem;
+  min-height: 1rem;
 }
 
 .reply {
   margin-bottom: 1rem;
-  border: 0;
+  border: 1px solid #4f709c;
+  padding: 1rem;
+  border-radius: 1rem;
 }

@@ -148,6 +148,9 @@
 }
 
 .delete {
+  /* position: absolute;
+  top: 1.3rem;
+  right: 1.3rem; */
   background: url("../../assets/images/delete.png");
   background-size: cover;
   width: 1rem;

@@ -71,26 +71,29 @@ export default function Reply({ fullname, username, content, date }) {
           </p>
           <p className="date">{formatDate(date)}</p>
         </div>
-      </div>
-      <p
-        style={{
-          fontSize: "0.85rem",
-          marginTop: "0.1rem",
-          marginLeft: "3.5rem",
-        }}
-      >
-        {content}
-      </p>
-      <div
+      </div>{" "}
+      {content.split("\n").map((line, index) => (
+        <p
+          key={index}
+          style={{
+            fontSize: "0.85rem",
+            marginTop: "0.1rem",
+            marginLeft: "3.5rem",
+          }}
+        >
+          {line}
+        </p>
+      ))}
+      {/* <div
         className="post-interaction"
         style={{
           //   borderBottom: " 1px solid rgb(93, 93, 93)",
           padding: "1.5rem 2.5rem",
         }}
       >
-        {/*<div className="like-container">
+        <div className="like-container">
           <div
-            className={/*isLiked ? "like-icon --isLiked" :  "like-icon"}
+            className={isLiked ? "like-icon --isLiked" :  "like-icon"}
             // style={{
             //   background-image: isLiked
             //     ? "url(../../assets/images/heart-filled.png)"
@@ -106,8 +109,8 @@ export default function Reply({ fullname, username, content, date }) {
             //   setIsPostOpen(!isPostOpen);
             // }}
       ></div>
-        </div>*/}
-      </div>
+        </div>
+      </div> */}
       {/* <Reply /> */}
     </div>
   );
