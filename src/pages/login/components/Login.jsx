@@ -14,6 +14,7 @@ export default function Login({ onDecodeUser }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [steps, setSteps] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
   const [signUpBtnMsg, setSignUpBtnMsg] = useState("NEXT");
   const [loginBtnMsg, setLoginBtnMsg] = useState("LOG IN");
 
@@ -202,9 +203,12 @@ export default function Login({ onDecodeUser }) {
       const parsedUser = JSON.parse(User.user);
 
       if (parsedUser.nameValid && parsedUser.emailValid) {
+        setSuccessMsg("Logged In Successfully");
         Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
         Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
-        setIsLoggedIn(true);
+        setTimeout(() => {
+          setIsLoggedIn(true);
+        }, 1000);
       } else if (!parsedUser.nameValid) {
         Cookies.set("tempToken", res.data.token, {
           expires: 24 * 60 * 60,
@@ -239,11 +243,6 @@ export default function Login({ onDecodeUser }) {
       setLoginBtnMsg("LOG IN");
       return setErrorMsg(err.response.data.message);
     }
-    setUsernameOrEmail("");
-    setPassword("");
-    setIsRememberMe();
-    setErrorMsg("");
-    setLoginBtnMsg("LOG IN");
   }
 
   useEffect(() => {
@@ -408,10 +407,10 @@ export default function Login({ onDecodeUser }) {
                         }}
                       >
                         <option value={null}>Section</option>
-                        <option value={0}>PUPian</option>
+                        <option value={0}>Outsider</option>
                         <option value={1}>ICT 12 - 1</option>
                         <option value={2}>ICT 12 - 2</option>
-                        <option value={3}>Outsider</option>
+                        <option value={3}>PUPian</option>
                       </select>
                     </>
                   ) : (
@@ -460,6 +459,7 @@ export default function Login({ onDecodeUser }) {
                     )}
                   </div>
                   <p className="--server-msg">{errorMsg}</p>
+                  <p className="--server-success-msg">{successMsg}</p>
                 </div>
                 {isInSignInPage ? (
                   <button className="--blue-btn" onClick={handleLogInSubmit}>

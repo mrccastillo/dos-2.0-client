@@ -91,6 +91,7 @@ export default function CreatePost({
                 <option value="1">PUP</option>
                 <option value="2">Question</option>
                 <option value="3">Rant</option>
+                <option value="4">Confession</option>
               </select>
               <div className="anonymous-btn">
                 <input

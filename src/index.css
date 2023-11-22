@@ -84,6 +84,11 @@ a {
   font-size: 0.8rem;
 }
 
+.--server-success-msg {
+  color: green;
+  font-size: 0.8rem;
+}
+
 .profile-pic {
   height: 2.5rem;
   width: 2.5rem;
@@ -162,6 +167,10 @@ a {
   backdrop-filter: blur(5px);
   z-index: 1;
   transition: all 0.5s;
+}
+
+.react-loading-skeleton {
+  z-index: 0;
 }
 
 @media (min-width: 1920px) {

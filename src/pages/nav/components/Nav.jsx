@@ -5,7 +5,14 @@ import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Cookies from "js-cookie";
 import axios from "axios";
 
-export default function Nav({ user, email, bio, fullname }) {
+export default function Nav({
+  user,
+  email,
+  bio,
+  firstname,
+  lastname,
+  fullname,
+}) {
   const token = Cookies.get("token");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -96,6 +103,8 @@ export default function Nav({ user, email, bio, fullname }) {
       {isSettingsOpen && (
         <EditUserInfo
           fullname={fullname}
+          firstname={firstname}
+          lastname={lastname}
           username={user}
           bio={bio}
           email={email}

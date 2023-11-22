@@ -1,0 +1,42 @@
+.authentication-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  height: 17rem;
+  padding: 1rem 0;
+  border-radius: 1rem;
+  text-align: center;
+  z-index: 3;
+  background-color: #f0f0f0;
+}
+
+.authentication-header {
+  height: 2.8rem;
+  border-bottom: 1px solid black;
+  margin-bottom: 2rem;
+}
+
+.code-text {
+  margin-bottom: 1rem;
+}
+
+.code-field {
+  margin-bottom: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 1rem;
+  border: 1px solid #4f709c;
+}
+
+.submit-authentication {
+  border: 0;
+  width: 7rem;
+  padding: 0.5rem 0;
+  background-color: #e5d283;
+  border-radius: 1rem;
+}
+
+.code-field:focus {
+  outline: 0;
+}
