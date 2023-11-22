@@ -2,7 +2,9 @@ import "./EditUserInfo.css";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Cookies from "js-cookie";
+
 import EditPasswordModal from "./EditPasswordModal";
+
 import { useState } from "react";
 
 export default function EditUserInfo({
@@ -13,8 +15,12 @@ export default function EditUserInfo({
   onCloseSettings,
 }) {
   const token = Cookies.get("token");
+
   const [firstnameEdit, setFirstnameEdit] = useState();
   const [lastnameEdit, setLastnameEdit] = useState();
+
+  const [fullnameEdit, setFullnameEdit] = useState(fullname);
+
   const [usernameEdit, setUsernameEdit] = useState(username);
   const [bioEdit, setbioEdit] = useState(bio);
   const [updating, setUpdating] = useState(false);
@@ -29,6 +35,51 @@ export default function EditUserInfo({
     //   console.error("bawal kapareho ng current bio o username mo boi");
     //   return;
     // }
+    if (updating) return;
+    setUpdating(true);
+    const user = {
+      username: usernameEdit,
+      bio: bioEdit,
+    };
+
+    try {
+      const res = await axios.get(
+        `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      if (res.data.other) return alert("Username is taken");
+    } catch (err) {
+      return console.error(err);
+    }
+
+    try {
+      const res = await axios.put(
+        `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
+        user,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      Cookies.set("token", res.data.token, {
+        expires: 30 * 24 * 60 * 60,
+      }); // 30 day expiration
+      alert(res.data.message);
+      window.location.reload();
+    } catch (err) {
+      return console.error(err);
+    } finally {
+      setUpdating(false);
+    }
+  }
+
+  async function handleUserUpdate() {
     if (updating) return;
     setUpdating(true);
     const user = {
@@ -170,6 +221,80 @@ export default function EditUserInfo({
               )}
             </>
           }
+    <div className="edit-userinfo-modal">
+      <div className="userprofile-container --edit-user-details">
+        <div
+          className="profile-pic --userprofile-pic"
+          style={{ width: "7rem", height: "7rem", left: "1rem" }}
+        ></div>
+        <p className="display-name" style={{ fontSize: "1.3rem" }}>
+          {fullname} {"    "}
+          <EditIcon
+            onClick={() => {
+              setIsFullnameEditOpen(!isFullnameEditOpen);
+              setIsUsernameEditOpen(false);
+              setIsBioEditOpen(false);
+            }}
+          ></EditIcon>
+        </p>
+        {isFullnameEditOpen && (
+          <input
+            type="text"
+            // placeholder={fullname}
+            className="edit-info"
+            value={"BAWAL PA"}
+            onChange={(e) => {
+              setFullnameEdit(e.target.value);
+            }}
+          />
+        )}
+        <p className="username" style={{ fontSize: "1rem" }}>
+          @{username}{" "}
+          <EditIcon
+            onClick={() => {
+              setIsUsernameEditOpen(!isUsernameEditOpen);
+              setIsFullnameEditOpen(false);
+              setIsBioEditOpen(false);
+            }}
+          ></EditIcon>
+        </p>
+        {isUsernameEditOpen && (
+          <input
+            type="text"
+            // placeholder={username}
+            className="edit-info"
+            value={usernameEdit}
+            onChange={(e) => {
+              setUsernameEdit(e.target.value);
+            }}
+          />
+        )}
+        {
+          <>
+            <p className="bio">
+              "{bio ? bio : "Edit Bio"}"
+              <EditIcon
+                onClick={() => {
+                  setIsBioEditOpen(!isBioEditOpen);
+                  setIsFullnameEditOpen(false);
+                  setIsUsernameEditOpen(false);
+                }}
+              ></EditIcon>
+            </p>
+            {isBioEditOpen && (
+              <input
+                type="text"
+                placeholder={bio}
+                className="edit-info"
+                value={bioEdit}
+                onChange={(e) => {
+                  setbioEdit(e.target.value);
+                }}
+              />
+            )}
+          </>
+        }
+
 
           <div
             className="delete"
@@ -207,6 +332,7 @@ export default function EditUserInfo({
           Save Changes
         </button>
       </div>
+
       {isChangePasswordOpen && (
         <>
           <EditPasswordModal
@@ -215,5 +341,9 @@ export default function EditUserInfo({
         </>
       )}
     </>
+
+      <button onClick={handleUserUpdate}>Save Changes</button>
+    </div>
+
   );
 }

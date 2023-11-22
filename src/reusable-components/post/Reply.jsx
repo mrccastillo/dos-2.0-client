@@ -84,7 +84,10 @@ export default function Reply({ fullname, username, content, date }) {
           {line}
         </p>
       ))}
+
       {/* <div
+
+      <div>
         className="post-interaction"
         style={{
           //   borderBottom: " 1px solid rgb(93, 93, 93)",
