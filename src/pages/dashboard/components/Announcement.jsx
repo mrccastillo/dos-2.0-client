@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Announce from "../../../reusable-components/announcement/Announce";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
+import AnnouncementSkeleton from "../../../reusable-components/skeletonloading/AnnouncementSkeleton";
 import "../stylesheets/Announcement.css";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -101,25 +102,27 @@ export default function Announcements({ fullname, username, userId }) {
               </button>
             </div>
             <div className="announcement-list">
-              {announcements.length === 0
-                ? "Loading..."
-                : announcements.map((el) => (
-                    <Announce
-                      key={el._id}
-                      userUsername={username}
-                      userUserId={userId}
-                      userFullName={fullname}
-                      announceId={el._id}
-                      fullname={el.fullname}
-                      username={el.username}
-                      content={el.content}
-                      date={el.dateCreated}
-                      liked={el.liked}
-                      likeCount={el.likeCount}
-                      likeId={el.likeId}
-                      commentCount={el.commentCount}
-                    />
-                  ))}
+              {announcements.length === 0 ? (
+                <AnnouncementSkeleton cards={2} />
+              ) : (
+                announcements.map((el) => (
+                  <Announce
+                    key={el._id}
+                    userUsername={username}
+                    userUserId={userId}
+                    userFullName={fullname}
+                    announceId={el._id}
+                    fullname={el.fullname}
+                    username={el.username}
+                    content={el.content}
+                    date={el.dateCreated}
+                    liked={el.liked}
+                    likeCount={el.likeCount}
+                    likeId={el.likeId}
+                    commentCount={el.commentCount}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -7,6 +7,8 @@ import Nav from "../../nav/components/Nav";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
+import PostSkeleton from "../../../reusable-components/skeletonloading/PostSkeleton";
+import AnnouncementSkeleton from "../../../reusable-components/skeletonloading/AnnouncementSkeleton";
 import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -14,6 +16,7 @@ import Cookies from "js-cookie";
 
 export default function Userprofile({ userLoggedIn }) {
   const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
   const { username } = useParams();
   const [user, setUser] = useState([]);
   const [userFound, setUserFound] = useState(true);
@@ -21,6 +24,8 @@ export default function Userprofile({ userLoggedIn }) {
   const [announcements, setAnnouncements] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
+  const [postFetched, setPostFetched] = useState(false);
+  const [announcementFetched, setAnnouncementFetched] = useState(false);
 
   const filteredPosts = posts.filter((el) => el.username === user.username);
   const filteredAnnouncements = announcements.filter(
@@ -53,11 +58,12 @@ export default function Userprofile({ userLoggedIn }) {
       );
       setUser(userResponse.data.other);
     } catch (error) {
+      setUserFound(false);
       console.error("Error fetching user:", error);
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchAnnouncements = async () => {
     try {
       const announcement = await axios.get(
         "https://backend.dosshs.online/api/announcement",
@@ -80,11 +86,11 @@ export default function Userprofile({ userLoggedIn }) {
           );
 
           const liked = likeCountResponse.data.likes.some(
-            (like) => like.username === userLoggedIn.username
+            (like) => like.userId === userId
           );
 
           const likedId = likeCountResponse.data.likes
-            .filter((like) => like.username === userLoggedIn.username)
+            .filter((like) => like.userId === userId)
             .map((like) => like._id);
 
           const [likeCount] = await Promise.all([likeCountResponse]);
@@ -114,7 +120,14 @@ export default function Userprofile({ userLoggedIn }) {
         getAnnouncementLikesPromises
       );
       setAnnouncements(announcementsWithCounts.reverse());
+      setAnnouncementFetched(true);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+  };
 
+  const fetchPosts = async () => {
+    try {
       const post = await axios.get("https://backend.dosshs.online/api/post", {
         headers: {
           Authorization: token,
@@ -132,11 +145,11 @@ export default function Userprofile({ userLoggedIn }) {
         );
 
         const liked = likeCountResponse.data.likes.some(
-          (like) => like.username === userLoggedIn.username
+          (like) => like.userId === userId
         );
 
         const likedId = likeCountResponse.data.likes
-          .filter((like) => like.username === userLoggedIn.username)
+          .filter((like) => like.userId === userId)
           .map((like) => like._id);
 
         const [likeCount] = await Promise.all([likeCountResponse]);
@@ -167,6 +180,7 @@ export default function Userprofile({ userLoggedIn }) {
 
       const postsWithCounts = await Promise.all(getPostLikesPromises);
       setPosts(postsWithCounts.reverse());
+      setPostFetched(true);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -178,16 +192,24 @@ export default function Userprofile({ userLoggedIn }) {
 
   useEffect(() => {
     let isMounted = true;
-    // console.log(userLoggedIn);
+
     const fetchData = async () => {
-      await fetchUser();
-      if (isMounted) {
-        fetchPosts();
+      try {
+        await fetchUser();
+        if (isMounted) {
+          fetchPosts();
+          fetchAnnouncements();
+        }
+      } catch (error) {
+        if (isMounted) {
+          setUserFound(false); // Set userFound to false on error
+        }
+        console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-    // console.log(announcements);
+
     return () => {
       isMounted = false;
     };
@@ -220,13 +242,13 @@ export default function Userprofile({ userLoggedIn }) {
                 @{user.username}
               </p>
               {user.bio ? (
-                <p className="bio">
+                <div className="bio">
                   {user.bio.split("\n").map((line, index) => (
                     <p key={index} style={{ fontSize: "0.95rem" }}>
                       "{line}"
                     </p>
                   ))}
-                </p>
+                </div>
               ) : null}
             </div>
             <div className="userpost-container">
@@ -266,7 +288,9 @@ export default function Userprofile({ userLoggedIn }) {
               </div>
               <div className="user-post-and-announcements">
                 <div className="user-announcement">
-                  {filteredAnnouncements.length > 0 ? (
+                  {!announcementFetched ? (
+                    <AnnouncementSkeleton cards={3} />
+                  ) : filteredAnnouncements.length > 0 ? (
                     filteredAnnouncements.map((el) => (
                       <Announce
                         key={el._id}
@@ -292,7 +316,9 @@ export default function Userprofile({ userLoggedIn }) {
                   )}
                 </div>
                 <div className="user-post">
-                  {filteredPosts.length > 0 ? (
+                  {!postFetched ? (
+                    <PostSkeleton cards={2} />
+                  ) : filteredPosts.length > 0 ? (
                     filteredPosts
                       .filter((filteredPost) => !filteredPost.isAnonymous)
                       .map((el) => (

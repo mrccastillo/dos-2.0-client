@@ -1,3 +1,4 @@
+import PostSkeleton from "../../../reusable-components/skeletonloading/PostSkeleton";
 import Post from "../../../reusable-components/post/Post";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import "../stylesheets/Home.css";
@@ -127,6 +128,24 @@ export default function Home({ fullname, username, userId }) {
           >
             Rant
           </span>
+          <span
+            className={postFilter === 4 ? "--chip active-chip" : "--chip"}
+            onClick={() => {
+              setPostFilter(4);
+              // console.log(postFilter);
+            }}
+          >
+            Confession
+          </span>
+          <span
+            className={postFilter === 5 ? "--chip active-chip" : "--chip"}
+            onClick={() => {
+              setPostFilter(5);
+              // console.log(postFilter);
+            }}
+          >
+            Anonymous
+          </span>
         </div>
         <div className="post-container">
           <div className="create-post">
@@ -155,7 +174,29 @@ export default function Home({ fullname, username, userId }) {
                 />;
               })} */}
             <div className="posts-list">
-              {postFilter === undefined
+              {postFilter === 5
+                ? posts
+                    .filter((el) => el.isAnonymous === true)
+                    .map((el) => (
+                      <Post
+                        key={el._id}
+                        postId={el._id}
+                        userUsername={username}
+                        userUserId={userId}
+                        userFullName={fullname}
+                        fullname={el.fullname}
+                        username={el.username}
+                        content={el.content}
+                        date={el.dateCreated}
+                        category={el.category}
+                        isAnonymous={el.isAnonymous}
+                        likeCount={el.likeCount}
+                        liked={el.liked}
+                        likeId={el.likeId}
+                        commentCount={el.commentCount}
+                      />
+                    ))
+                : postFilter === undefined
                 ? posts.map((el) => (
                     <Post
                       key={el._id}
@@ -196,7 +237,7 @@ export default function Home({ fullname, username, userId }) {
                         commentCount={el.commentCount}
                       />
                     ))}
-              {posts.length === 0 ? "Loading..." : null}
+              {posts.length === 0 && <PostSkeleton cards={2} />}
             </div>
           </div>
         </div>

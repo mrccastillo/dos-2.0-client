@@ -28,6 +28,8 @@ export default function Dashboard({ user, onDecodeUser }) {
           user={user.username}
           email={user.email}
           bio={user.bio}
+          firstname={user.firstname}
+          lastname={user.lastname}
           fullname={user.fullname}
         />
         <div className="dashboard">

@@ -10,10 +10,11 @@
 }
 
 .userpost-container {
-  min-height: 50%;
+  /* max-height: 1500%; */
   border-radius: 2rem;
-  background-color: #dee4ec;
+  background-color: #dee4ec7e;
   padding: 2rem 3rem;
+  /* overflow-y: scroll; */
 }
 
 .userpost-container-header {
@@ -31,14 +32,28 @@
 
 .user-post {
   width: 53%;
+  height: 35rem;
+  overflow-y: scroll;
+}
+
+.user-post::-webkit-scrollbar-thumb {
+  background: rgba(7, 7, 7, 0);
+  border-radius: 10px;
 }
 
 .user-announcement {
   width: 43%;
-  min-height: 10rem;
-  background-color: #c6cbd3a3;
-  border-radius: 1rem;
-  padding: 1rem;
+  height: 35rem;
+  /* background-color: #c6cbd3a3; */
+  /* border-radius: 1rem; */
+  padding: 0 1.7rem 1rem 1.7rem;
+  border-right: 1px solid rgba(128, 128, 128, 0.262);
+  overflow-y: scroll;
+}
+
+.user-announcement::-webkit-scrollbar-thumb {
+  background: rgba(7, 7, 7, 0);
+  border-radius: 10px;
 }
 
 .userprofile-createpost-announce-container {
@@ -53,6 +68,7 @@
 
 .bio {
   font-size: 1.2rem;
+  overflow-wrap: break-word;
 }
 
 .empty {

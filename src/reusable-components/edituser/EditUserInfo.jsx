@@ -2,28 +2,26 @@ import "./EditUserInfo.css";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Cookies from "js-cookie";
-
 import EditPasswordModal from "./EditPasswordModal";
-
 import { useState } from "react";
 
 export default function EditUserInfo({
   username,
   fullname,
+  firstname,
+  lastname,
   bio,
   email,
   onCloseSettings,
 }) {
   const token = Cookies.get("token");
-
-  const [firstnameEdit, setFirstnameEdit] = useState();
-  const [lastnameEdit, setLastnameEdit] = useState();
-
-  const [fullnameEdit, setFullnameEdit] = useState(fullname);
-
+  const [firstnameEdit, setFirstnameEdit] = useState(firstname);
+  const [lastnameEdit, setLastnameEdit] = useState(lastname);
   const [usernameEdit, setUsernameEdit] = useState(username);
   const [bioEdit, setbioEdit] = useState(bio);
   const [updating, setUpdating] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   const [isFullnameEditOpen, setIsFullnameEditOpen] = useState(false);
   const [isUsernameEditOpen, setIsUsernameEditOpen] = useState(false);
@@ -31,29 +29,39 @@ export default function EditUserInfo({
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   async function handleUserUpdate() {
-    // if (fullnameEdit === fullname || bioEdit === bio) {
-    //   console.error("bawal kapareho ng current bio o username mo boi");
-    //   return;
-    // }
+    setErrorMsg("");
+    setSuccessMsg("");
+
     if (updating) return;
+
+    if (!firstnameEdit || !lastnameEdit || !usernameEdit) {
+      return setErrorMsg("firstname, lastname, and username cannot be empty");
+    }
     setUpdating(true);
-    const user = {
-      username: usernameEdit,
-      bio: bioEdit,
-    };
+    const user = {};
 
+    if (firstnameEdit !== firstname) user.firstname = firstnameEdit;
+    if (lastnameEdit !== lastname) user.lastname = lastnameEdit;
+    if (usernameEdit !== username) user.username = usernameEdit;
+    if (bioEdit !== bio) user.bio = bioEdit;
+
+    if (Object.keys(user).length === 0) {
+      return setErrorMsg("No changes");
+    }
     try {
-      const res = await axios.get(
-        `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (res.data.other) return alert("Username is taken");
+      if (user.username) {
+        const res = await axios.get(
+          `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        if (res.data.other) return setErrorMsg("Username is taken");
+      }
     } catch (err) {
+      setErrorMsg("An error occurred, Please report it to the administrator");
       return console.error(err);
     }
 
@@ -67,57 +75,16 @@ export default function EditUserInfo({
           },
         }
       );
-      Cookies.set("token", res.data.token, {
-        expires: 30 * 24 * 60 * 60,
-      }); // 30 day expiration
-      alert(res.data.message);
-      window.location.reload();
+      if (res.data.message === "Account Successfully Updated") {
+        setSuccessMsg(
+          "Account Successfully Updated. To view the changes refresh the page."
+        );
+        Cookies.set("token", res.data.token, {
+          expires: 30 * 24 * 60 * 60,
+        }); // 30 day expiration
+      }
     } catch (err) {
-      return console.error(err);
-    } finally {
-      setUpdating(false);
-    }
-  }
-
-  async function handleUserUpdate() {
-    if (updating) return;
-    setUpdating(true);
-    const user = {
-      username: usernameEdit,
-      bio: bioEdit,
-    };
-
-    try {
-      const res = await axios.get(
-        `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-
-      if (res.data.other) return alert("Username is taken");
-    } catch (err) {
-      return console.error(err);
-    }
-
-    try {
-      const res = await axios.put(
-        `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
-        user,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
-      Cookies.set("token", res.data.token, {
-        expires: 30 * 24 * 60 * 60,
-      }); // 30 day expiration
-      alert(res.data.message);
-      window.location.reload();
-    } catch (err) {
+      setErrorMsg("An error occurred, Please report it to the administrator");
       return console.error(err);
     } finally {
       setUpdating(false);
@@ -199,7 +166,7 @@ export default function EditUserInfo({
           {
             <>
               <p className="bio">
-                "{bio ? bio : "Edit Bio"}"
+                {bio ? `"${bio}"` : "bio"}
                 <EditIcon
                   onClick={() => {
                     setIsBioEditOpen(!isBioEditOpen);
@@ -221,80 +188,6 @@ export default function EditUserInfo({
               )}
             </>
           }
-    <div className="edit-userinfo-modal">
-      <div className="userprofile-container --edit-user-details">
-        <div
-          className="profile-pic --userprofile-pic"
-          style={{ width: "7rem", height: "7rem", left: "1rem" }}
-        ></div>
-        <p className="display-name" style={{ fontSize: "1.3rem" }}>
-          {fullname} {"    "}
-          <EditIcon
-            onClick={() => {
-              setIsFullnameEditOpen(!isFullnameEditOpen);
-              setIsUsernameEditOpen(false);
-              setIsBioEditOpen(false);
-            }}
-          ></EditIcon>
-        </p>
-        {isFullnameEditOpen && (
-          <input
-            type="text"
-            // placeholder={fullname}
-            className="edit-info"
-            value={"BAWAL PA"}
-            onChange={(e) => {
-              setFullnameEdit(e.target.value);
-            }}
-          />
-        )}
-        <p className="username" style={{ fontSize: "1rem" }}>
-          @{username}{" "}
-          <EditIcon
-            onClick={() => {
-              setIsUsernameEditOpen(!isUsernameEditOpen);
-              setIsFullnameEditOpen(false);
-              setIsBioEditOpen(false);
-            }}
-          ></EditIcon>
-        </p>
-        {isUsernameEditOpen && (
-          <input
-            type="text"
-            // placeholder={username}
-            className="edit-info"
-            value={usernameEdit}
-            onChange={(e) => {
-              setUsernameEdit(e.target.value);
-            }}
-          />
-        )}
-        {
-          <>
-            <p className="bio">
-              "{bio ? bio : "Edit Bio"}"
-              <EditIcon
-                onClick={() => {
-                  setIsBioEditOpen(!isBioEditOpen);
-                  setIsFullnameEditOpen(false);
-                  setIsUsernameEditOpen(false);
-                }}
-              ></EditIcon>
-            </p>
-            {isBioEditOpen && (
-              <input
-                type="text"
-                placeholder={bio}
-                className="edit-info"
-                value={bioEdit}
-                onChange={(e) => {
-                  setbioEdit(e.target.value);
-                }}
-              />
-            )}
-          </>
-        }
-
 
           <div
             className="delete"
@@ -328,11 +221,12 @@ export default function EditUserInfo({
             </p>
           </div>
         </div>
+        <p className="--server-msg">{errorMsg}</p>
+        <p className="--server-success-msg">{successMsg}</p>
         <button onClick={handleUserUpdate} className="save-user-changes">
           Save Changes
         </button>
       </div>
-
       {isChangePasswordOpen && (
         <>
           <EditPasswordModal
@@ -341,9 +235,5 @@ export default function EditUserInfo({
         </>
       )}
     </>
-
-      <button onClick={handleUserUpdate}>Save Changes</button>
-    </div>
-
   );
 }
