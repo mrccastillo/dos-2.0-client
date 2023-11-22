@@ -47,6 +47,7 @@
   resize: none;
   width: 30rem;
   height: 3rem;
+  padding-top: 0.6rem;
   border: none;
 }
 
@@ -62,6 +63,6 @@
   background-color: #e6d283;
 }
 
-.reply-textarea::placeholder {
+/* .reply-textarea::placeholder {
   transform: translateY(55%);
-}
+} */

@@ -145,7 +145,7 @@ export default function ExpandedPost({
           </div>
           <div className="report-post-container"></div>
         </div>
-        <div className="post-content" style={{ padding: "1rem 0" }}>
+        <div className="post-content" style={{ padding: "1rem 0 0" }}>
           <div className="contents">
             <p className="category">
               #

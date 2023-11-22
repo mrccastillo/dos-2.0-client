@@ -140,7 +140,7 @@ export default function ExpandedAnnounce({
           </div>
           <div className="report-post-container"></div>
         </div>
-        <div className="post-content" style={{ padding: "1rem 0" }}>
+        <div className="post-content" style={{ padding: "1rem 0 0" }}>
           <div className="contents">
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>

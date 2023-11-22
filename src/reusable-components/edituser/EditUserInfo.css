@@ -3,12 +3,13 @@
   top: 50%;
   left: 50%;
   width: 40rem;
-  height: 30rem;
+  height: 32rem;
   transform: translate(-50%, -50%);
   background-color: #f0f0f0;
   border-radius: 1rem;
   padding: 1rem 2rem;
   z-index: 2;
+  text-align: center;
 }
 
 .credentials {
@@ -24,9 +25,31 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  text-align: center;
   /* background-color: #177282; */
   /* width: 23rem; */
   /* height: 10rem; */
+}
+
+.save-user-changes {
+  margin-top: 1.5rem;
+  background-color: #213555;
+  color: white;
+  width: 7.5rem;
+  padding: 0.5rem 0;
+  border: 1px solid #213555;
+  border-radius: 1rem;
+  transition: 200ms;
+}
+
+.change-pass-btn {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.save-user-changes:active {
+  transform: scale(0.95);
 }
 
 .username-container {
@@ -59,4 +82,42 @@
 
 .edit-info:focus {
   outline: 0;
+}
+
+.change-pass-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #f0f0f0;
+  width: 20rem;
+  height: 22rem;
+  border-radius: 1rem;
+  padding: 3.5rem 1rem;
+  z-index: 3;
+  text-align: center;
+}
+
+.change-pass-input {
+  width: 15rem;
+  padding: 0.5rem 1rem;
+  background-color: #0cc0df;
+  border: 0;
+  border-radius: 1rem;
+}
+
+.--current-pass {
+  background-color: #4f709c;
+  color: white;
+}
+
+.change-pass-label {
+  margin-bottom: 1rem;
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+}
+
+.--confirm-pass {
+  background-color: #ff3131;
+  border: 0;
 }
