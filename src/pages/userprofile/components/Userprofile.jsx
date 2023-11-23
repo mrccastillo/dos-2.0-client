@@ -7,8 +7,6 @@ import Nav from "../../nav/components/Nav";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
-import PostSkeleton from "../../../reusable-components/skeletonloading/PostSkeleton";
-import AnnouncementSkeleton from "../../../reusable-components/skeletonloading/AnnouncementSkeleton";
 import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -289,7 +287,7 @@ export default function Userprofile({ userLoggedIn }) {
               <div className="user-post-and-announcements">
                 <div className="user-announcement">
                   {!announcementFetched ? (
-                    <AnnouncementSkeleton cards={3} />
+                    <p className="empty">Loading...</p>
                   ) : filteredAnnouncements.length > 0 ? (
                     filteredAnnouncements.map((el) => (
                       <Announce
@@ -317,7 +315,7 @@ export default function Userprofile({ userLoggedIn }) {
                 </div>
                 <div className="user-post">
                   {!postFetched ? (
-                    <PostSkeleton cards={2} />
+                    <p className="empty">Loading...</p>
                   ) : filteredPosts.length > 0 ? (
                     filteredPosts
                       .filter((filteredPost) => !filteredPost.isAnonymous)
