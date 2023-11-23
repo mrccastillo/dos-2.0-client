@@ -1,10 +1,24 @@
 import { useEffect, useState } from "react";
 import "./Reply.css";
+import Cookies from "js-cookie";
+import axios from "axios";
 
-export default function Reply({ fullname, username, content, date }) {
+export default function Reply({
+  fullname,
+  username,
+  content,
+  date,
+  commentId,
+  userUsername,
+}) {
+  const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
+  const [likeId, setLikeId] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
+
+  const [likeInProgress, setLikeInProgress] = useState(false);
   const formatDate = (inputDate) => {
     const postDate = new Date(inputDate);
     const currentDate = new Date();
@@ -58,11 +72,77 @@ export default function Reply({ fullname, username, content, date }) {
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
 
-  // const fetchLikes
+  const fetchLikes = async () => {
+    try {
+      const likes = await axios.get(
+        `https://backend.dosshs.online/api/comment?commentId=${commentId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setLikeCount(likes.data.likeCount);
+      const liked = likes.data.likes.some((like) => like.userId === userId);
 
-  // useEffect(() => {
+      const LikeID = likes.data.likes
+        .filter((like) => like.userId === userId)
+        .map((like) => like._id);
 
-  // }, []);
+      setIsLiked(liked);
+      setLikeId(LikeID);
+    } catch (err) {
+      return console.error(err);
+    }
+  };
+
+  async function handleLike() {
+    if (likeInProgress) return;
+
+    setLikeInProgress(true);
+
+    try {
+      if (!isLiked) {
+        const likePost = {
+          commentId: commentId,
+          userId: userId,
+          username: userUsername,
+        };
+        const likeRes = await axios.post(
+          "https://backend.dosshs.online/api/comment",
+          likePost,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(likeRes.data.like._id);
+        setIsLiked(!isLiked);
+        setLikeCount(likeCount + 1);
+      } else {
+        await axios.delete(
+          `https://backend.dosshs.online/api/comment?likeId=${likeId}`,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        setLikeId(null);
+        setIsLiked(!isLiked);
+        setLikeCount(likeCount - 1);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLikeInProgress(false);
+    }
+  }
+
+  useEffect(() => {
+    fetchLikes();
+  }, []);
 
   return (
     <div className="reply">
@@ -105,7 +185,7 @@ export default function Reply({ fullname, username, content, date }) {
         <div className="like-container">
           <div
             className={isLiked ? "like-icon --isLiked" : "like-icon"}
-            // onClick={handleLike}
+            onClick={handleLike}
           ></div>
           {likeCount}
         </div>

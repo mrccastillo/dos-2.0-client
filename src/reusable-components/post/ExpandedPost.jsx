@@ -212,6 +212,8 @@ export default function ExpandedPost({
             {comments.map((comment) => (
               <Reply
                 key={comment._id}
+                commentId={comment._id}
+                userUsername={userUsername}
                 fullname={comment.fullname}
                 username={comment.username}
                 content={comment.content}
