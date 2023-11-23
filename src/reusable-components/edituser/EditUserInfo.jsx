@@ -39,7 +39,7 @@ export default function EditUserInfo({
     if (!firstnameEdit || !lastnameEdit || !usernameEdit) {
       return setErrorMsg("firstname, lastname, and username cannot be empty");
     }
-    setUpdating(true);
+
     const user = {};
 
     if (firstnameEdit !== firstname) user.firstname = firstnameEdit;
@@ -50,6 +50,9 @@ export default function EditUserInfo({
     if (Object.keys(user).length === 0) {
       return setErrorMsg("No changes");
     }
+
+    setUpdating(true);
+
     try {
       if (user.username) {
         const res = await axios.get(
@@ -78,9 +81,6 @@ export default function EditUserInfo({
         }
       );
       if (res.data.message === "Account Successfully Updated") {
-        // setSuccessMsg(
-        //   "Account Successfully Updated. To view the changes refresh the page."
-        // );
         setIsSuccessModalOpen(true);
         Cookies.set("token", res.data.token, {
           expires: 30 * 24 * 60 * 60,

@@ -195,7 +195,9 @@ export default function Userprofile({ userLoggedIn }) {
 
     const fetchData = async () => {
       try {
-        await fetchUser();
+        if (userLoggedIn.username === username) {
+          setUser(userLoggedIn);
+        } else await fetchUser();
         if (isMounted) {
           fetchPosts();
           fetchAnnouncements();

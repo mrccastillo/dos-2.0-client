@@ -25,9 +25,11 @@ export default function Post({
   const [isLiked, setIsLiked] = useState(liked);
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [likeCounts, setlikeCounts] = useState(likeCount);
+  const [commentCounts, setCommentCount] = useState(commentCount);
   const [postLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [hasComments, setHasComments] = useState(false);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -130,6 +132,10 @@ export default function Post({
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
 
+  useEffect(() => {
+    if (commentCount > 0) setHasComments(true);
+  });
+
   return (
     <>
       <div className="post">
@@ -199,7 +205,7 @@ export default function Post({
                 setIsPostOpen(!isPostOpen);
               }}
             ></div>
-            <p className="comment-count">{commentCount} Comments</p>
+            <p className="comment-count">{commentCounts} Comments</p>
           </div>
           <div className="report-post"></div>
         </div>
@@ -224,6 +230,17 @@ export default function Post({
             liked={isLiked}
             likeId={postLikeId}
             likeCount={likeCounts}
+            onLike={(likeId) => {
+              setIsLiked(!isLiked);
+              isLiked
+                ? setlikeCounts(likeCounts - 1)
+                : setlikeCounts(likeCounts + 1);
+              setLikeId(likeId);
+            }}
+            onCommentUpdate={() => {
+              setCommentCount(commentCounts + 1);
+            }}
+            hasComments={hasComments}
           />{" "}
           <div className="overlay"></div>
         </>

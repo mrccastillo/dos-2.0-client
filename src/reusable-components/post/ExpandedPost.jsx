@@ -21,6 +21,9 @@ export default function ExpandedPost({
   liked,
   likeId,
   likeCount,
+  onCommentUpdate,
+  onLike,
+  hasComments,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -53,6 +56,7 @@ export default function ExpandedPost({
           }
         );
         setLikeId(likeRes.data.like._id);
+        onLike(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts + 1);
       } else {
@@ -65,6 +69,7 @@ export default function ExpandedPost({
           }
         );
         setLikeId(null);
+        onLike(null);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts - 1);
       }
@@ -111,6 +116,7 @@ export default function ExpandedPost({
           },
         }
       );
+      onCommentUpdate();
     } catch (err) {
       console.error(err);
     } finally {
@@ -121,7 +127,10 @@ export default function ExpandedPost({
   };
 
   useEffect(() => {
-    fetchComments();
+    if (hasComments) fetchComments();
+    else {
+      setIsCommentFetching(false);
+    }
   }, []);
 
   return (
