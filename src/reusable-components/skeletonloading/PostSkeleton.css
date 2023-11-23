@@ -1,0 +1,36 @@
+.post-skeleton {
+  width: 100%;
+  min-height: 13rem;
+  padding: 1rem;
+  border-radius: 1rem;
+  /* border: 1px solid rgba(128, 128, 128, 0.112); */
+  background-color: hsla(189, 53%, 85%, 0.42);
+  margin-bottom: 1.5rem;
+}
+
+.--announcememt-skel {
+  margin-bottom: 1rem;
+  min-height: 9rem;
+}
+
+.right-col {
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.post-author-skeleton {
+  display: flex;
+  /* flex-direction: row; */
+  align-items: center;
+}
+
+.post-content-skeleton {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(128, 128, 128, 0.472);
+  margin-top: 1rem;
+}
+
+.post-interaction-skeleton {
+  margin-top: 1rem;
+}

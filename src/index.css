@@ -169,6 +169,10 @@ a {
   transition: all 0.5s;
 }
 
+.react-loading-skeleton {
+  z-index: 0;
+}
+
 @media (min-width: 1920px) {
   html {
     font-size: 18px;

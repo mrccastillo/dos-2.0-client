@@ -2,8 +2,8 @@ import "./EditUserInfo.css";
 import EditIcon from "@mui/icons-material/Edit";
 import axios from "axios";
 import Cookies from "js-cookie";
-import EditPasswordModal from "./EditPasswordModal";
 import { useState } from "react";
+import AuthenticationModal from "./AuthenticationModal";
 
 export default function EditUserInfo({
   username,
@@ -229,8 +229,11 @@ export default function EditUserInfo({
       </div>
       {isChangePasswordOpen && (
         <>
-          <EditPasswordModal
-            onCloseModal={() => setIsChangePasswordOpen(!isChangePasswordOpen)}
+          <AuthenticationModal
+            onCloseAuthentication={() =>
+              setIsChangePasswordOpen(!isChangePasswordOpen)
+            }
+            email={email}
           />
         </>
       )}

@@ -1,3 +1,4 @@
+import PostSkeleton from "../../../reusable-components/skeletonloading/PostSkeleton";
 import Post from "../../../reusable-components/post/Post";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import "../stylesheets/Home.css";
@@ -236,7 +237,8 @@ export default function Home({ fullname, username, userId }) {
                         commentCount={el.commentCount}
                       />
                     ))}
-              {posts.length === 0 ? "Loading..." : null}
+
+              {posts.length === 0 && <PostSkeleton cards={2} />}
             </div>
           </div>
         </div>

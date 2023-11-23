@@ -162,7 +162,10 @@ export default function Login({ onDecodeUser }) {
           https://backend.dosshs.online/api/verify/email?token=${code}
         `);
 
-        if (verifyRes.data.message === "Email Successfully Verified") {
+        if (
+          verifyRes.data.message === "Email Successfully Verified" ||
+          verifyRes.data.message === "Account Email already verified"
+        ) {
           Cookies.set("token", Cookies.get("tempToken"));
           Cookies.remove("tempToken");
           setIsLoggedIn(true);

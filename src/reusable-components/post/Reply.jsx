@@ -1,5 +1,10 @@
+import { useEffect, useState } from "react";
 import "./Reply.css";
+
 export default function Reply({ fullname, username, content, date }) {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+  const [replyCount, setReplyCount] = useState(0);
   const formatDate = (inputDate) => {
     const postDate = new Date(inputDate);
     const currentDate = new Date();
@@ -53,6 +58,12 @@ export default function Reply({ fullname, username, content, date }) {
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
 
+  // const fetchLikes
+
+  // useEffect(() => {
+
+  // }, []);
+
   return (
     <div className="reply">
       <div className="post-header">
@@ -93,14 +104,10 @@ export default function Reply({ fullname, username, content, date }) {
       >
         <div className="like-container">
           <div
-            className={"like-icon"}
-            // style={{
-            //   background-image: isLiked
-            //     ? "url(../../assets/images/heart-filled.png)"
-            //     : "url(../../assets/images/heart.png)",
-            // }}
+            className={isLiked ? "like-icon --isLiked" : "like-icon"}
             // onClick={handleLike}
           ></div>
+          {likeCount}
         </div>
         <div className="comment-container">
           <div
@@ -109,6 +116,7 @@ export default function Reply({ fullname, username, content, date }) {
             //   setIsPostOpen(!isPostOpen);
             // }}
           ></div>
+          {replyCount} Replies
         </div>
       </div>
       {/* <Reply /> */}
