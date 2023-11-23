@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import AuthenticationModal from "./AuthenticationModal";
+import SuccessModal from "./SuccessModal";
 
 export default function EditUserInfo({
   username,
@@ -27,6 +28,7 @@ export default function EditUserInfo({
   const [isUsernameEditOpen, setIsUsernameEditOpen] = useState(false);
   const [isBioEditOpen, setIsBioEditOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   async function handleUserUpdate() {
     setErrorMsg("");
@@ -37,7 +39,7 @@ export default function EditUserInfo({
     if (!firstnameEdit || !lastnameEdit || !usernameEdit) {
       return setErrorMsg("firstname, lastname, and username cannot be empty");
     }
-    setUpdating(true);
+
     const user = {};
 
     if (firstnameEdit !== firstname) user.firstname = firstnameEdit;
@@ -48,6 +50,9 @@ export default function EditUserInfo({
     if (Object.keys(user).length === 0) {
       return setErrorMsg("No changes");
     }
+
+    setUpdating(true);
+
     try {
       if (user.username) {
         const res = await axios.get(
@@ -76,9 +81,7 @@ export default function EditUserInfo({
         }
       );
       if (res.data.message === "Account Successfully Updated") {
-        setSuccessMsg(
-          "Account Successfully Updated. To view the changes refresh the page."
-        );
+        setIsSuccessModalOpen(true);
         Cookies.set("token", res.data.token, {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
@@ -95,7 +98,7 @@ export default function EditUserInfo({
     <>
       <div
         className="edit-userinfo-modal"
-        style={{ zIndex: isChangePasswordOpen && 1 }}
+        style={{ zIndex: (isChangePasswordOpen || isSuccessModalOpen) && 1 }}
       >
         <div className="userprofile-container --edit-user-details">
           <div
@@ -165,7 +168,7 @@ export default function EditUserInfo({
           )}
           {
             <>
-              <p className="bio">
+              <p className="bio" style={{ fontSize: "0.85rem" }}>
                 {bio ? `"${bio}"` : "bio"}
                 <EditIcon
                   onClick={() => {
@@ -181,6 +184,7 @@ export default function EditUserInfo({
                   placeholder={bio}
                   className="edit-info"
                   value={bioEdit}
+                  maxLength={100}
                   onChange={(e) => {
                     setbioEdit(e.target.value);
                   }}
@@ -221,8 +225,19 @@ export default function EditUserInfo({
             </p>
           </div>
         </div>
-        <p className="--server-msg">{errorMsg}</p>
-        <p className="--server-success-msg">{successMsg}</p>
+        <div className="response--container" style={{ height: "1rem" }}>
+          {errorMsg.length > 0 && (
+            <p className="--server-msg" style={{ height: "1rem" }}>
+              {errorMsg}
+            </p>
+          )}
+          {successMsg.length > 0 && (
+            <p className="--server-success-msg" style={{ height: "1rem" }}>
+              {successMsg}
+            </p>
+          )}
+        </div>
+
         <button onClick={handleUserUpdate} className="save-user-changes">
           Save Changes
         </button>
@@ -237,6 +252,7 @@ export default function EditUserInfo({
           />
         </>
       )}
+      {isSuccessModalOpen && <SuccessModal />}
     </>
   );
 }

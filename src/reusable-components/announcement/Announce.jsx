@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import ExpandedAnnounce from "./ExpandedAnnounce";
@@ -21,9 +21,16 @@ export default function Announce({
   const token = Cookies.get("token");
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(liked);
-  const [likeCounts, setIlikeCounts] = useState(likeCount);
+  const [likeCounts, setlikeCounts] = useState(likeCount);
+  const [commentCounts, setCommentCount] = useState(commentCount);
   const [announceLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [hasComments, setHasComments] = useState(false);
+
+  const toggleReadMore = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   async function handleLike() {
     if (likeInProgress) return;
@@ -47,7 +54,7 @@ export default function Announce({
         );
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
-        setIlikeCounts(likeCounts + 1);
+        setlikeCounts(likeCounts + 1);
       } else {
         await axios.delete(
           `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
@@ -59,7 +66,7 @@ export default function Announce({
         );
         setLikeId(null);
         setIsLiked(!isLiked);
-        setIlikeCounts(likeCounts - 1);
+        setlikeCounts(likeCounts - 1);
       }
     } catch (err) {
       console.error(err);
@@ -121,6 +128,10 @@ export default function Announce({
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
 
+  useEffect(() => {
+    if (commentCount > 0) setHasComments(true);
+  });
+
   return (
     <>
       <div className="post">
@@ -142,9 +153,14 @@ export default function Announce({
           <div className="post-content --announce">
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
-                {line}
+                {isCollapsed ? line.slice(0, 120) : line}
               </p>
             ))}
+            {content.length > 120 && (
+              <p className="read-more" onClick={toggleReadMore}>
+                {isCollapsed ? "...read more" : "...show less"}
+              </p>
+            )}
           </div>
         </div>
         <div className="post-interaction">
@@ -180,7 +196,7 @@ export default function Announce({
               className="announce-comment-count"
               style={{ marginTop: "0.3rem" }}
             >
-              {commentCount} Comments
+              {commentCounts} Comments
             </p>
           </div>
         </div>
@@ -204,6 +220,17 @@ export default function Announce({
             liked={isLiked}
             likeId={announceLikeId}
             likeCount={likeCounts}
+            onLike={(aLikeId) => {
+              isLiked
+                ? setlikeCounts(likeCounts - 1)
+                : setlikeCounts(likeCounts + 1);
+              setIsLiked(!isLiked);
+              setLikeId(aLikeId);
+            }}
+            onCommentUpdate={() => {
+              setCommentCount(commentCounts + 1);
+            }}
+            hasComments={hasComments}
           />{" "}
           <div className="overlay"></div>
         </>

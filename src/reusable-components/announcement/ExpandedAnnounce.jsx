@@ -19,12 +19,15 @@ export default function ExpandedAnnounce({
   liked,
   likeId,
   likeCount,
+  onCommentUpdate,
+  onLike,
+  hasComments,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
   const [comments, setComments] = useState([]);
   const [isLiked, setIsLiked] = useState(liked);
-  const [postLikeId, setLikeId] = useState(likeId);
+  const [announceLikeId, setLikeId] = useState(likeId);
   const [likeCounts, setlikeCounts] = useState(likeCount);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCommentFetching, setIsCommentFetching] = useState(true);
@@ -42,7 +45,7 @@ export default function ExpandedAnnounce({
           username: userUsername,
         };
         const likeRes = await axios.post(
-          "https://backend.dosshs.online/api/post/like",
+          "https://backend.dosshs.online/api/announcement/like",
           likePost,
           {
             headers: {
@@ -51,11 +54,12 @@ export default function ExpandedAnnounce({
           }
         );
         setLikeId(likeRes.data.like._id);
+        onLike(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts + 1);
       } else {
         await axios.delete(
-          `https://backend.dosshs.online/api/post/like/${postLikeId}`,
+          `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
           {
             headers: {
               Authorization: token,
@@ -63,6 +67,7 @@ export default function ExpandedAnnounce({
           }
         );
         setLikeId(null);
+        onLike(null);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts - 1);
       }
@@ -109,6 +114,7 @@ export default function ExpandedAnnounce({
           },
         }
       );
+      onCommentUpdate();
     } catch (err) {
       return console.error(err);
     } finally {
@@ -119,8 +125,12 @@ export default function ExpandedAnnounce({
   };
 
   useEffect(() => {
-    fetchComments();
+    if (hasComments) fetchComments();
+    else {
+      setIsCommentFetching(false);
+    }
   }, []);
+
   return (
     <div className="expanded-post-modal-background">
       <div className="expanded-post-modal">

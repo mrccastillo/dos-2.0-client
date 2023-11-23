@@ -8,6 +8,11 @@
   margin-bottom: 1.5rem;
 }
 
+.--comment-skel {
+  background-color: #74747411;
+  /* border: 1px solid #4f709c28; */
+}
+
 .--announcememt-skel {
   margin-bottom: 1rem;
   min-height: 9rem;
@@ -41,6 +46,10 @@
   border-radius: 0.2rem;
 }
 
+.--comment-skeleton {
+  animation: commentSkeletonLoading 1s linear infinite alternate;
+}
+
 /* baseColor="#0cbfdf45" highlightColor="#c8fdff4e" */
 @keyframes skeletonLoading {
   0% {
@@ -49,5 +58,15 @@
 
   100% {
     background-color: #0cbfdf7c;
+  }
+}
+
+@keyframes commentSkeletonLoading {
+  0% {
+    background-color: rgba(128, 128, 128, 0.182);
+  }
+
+  100% {
+    background-color: rgba(128, 128, 128, 0.377);
   }
 }

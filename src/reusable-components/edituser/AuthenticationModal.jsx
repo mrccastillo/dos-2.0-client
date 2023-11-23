@@ -18,7 +18,7 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
   const [verified, setVerified] = useState(false);
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+
   const handleSendEmail = async () => {
     setErrMsg("");
     setSuccessMsg("");
@@ -74,11 +74,7 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
   };
 
   if (verified) {
-    return (
-      <EditPasswordModal
-        onCloseModal={() => setIsChangePasswordOpen(!isChangePasswordOpen)}
-      />
-    );
+    return <EditPasswordModal onCloseModal={() => onCloseAuthentication()} />;
   } else {
     return (
       <div className="authentication-modal">
@@ -94,21 +90,32 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
             </p>
           ))}
           {/* {message} */}
-          <input
-            type="text"
-            className="code-field"
-            placeholder="Enter your code here"
-            value={codeInput}
-            onChange={(e) => {
-              setCodeInput(e.target.value);
-            }}
-          />
-          <p style={{ fontSize: "0.85rem", color: "red", height: "1rem" }}>
-            {errMsg}
-          </p>
-          <p style={{ fontSize: "0.85rem", color: "green", height: "1rem" }}>
-            {successMsg}
-          </p>
+          {codeSent && (
+            <input
+              type="text"
+              className="code-field"
+              placeholder="Enter your code here"
+              value={codeInput}
+              onChange={(e) => {
+                setCodeInput(e.target.value);
+              }}
+            />
+          )}
+
+          <div style={{ height: "1rem" }}>
+            {errMsg.length > 0 && (
+              <p style={{ fontSize: "0.85rem", color: "red", height: "1rem" }}>
+                {errMsg}
+              </p>
+            )}
+            {successMsg.length > 0 && (
+              <p
+                style={{ fontSize: "0.85rem", color: "green", height: "1rem" }}
+              >
+                {successMsg}
+              </p>
+            )}
+          </div>
           <br />
           <button
             className="submit-authentication"

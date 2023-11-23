@@ -5,9 +5,9 @@ import "./PostSkeleton.css";
 export default function PostSkeleton({ cards }) {
   return Array(cards)
     .fill(0)
-    .map((item) => (
+    .map((item, index) => (
       // <SkeletonTheme baseColor="#0cbfdf45" highlightColor="#c8fdff4e">
-      <div className="post-skeleton">
+      <div className="post-skeleton" key={index}>
         <div className="post-author-skeleton">
           <div className="left-col">
             <div

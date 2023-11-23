@@ -16,6 +16,7 @@ export default function Nav({
   const token = Cookies.get("token");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
   const logOut = async () => {
     try {
       const res = await axios.post(
@@ -49,12 +50,16 @@ export default function Nav({
       <nav className="nav">
         <div className="nav-content-container">
           <div className="logo-navlinks">
-            <div className="logo"></div>
+            <Link
+              to="/home"
+              style={{ textDecoration: "none" }}
+              className="logo"
+            ></Link>
             <div className="navlinks-container">
               <p className="navlink bell-icon"></p>
               <p className="navlink announcement-icon"></p>
               <Link
-                to="/"
+                to="/home"
                 style={{ textDecoration: "none" }}
                 className="navlink home-icon"
               ></Link>

@@ -1,7 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
-import AuthenticationModal from "./AuthenticationModal";
+import SuccessModal from "./SuccessModal";
 
 export default function handleChangePass({ onCloseModal }) {
   const token = Cookies.get("token");
@@ -12,6 +12,7 @@ export default function handleChangePass({ onCloseModal }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   async function handleChangePass() {
     setErrorMsg("");
@@ -23,17 +24,14 @@ export default function handleChangePass({ onCloseModal }) {
       return setErrorMsg("Passwords do not match");
     }
 
-    if (updating) {
-      return setErrorMsg("Already Updating Please Wait");
-    }
-    setUpdating(true);
-
     const user = {
       password: currentPass,
       newPassword: newPass,
     };
 
     try {
+      setErrorMsg("");
+      setSuccessMsg("Already Updating Please Wait");
       const res = await axios.put(
         `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
         user,
@@ -47,7 +45,12 @@ export default function handleChangePass({ onCloseModal }) {
         Cookies.set("token", res.data.token, {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
+
+        setErrorMsg("");
         setSuccessMsg("Password Successfully Updated");
+        setTimeout(() => {
+          setIsSuccessModalOpen(true);
+        }, 1000);
       }
     } catch (err) {
       if (err.response.data.message === "Incorrect Password") {
@@ -62,15 +65,9 @@ export default function handleChangePass({ onCloseModal }) {
     }
   }
 
-  return (
-    <>
-      {isAuthenticationOpen ? (
-        <AuthenticationModal
-          onCloseAuthentication={() => {
-            setIsAuthenticationOpen(!isAuthenticationOpen);
-          }}
-        />
-      ) : (
+  if (!isSuccessModalOpen) {
+    return (
+      <>
         <div className="change-pass-modal">
           <div className="change-pass-input-fields">
             <input
@@ -104,8 +101,10 @@ export default function handleChangePass({ onCloseModal }) {
             />
             <p className="change-pass-label">Confirm Password</p>
           </div>
-          <p className="--server-msg">{errorMsg}</p>
-          <p className="--server-success-msg">{successMsg}</p>
+          {errorMsg.length > 0 && <p className="--server-msg">{errorMsg}</p>}
+          {successMsg.length > 0 && (
+            <p className="--server-success-msg">{successMsg}</p>
+          )}
           <button
             onClick={() => {
               setIsAuthenticationOpen(!isAuthenticationOpen);
@@ -125,7 +124,9 @@ export default function handleChangePass({ onCloseModal }) {
             }}
           ></div>
         </div>
-      )}
-    </>
-  );
+      </>
+    );
+  } else {
+    return <SuccessModal />;
+  }
 }

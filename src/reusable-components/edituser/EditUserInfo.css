@@ -3,7 +3,7 @@
   top: 50%;
   left: 50%;
   width: 40rem;
-  height: 32rem;
+  height: 33rem;
   transform: translate(-50%, -50%);
   background-color: #f0f0f0;
   border-radius: 1rem;
@@ -33,8 +33,8 @@
 
 .save-user-changes {
   margin-top: 1.5rem;
-  background-color: #213555;
-  color: white;
+  background-color: #e5d283;
+  /* color: white; */
   width: 7.5rem;
   padding: 0.5rem 0;
   border: 1px solid #213555;
