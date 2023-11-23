@@ -2,6 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import AuthenticationModal from "./AuthenticationModal";
+import SuccessModal from "./SuccessModal";
 
 export default function handleChangePass({ onCloseModal }) {
   const token = Cookies.get("token");
@@ -12,6 +13,7 @@ export default function handleChangePass({ onCloseModal }) {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   async function handleChangePass() {
     setErrorMsg("");
@@ -23,10 +25,10 @@ export default function handleChangePass({ onCloseModal }) {
       return setErrorMsg("Passwords do not match");
     }
 
-    if (updating) {
-      return setErrorMsg("Already Updating Please Wait");
-    }
-    setUpdating(true);
+    // if (updating) {
+
+    // }
+    // setUpdating(true);
 
     const user = {
       password: currentPass,
@@ -34,6 +36,8 @@ export default function handleChangePass({ onCloseModal }) {
     };
 
     try {
+      setErrorMsg("");
+      setSuccessMsg("Already Updating Please Wait");
       const res = await axios.put(
         `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
         user,
@@ -47,6 +51,8 @@ export default function handleChangePass({ onCloseModal }) {
         Cookies.set("token", res.data.token, {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
+        setIsSuccessModalOpen(true);
+        setErrorMsg("");
         setSuccessMsg("Password Successfully Updated");
       }
     } catch (err) {
@@ -64,68 +70,70 @@ export default function handleChangePass({ onCloseModal }) {
 
   return (
     <>
-      {isAuthenticationOpen ? (
+      {/* {isAuthenticationOpen ? (
         <AuthenticationModal
           onCloseAuthentication={() => {
             setIsAuthenticationOpen(!isAuthenticationOpen);
           }}
         />
-      ) : (
-        <div className="change-pass-modal">
-          <div className="change-pass-input-fields">
-            <input
-              type="password"
-              name=""
-              className="change-pass-input --current-pass"
-              value={currentPass}
-              onChange={(e) => {
-                setCurrentPass(e.target.value);
-              }}
-            />
-            <p className="change-pass-label">Current Password</p>
-            <input
-              type="password"
-              name=""
-              className="change-pass-input"
-              value={newPass}
-              onChange={(e) => {
-                setNewPass(e.target.value);
-              }}
-            />
-            <p className="change-pass-label">New Password</p>
-            <input
-              type="password"
-              name=""
-              className="change-pass-input"
-              value={confirmPass}
-              onChange={(e) => {
-                setConfirmPass(e.target.value);
-              }}
-            />
-            <p className="change-pass-label">Confirm Password</p>
-          </div>
-          <p className="--server-msg">{errorMsg}</p>
-          <p className="--server-success-msg">{successMsg}</p>
-          <button
-            onClick={() => {
-              setIsAuthenticationOpen(!isAuthenticationOpen);
-              handleChangePass();
+      ) : ( */}
+      <div className="change-pass-modal">
+        <div className="change-pass-input-fields">
+          <input
+            type="password"
+            name=""
+            className="change-pass-input --current-pass"
+            value={currentPass}
+            onChange={(e) => {
+              setCurrentPass(e.target.value);
             }}
-            className="save-user-changes --confirm-pass "
-          >
-            Confirm
-          </button>
-          <div
-            className="delete"
-            onClick={onCloseModal}
-            style={{
-              position: "absolute",
-              top: "1.3rem",
-              right: "1.3rem",
+          />
+          <p className="change-pass-label">Current Password</p>
+          <input
+            type="password"
+            name=""
+            className="change-pass-input"
+            value={newPass}
+            onChange={(e) => {
+              setNewPass(e.target.value);
             }}
-          ></div>
+          />
+          <p className="change-pass-label">New Password</p>
+          <input
+            type="password"
+            name=""
+            className="change-pass-input"
+            value={confirmPass}
+            onChange={(e) => {
+              setConfirmPass(e.target.value);
+            }}
+          />
+          <p className="change-pass-label">Confirm Password</p>
         </div>
-      )}
+        {errorMsg.length > 0 && <p className="--server-msg">{errorMsg}</p>}
+        {successMsg.length > 0 && (
+          <p className="--server-success-msg">{successMsg}</p>
+        )}
+        <button
+          onClick={() => {
+            setIsAuthenticationOpen(!isAuthenticationOpen);
+            handleChangePass();
+          }}
+          className="save-user-changes --confirm-pass "
+        >
+          Confirm
+        </button>
+        <div
+          className="delete"
+          onClick={onCloseModal}
+          style={{
+            position: "absolute",
+            top: "1.3rem",
+            right: "1.3rem",
+          }}
+        ></div>
+      </div>
+      {/* )} */}
     </>
   );
 }

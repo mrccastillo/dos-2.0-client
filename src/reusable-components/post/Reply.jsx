@@ -17,6 +17,11 @@ export default function Reply({
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const toggleReadMore = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   const [likeInProgress, setLikeInProgress] = useState(false);
 
@@ -161,10 +166,19 @@ export default function Reply({
             {/* {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>} */}
             @{username}
           </p>
-          <p className="date">{formatDate(date)}</p>
+          <p
+            className="date"
+            style={{
+              position: "absolute",
+              top: "1.5rem",
+              right: "1rem",
+            }}
+          >
+            {formatDate(date)}
+          </p>
         </div>
       </div>{" "}
-      {content.split("\n").map((line, index) => (
+      {/* {content.split("\n").map((line, index) => (
         <p
           key={index}
           style={{
@@ -175,7 +189,28 @@ export default function Reply({
         >
           {line}
         </p>
+      ))} */}
+      {content.split("\n").map((line, index) => (
+        <p
+          key={index}
+          style={{
+            fontSize: "0.85rem",
+            marginTop: "0.1rem",
+            marginLeft: "3.5rem",
+          }}
+        >
+          {isCollapsed ? line.slice(0, 120) : line}
+        </p>
       ))}
+      {content.length > 120 && (
+        <p
+          className="read-more"
+          style={{ marginLeft: "3.5rem" }}
+          onClick={toggleReadMore}
+        >
+          {isCollapsed ? "...read more" : "...show less"}
+        </p>
+      )}
       <div
         className="post-interaction"
         style={{

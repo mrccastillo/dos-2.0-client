@@ -27,6 +27,11 @@ export default function Post({
   const [likeCounts, setlikeCounts] = useState(likeCount);
   const [postLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const toggleReadMore = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   async function handleLike() {
     if (likeInProgress) return;
@@ -164,9 +169,14 @@ export default function Post({
             </p>
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
-                {line}
+                {isCollapsed ? line.slice(0, 120) : line}
               </p>
             ))}
+            {content.length > 120 && (
+              <p className="read-more" onClick={toggleReadMore}>
+                {isCollapsed ? "...read more" : "...show less"}
+              </p>
+            )}
           </div>
         </div>
         <div className="post-interaction">

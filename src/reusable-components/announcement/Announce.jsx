@@ -24,6 +24,11 @@ export default function Announce({
   const [likeCounts, setIlikeCounts] = useState(likeCount);
   const [announceLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
+
+  const toggleReadMore = () => {
+    setIsCollapsed(!isCollapsed);
+  };
 
   async function handleLike() {
     if (likeInProgress) return;
@@ -142,9 +147,14 @@ export default function Announce({
           <div className="post-content --announce">
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
-                {line}
+                {isCollapsed ? line.slice(0, 120) : line}
               </p>
             ))}
+            {content.length > 120 && (
+              <p className="read-more" onClick={toggleReadMore}>
+                {isCollapsed ? "...read more" : "...show less"}
+              </p>
+            )}
           </div>
         </div>
         <div className="post-interaction">
