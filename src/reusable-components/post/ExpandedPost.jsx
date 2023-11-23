@@ -1,5 +1,6 @@
 import "./ExpandedPost.css";
 import Reply from "./Reply";
+import CommentSkeleton from "../skeletonloading/CommentsSkeleton";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -28,6 +29,7 @@ export default function ExpandedPost({
   const [postLikeId, setLikeId] = useState(likeId);
   const [likeCounts, setlikeCounts] = useState(likeCount);
   const [likeInProgress, setLikeInProgress] = useState(false);
+  const [isCommentFetching, setIsCommentFetching] = useState(true);
 
   async function handleLike() {
     if (likeInProgress) return;
@@ -82,6 +84,7 @@ export default function ExpandedPost({
         },
       }
     );
+    setIsCommentFetching(false);
     setComments(commentsRes.data.comments.reverse());
   };
 
@@ -209,15 +212,19 @@ export default function ExpandedPost({
             </button>
           </div>
           <div className="replies-container">
-            {comments.map((comment) => (
-              <Reply
-                key={comment._id}
-                fullname={comment.fullname}
-                username={comment.username}
-                content={comment.content}
-                date={comment.dateCreated}
-              />
-            ))}
+            {isCommentFetching ? (
+              <CommentSkeleton cards={1} />
+            ) : (
+              comments.map((comment) => (
+                <Reply
+                  key={comment._id}
+                  fullname={comment.fullname}
+                  username={comment.username}
+                  content={comment.content}
+                  date={comment.dateCreated}
+                />
+              ))
+            )}
           </div>
         </div>
       </div>
