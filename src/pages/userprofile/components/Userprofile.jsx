@@ -7,6 +7,8 @@ import Nav from "../../nav/components/Nav";
 import CreateAnnouncement from "../../../reusable-components/announcement/CreateAnnouncement";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
+import PostSkeleton from "../../../reusable-components/skeletonloading/PostSkeleton";
+import AnnouncementSkeleton from "../../../reusable-components/skeletonloading/AnnouncementSkeleton";
 import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -253,11 +255,11 @@ export default function Userprofile({ userLoggedIn }) {
               <div className="userpost-container-header">
                 {user._id === userLoggedIn._id ? (
                   <h2 style={{ fontSize: "1.5rem" }}>
-                    Your Post & Announcements
+                    Your Announcements & Posts
                   </h2>
                 ) : (
                   <h2 style={{ fontSize: "1.5rem" }}>
-                    {user.username} Posts & Announcements
+                    {user.username} Announcements & Posts
                   </h2>
                 )}
                 {user._id === userLoggedIn._id ? (
@@ -287,7 +289,7 @@ export default function Userprofile({ userLoggedIn }) {
               <div className="user-post-and-announcements">
                 <div className="user-announcement">
                   {!announcementFetched ? (
-                    <p className="empty">Loading...</p>
+                    <AnnouncementSkeleton cards={2} />
                   ) : filteredAnnouncements.length > 0 ? (
                     filteredAnnouncements.map((el) => (
                       <Announce
@@ -315,7 +317,7 @@ export default function Userprofile({ userLoggedIn }) {
                 </div>
                 <div className="user-post">
                   {!postFetched ? (
-                    <p className="empty">Loading...</p>
+                    <PostSkeleton cards={2} />
                   ) : filteredPosts.length > 0 ? (
                     filteredPosts
                       .filter((filteredPost) => !filteredPost.isAnonymous)
