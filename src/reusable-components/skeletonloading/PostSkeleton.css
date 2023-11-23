@@ -34,3 +34,20 @@
 .post-interaction-skeleton {
   margin-top: 1rem;
 }
+
+.skeleton {
+  animation: skeletonLoading 1s linear infinite alternate;
+  margin-bottom: 0.5rem;
+  border-radius: 0.2rem;
+}
+
+/* baseColor="#0cbfdf45" highlightColor="#c8fdff4e" */
+@keyframes skeletonLoading {
+  0% {
+    background-color: #0cbfdf15;
+  }
+
+  100% {
+    background-color: #0cbfdf7c;
+  }
+}
