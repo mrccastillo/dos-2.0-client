@@ -29,9 +29,13 @@ export default function handleChangePass({ onCloseModal }) {
       newPassword: newPass,
     };
 
+    if (updating) return setSuccessMsg("Already Updating Please Wait");
+
+    setUpdating(true);
+    setSuccessMsg("Updating");
+
     try {
       setErrorMsg("");
-      setSuccessMsg("Already Updating Please Wait");
       const res = await axios.put(
         `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
         user,
