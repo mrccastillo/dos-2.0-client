@@ -225,10 +225,12 @@ export default function Userprofile({ userLoggedIn }) {
 
         <div className="container">
           <Nav
-            user={userLoggedIn.username}
-            email={userLoggedIn.email}
-            bio={userLoggedIn.bio}
-            fullname={userLoggedIn.fullname}
+            user={user.username}
+            email={user.email}
+            bio={user.bio}
+            firstname={user.firstname}
+            lastname={user.lastname}
+            fullname={user.fullname}
           />
           <div className="dashboard --userprofile">
             <h2 className="--big-h2">Profile</h2>
