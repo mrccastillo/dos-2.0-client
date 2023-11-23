@@ -10,20 +10,40 @@ export default function AnnouncementSkeleton({ cards }) {
         <div className="post-skeleton --announcememt-skel">
           <div className="post-author-skeleton">
             <div className="left-col">
-              <Skeleton circle width={45} height={45} style={{}} />
+              <div
+                className="skeleton"
+                style={{
+                  height: "2.5rem",
+                  width: "2.5rem",
+                  borderRadius: "50%",
+                }}
+              ></div>
             </div>
             <div className="right-col">
-              <Skeleton count={2} />
+              <div
+                className="skeleton"
+                style={{ height: "0.7rem", width: "100%" }}
+              ></div>
+              <div
+                className="skeleton"
+                style={{ height: "0.7rem", width: "100%" }}
+              ></div>
             </div>
           </div>
           <div
             className="post-content-skeleton"
             style={{ border: 0, padding: "0.2rem 0" }}
           >
-            <Skeleton height={"2rem"} />
+            <div
+              className="skeleton"
+              style={{ height: "2rem", width: "100%" }}
+            ></div>
           </div>
           <div className="post-interaction-skeleton">
-            <Skeleton />
+            <div
+              className="skeleton"
+              style={{ height: "1.5rem", width: "100%" }}
+            ></div>
           </div>
         </div>
       </SkeletonTheme>
