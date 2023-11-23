@@ -86,18 +86,14 @@
 
 .change-pass-modal {
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #f0f0f0;
   width: 20rem;
-  height: 23rem;
+  height: 22rem;
   border-radius: 1rem;
-  padding: 3.5rem 1rem 2rem 1rem;
+  padding: 3.5rem 1rem;
   z-index: 3;
   text-align: center;
 }
@@ -124,5 +120,4 @@
 .--confirm-pass {
   background-color: #ff3131;
   border: 0;
-  margin: 0;
 }

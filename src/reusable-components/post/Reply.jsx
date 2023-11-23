@@ -84,10 +84,7 @@ export default function Reply({ fullname, username, content, date }) {
           {line}
         </p>
       ))}
-
-      {/* <div
-
-      <div>
+      <div
         className="post-interaction"
         style={{
           //   borderBottom: " 1px solid rgb(93, 93, 93)",
@@ -96,7 +93,7 @@ export default function Reply({ fullname, username, content, date }) {
       >
         <div className="like-container">
           <div
-            className={isLiked ? "like-icon --isLiked" :  "like-icon"}
+            className={"like-icon"}
             // style={{
             //   background-image: isLiked
             //     ? "url(../../assets/images/heart-filled.png)"
@@ -111,9 +108,9 @@ export default function Reply({ fullname, username, content, date }) {
             // onClick={() => {
             //   setIsPostOpen(!isPostOpen);
             // }}
-      ></div>
+          ></div>
         </div>
-      </div> */}
+      </div>
       {/* <Reply /> */}
     </div>
   );
