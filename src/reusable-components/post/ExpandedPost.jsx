@@ -216,14 +216,16 @@ export default function ExpandedPost({
               <CommentSkeleton cards={1} />
             ) : (
               comments.map((comment) => (
-                <Reply
-                  key={comment._id}
-                  fullname={comment.fullname}
-                  username={comment.username}
-                  content={comment.content}
-                  date={comment.dateCreated}
-                />
-              ))
+              <Reply
+                key={comment._id}
+                commentId={comment._id}
+                userUsername={userUsername}
+                fullname={comment.fullname}
+                username={comment.username}
+                content={comment.content}
+                date={comment.dateCreated}
+              />
+            ))
             )}
           </div>
         </div>
