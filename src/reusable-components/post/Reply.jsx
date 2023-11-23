@@ -19,6 +19,7 @@ export default function Reply({
   const [replyCount, setReplyCount] = useState(0);
 
   const [likeInProgress, setLikeInProgress] = useState(false);
+
   const formatDate = (inputDate) => {
     const postDate = new Date(inputDate);
     const currentDate = new Date();
@@ -178,7 +179,6 @@ export default function Reply({
       <div
         className="post-interaction"
         style={{
-          //   borderBottom: " 1px solid rgb(93, 93, 93)",
           padding: "1.5rem 2.5rem",
         }}
       >
