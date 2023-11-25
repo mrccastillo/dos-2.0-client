@@ -6,6 +6,7 @@ import axios from "axios";
 import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
 import { useInView } from "react-intersection-observer";
+import { URL } from "../../../App";
 
 export default function Home({ fullname, username, userId }) {
   const { ref: myRef, inView: fetchPost } = useInView();
@@ -24,14 +25,11 @@ export default function Home({ fullname, username, userId }) {
     try {
       const lastPostId = posts.length > 0 ? posts[posts.length - 1]._id : null;
 
-      const post = await axios.get(
-        `https://backend.dosshs.online/api/post?postId=${lastPostId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const post = await axios.get(`${URL}/post?postId=${lastPostId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
       const newPosts = post.data;
 
@@ -39,7 +37,7 @@ export default function Home({ fullname, username, userId }) {
         newPosts.map(async (post) => {
           try {
             const likeCountResponse = await axios.get(
-              `https://backend.dosshs.online/api/post/like/count/${post._id}`,
+              `${URL}/post/like/count/${post._id}`,
               {
                 headers: {
                   Authorization: token,
@@ -48,7 +46,7 @@ export default function Home({ fullname, username, userId }) {
             );
 
             const commentCountResponse = await axios.get(
-              `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
+              `${URL}/post/comment/count?postId=${post._id}`,
               {
                 headers: {
                   Authorization: token,

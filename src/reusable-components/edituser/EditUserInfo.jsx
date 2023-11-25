@@ -56,7 +56,7 @@ export default function EditUserInfo({
     try {
       if (user.username) {
         const res = await axios.get(
-          `https://backend.dosshs.online/api/user/find?account=${usernameEdit}`,
+          `${URL}/user/find?account=${usernameEdit}`,
           {
             headers: {
               Authorization: token,
@@ -72,7 +72,7 @@ export default function EditUserInfo({
 
     try {
       const res = await axios.put(
-        `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
+        `${URL}/user/${Cookies.get("userId")}`,
         user,
         {
           headers: {
@@ -242,7 +242,7 @@ export default function EditUserInfo({
           Save Changes
         </button>
       </div>
-      {isChangePasswordOpen && (
+      {isSuccessModalOpen && (
         <>
           <AuthenticationModal
             onCloseAuthentication={() =>

@@ -4,6 +4,7 @@ import CommentSkeleton from "../skeletonloading/CommentsSkeleton";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { URL } from "../../App";
 
 export default function ExpandedAnnounce({
   token,
@@ -46,28 +47,21 @@ export default function ExpandedAnnounce({
           userId: userUserId,
           username: userUsername,
         };
-        const likeRes = await axios.post(
-          "https://backend.dosshs.online/api/announcement/like",
-          likePost,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const likeRes = await axios.post(`${URL}/announcement/like`, likePost, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(likeRes.data.like._id);
         onLike(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts + 1);
       } else {
-        await axios.delete(
-          `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        await axios.delete(`${URL}/announcement/like/${announceLikeId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(null);
         onLike(null);
         setIsLiked(!isLiked);
@@ -87,7 +81,7 @@ export default function ExpandedAnnounce({
     }
 
     const commentsRes = await axios.get(
-      `https://backend.dosshs.online/api/announcement/comment/c?announcementId=${announceId}`,
+      `${URL}/announcement/comment/c?announcementId=${announceId}`,
       {
         headers: {
           Authorization: token,
@@ -113,22 +107,25 @@ export default function ExpandedAnnounce({
       content: comment,
     };
     try {
-      await axios.post(
-        "https://backend.dosshs.online/api/announcement/comment",
-        commentObj,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const res = await axios.post(`${URL}/announcement/comment`, commentObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
       onCommentUpdate();
+      if (comments.length > 0) {
+        onFetchedComments([res.data.comment, ...comments]);
+        setComments((prevComments) => [res.data.comment, ...prevComments]);
+      } else {
+        setComments((prevComments) => [res.data.comment, ...prevComments]);
+        onFetchedComments([res.data.comment]);
+      }
     } catch (err) {
       return console.error(err);
     } finally {
       setComment("");
       setCommenting(false);
-      fetchComments();
     }
   };
 

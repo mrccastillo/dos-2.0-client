@@ -13,6 +13,7 @@ import "../stylesheets/Userprofile.css";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { URL } from "../../../App";
 
 export default function Userprofile({ userLoggedIn }) {
   const token = Cookies.get("token");
@@ -34,28 +35,22 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchUser = async () => {
     try {
-      await axios.get(
-        `https://backend.dosshs.online/api/user/find?account=${username}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.get(`${URL}/auth/find?account=${username}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
     } catch (err) {
       setUserFound(false);
       return console.error(err);
     }
 
     try {
-      const userResponse = await axios.get(
-        `https://backend.dosshs.online/api/user?username=${username}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const userResponse = await axios.get(`${URL}/user?username=${username}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       setUser(userResponse.data.other);
     } catch (error) {
       setUserFound(false);
@@ -65,19 +60,16 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchAnnouncements = async () => {
     try {
-      const announcement = await axios.get(
-        "https://backend.dosshs.online/api/announcement",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const announcement = await axios.get(`${URL}/announcement`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
       const getAnnouncementLikesPromises = announcement.data.map(
         async (announcement) => {
           const likeCountResponse = await axios.get(
-            `https://backend.dosshs.online/api/announcement/like/count/${announcement._id}`,
+            `${URL}/announcement/like/count/${announcement._id}`,
             {
               headers: {
                 Authorization: token,
@@ -96,7 +88,7 @@ export default function Userprofile({ userLoggedIn }) {
           const [likeCount] = await Promise.all([likeCountResponse]);
 
           const commentCountResponse = await axios.get(
-            `https://backend.dosshs.online/api/announcement/comment/count?announcementId=${announcement._id}`,
+            `${URL}/announcement/comment/count?announcementId=${announcement._id}`,
             {
               headers: {
                 Authorization: token,
@@ -128,7 +120,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchPosts = async () => {
     try {
-      const post = await axios.get("https://backend.dosshs.online/api/post", {
+      const post = await axios.get(`${URL}/post`, {
         headers: {
           Authorization: token,
         },
@@ -136,7 +128,7 @@ export default function Userprofile({ userLoggedIn }) {
 
       const getPostLikesPromises = post.data.map(async (post) => {
         const likeCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/like/count/${post._id}`,
+          `${URL}/post/like/count/${post._id}`,
           {
             headers: {
               Authorization: token,
@@ -155,7 +147,7 @@ export default function Userprofile({ userLoggedIn }) {
         const [likeCount] = await Promise.all([likeCountResponse]);
 
         const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
+          `${URL}/post/comment/count?postId=${post._id}`,
           {
             headers: {
               Authorization: token,

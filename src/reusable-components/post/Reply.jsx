@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./Reply.css";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { URL } from "../../App";
 
 export default function Reply({
   fullname,
@@ -18,12 +19,11 @@ export default function Reply({
   const [likeCount, setLikeCount] = useState(0);
   const [replyCount, setReplyCount] = useState(0);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [likeInProgress, setLikeInProgress] = useState(false);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
   };
-
-  const [likeInProgress, setLikeInProgress] = useState(false);
 
   const formatDate = (inputDate) => {
     const postDate = new Date(inputDate);
@@ -80,14 +80,11 @@ export default function Reply({
 
   const fetchLikes = async () => {
     try {
-      const likes = await axios.get(
-        `https://backend.dosshs.online/api/comment?commentId=${commentId}`,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const likes = await axios.get(`${URL}/comment?commentId=${commentId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
       setLikeCount(likes.data.likeCount);
       const liked = likes.data.likes.some((like) => like.userId === userId);
 
@@ -114,27 +111,20 @@ export default function Reply({
           userId: userId,
           username: userUsername,
         };
-        const likeRes = await axios.post(
-          "https://backend.dosshs.online/api/comment",
-          likePost,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const likeRes = await axios.post(`${URL}/comment`, likePost, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setLikeCount(likeCount + 1);
       } else {
-        await axios.delete(
-          `https://backend.dosshs.online/api/comment?likeId=${likeId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        await axios.delete(`${URL}/comment?likeId=${likeId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(null);
         setIsLiked(!isLiked);
         setLikeCount(likeCount - 1);

@@ -5,6 +5,7 @@ import AnnouncementSkeleton from "../../../reusable-components/skeletonloading/A
 import "../stylesheets/Announcement.css";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { URL } from "../../../App";
 
 export default function Announcements({ fullname, username, userId }) {
   const token = Cookies.get("token");
@@ -14,18 +15,15 @@ export default function Announcements({ fullname, username, userId }) {
 
   const fetchPosts = async () => {
     try {
-      const announcement = await axios.get(
-        "https://backend.dosshs.online/api/announcement",
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const announcement = await axios.get(`${URL}/announcement`, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
       const getLikesPromises = announcement.data.map(async (announcement) => {
         const likeCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/announcement/like/count/${announcement._id}`,
+          `${URL}/announcement/like/count/${announcement._id}`,
           {
             headers: {
               Authorization: token,
@@ -44,7 +42,7 @@ export default function Announcements({ fullname, username, userId }) {
         const [likeCount] = await Promise.all([likeCountResponse]);
 
         const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/announcement/comment/count?announcementId=${announcement._id}`,
+          `${URL}/announcement/comment/count?announcementId=${announcement._id}`,
           {
             headers: {
               Authorization: token,

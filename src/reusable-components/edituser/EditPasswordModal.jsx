@@ -2,8 +2,9 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useState } from "react";
 import SuccessModal from "./SuccessModal";
+import { URL } from "../../App";
 
-export default function handleChangePass({ onCloseModal }) {
+export default function handleChangePass({ onCloseModal, recoverUserId }) {
   const token = Cookies.get("token");
   const [currentPass, setCurrentPass] = useState("");
   const [newPass, setNewPass] = useState("");
@@ -13,6 +14,7 @@ export default function handleChangePass({ onCloseModal }) {
   const [successMsg, setSuccessMsg] = useState("");
   const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [userId, setUserId] = useState(recoverUserId);
 
   async function handleChangePass() {
     setErrorMsg("");
@@ -35,9 +37,8 @@ export default function handleChangePass({ onCloseModal }) {
     setSuccessMsg("Updating");
 
     try {
-      setErrorMsg("");
       const res = await axios.put(
-        `https://backend.dosshs.online/api/user/${Cookies.get("userId")}`,
+        `${URL}/user/${Cookies.get("userId")}`,
         user,
         {
           headers: {
@@ -50,7 +51,6 @@ export default function handleChangePass({ onCloseModal }) {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
 
-        setErrorMsg("");
         setSuccessMsg("Password Successfully Updated");
         setTimeout(() => {
           setIsSuccessModalOpen(true);
@@ -69,21 +69,77 @@ export default function handleChangePass({ onCloseModal }) {
     }
   }
 
+  async function handleRecover() {
+    setErrorMsg("");
+    setSuccessMsg("");
+    if (!newPass || !confirmPass) {
+      return setErrorMsg("Please fill out the fields.");
+    }
+    if (newPass !== confirmPass) {
+      return setErrorMsg("Passwords do not match");
+    }
+
+    if (updating) return setSuccessMsg("Already Updating Please Wait");
+
+    setUpdating(true);
+    setSuccessMsg("Updating");
+
+    try {
+      const user = {
+        password: currentPass,
+      };
+
+      const res = await axios.get(`${URL}/auth/recover?userId=${userId}`, user);
+      if (res.data.message === "Account Successfully Recovered") {
+        Cookies.set("token", res.data.token, {
+          expires: 30 * 24 * 60 * 60,
+        }); // 30 day expiration
+        Cookies.set("userId", userId, {
+          expires: 30 * 24 * 60 * 60,
+        }); // 30 day expiration
+
+        setErrorMsg("");
+        setSuccessMsg("Account Successfully Recovered");
+        setTimeout(() => {
+          setIsSuccessModalOpen(true);
+        }, 1000);
+      }
+    } catch (err) {
+      if (err.response.status === 404) {
+        setErrorMsg(
+          "Error occured while updating your password, try again later"
+        );
+        return console.error(err);
+      } else {
+        setErrorMsg(
+          "Error occured while updating your password, try again later. If error persists contact the developers : )"
+        );
+        return console.error(err);
+      }
+    } finally {
+      setUpdating(false);
+    }
+  }
+
   if (!isSuccessModalOpen) {
     return (
       <>
         <div className="change-pass-modal">
           <div className="change-pass-input-fields">
-            <input
-              type="password"
-              name=""
-              className="change-pass-input --current-pass"
-              value={currentPass}
-              onChange={(e) => {
-                setCurrentPass(e.target.value);
-              }}
-            />
-            <p className="change-pass-label">Current Password</p>
+            {!recoverUserId && (
+              <>
+                <input
+                  type="password"
+                  name=""
+                  className="change-pass-input --current-pass"
+                  value={currentPass}
+                  onChange={(e) => {
+                    setCurrentPass(e.target.value);
+                  }}
+                />
+                <p className="change-pass-label">Current Password</p>
+              </>
+            )}
             <input
               type="password"
               name=""
@@ -112,7 +168,7 @@ export default function handleChangePass({ onCloseModal }) {
           <button
             onClick={() => {
               setIsAuthenticationOpen(!isAuthenticationOpen);
-              handleChangePass();
+              recoverUserId ? handleRecover() : handleChangePass();
             }}
             className="save-user-changes --confirm-pass "
           >

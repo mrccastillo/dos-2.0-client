@@ -1,6 +1,6 @@
 import "./SuccessModal.css";
 
-export default function SuccessModal() {
+export default function SuccessModal(isRecover) {
   return (
     <div className="success-change-modal">
       <div
@@ -12,9 +12,15 @@ export default function SuccessModal() {
         }}
       >
         <div className="success-image"></div>
-        <h2>Account Successfully Updated!</h2>
+        <h2>
+          {isRecover
+            ? "Account Successfully Recovered!"
+            : "Account Successfully Updated!"}
+        </h2>
         <p style={{ fontSize: "0.9rem", marginTop: "2rem" }}>
-          Account Successfully Updated. To view the changes refresh the page
+          {isRecover
+            ? "Glad to have you back : )"
+            : "To view the changes refresh the page"}
         </p>
       </div>
       <button
@@ -23,7 +29,7 @@ export default function SuccessModal() {
           location.reload();
         }}
       >
-        REFRESH
+        {isRecover ? "CONTINUE" : "LOGIN"}
       </button>
     </div>
   );

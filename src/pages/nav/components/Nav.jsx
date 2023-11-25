@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Cookies from "js-cookie";
 import axios from "axios";
+import { URL } from "../../../App";
 
 export default function Nav({
   user,
@@ -19,9 +20,7 @@ export default function Nav({
 
   const logOut = async () => {
     try {
-      const res = await axios.post(
-        `https://backend.dosshs.online/api/auth/logout?token=${token}`
-      );
+      const res = await axios.post(`${URL}/auth/logout?token=${token}`);
 
       if (res.data.message === "Logged Out Successfully") {
         Cookies.remove("token");
