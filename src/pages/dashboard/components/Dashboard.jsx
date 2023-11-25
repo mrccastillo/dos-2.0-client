@@ -4,6 +4,7 @@ import Home from "./Home";
 import "../stylesheets/Dashboard.css";
 import { useState, useEffect } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Link } from "react-router-dom";
 
 export default function Dashboard({ user, onDecodeUser }) {
   useEffect(() => {
@@ -38,7 +39,10 @@ export default function Dashboard({ user, onDecodeUser }) {
               <h2 className="--big-h2">DOSBoard</h2>
             </div>
             <h2 className="--big-h2">
-              Hello, <span className="--highlight">{user.username}!</span>
+              Hello,{" "}
+              <Link to={`/${user.username}`} className="--highlight">
+                {user.username}!
+              </Link>
             </h2>
           </div>
           <div className="posts-announcements-container">

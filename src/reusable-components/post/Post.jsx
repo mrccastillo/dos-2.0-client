@@ -30,6 +30,7 @@ export default function Post({
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [hasComments, setHasComments] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -245,6 +246,11 @@ export default function Post({
               setCommentCount(commentCounts + 1);
             }}
             hasComments={hasComments}
+            fetchedComments={comments}
+            onFetchedComments={(comment) => {
+              if (comments.length > 0) return comments;
+              else setComments(comment);
+            }}
           />{" "}
           <div className="overlay"></div>
         </>

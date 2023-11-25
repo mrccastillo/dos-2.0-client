@@ -22,6 +22,8 @@ export default function ExpandedAnnounce({
   onCommentUpdate,
   onLike,
   hasComments,
+  fetchedComments,
+  onFetchedComments,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -79,6 +81,11 @@ export default function ExpandedAnnounce({
   }
 
   const fetchComments = async () => {
+    if (fetchedComments.length > 0) {
+      setIsCommentFetching(false);
+      return setComments(fetchedComments);
+    }
+
     const commentsRes = await axios.get(
       `https://backend.dosshs.online/api/announcement/comment/c?announcementId=${announceId}`,
       {
@@ -89,6 +96,7 @@ export default function ExpandedAnnounce({
     );
     setIsCommentFetching(false);
     setComments(commentsRes.data.comments.reverse());
+    onFetchedComments(commentsRes.data.comments.reverse());
   };
 
   const submitComment = async () => {
@@ -126,7 +134,7 @@ export default function ExpandedAnnounce({
 
   useEffect(() => {
     if (hasComments) fetchComments();
-    else {
+    else if (!hasComments) {
       setIsCommentFetching(false);
     }
   }, []);

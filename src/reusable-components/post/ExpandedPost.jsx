@@ -24,6 +24,8 @@ export default function ExpandedPost({
   onCommentUpdate,
   onLike,
   hasComments,
+  fetchedComments,
+  onFetchedComments,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -81,6 +83,11 @@ export default function ExpandedPost({
   }
 
   const fetchComments = async () => {
+    if (fetchedComments.length > 0) {
+      setIsCommentFetching(false);
+      return setComments(fetchedComments);
+    }
+
     const commentsRes = await axios.get(
       `https://backend.dosshs.online/api/post/comment/c?postId=${postId}`,
       {
@@ -91,6 +98,7 @@ export default function ExpandedPost({
     );
     setIsCommentFetching(false);
     setComments(commentsRes.data.comments.reverse());
+    onFetchedComments(commentsRes.data.comments.reverse());
   };
 
   const submitComment = async () => {
