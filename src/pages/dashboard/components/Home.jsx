@@ -3,79 +3,131 @@ import Post from "../../../reusable-components/post/Post";
 import CreatePost from "../../../reusable-components/post/CreatePost";
 import "../stylesheets/Home.css";
 import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Cookies from "js-cookie";
+import { useInView } from "react-intersection-observer";
 
 export default function Home({ fullname, username, userId }) {
+  const { ref: myRef, inView: fetchPost } = useInView();
   const token = Cookies.get("token");
   const userUserId = Cookies.get("userId");
   const [posts, setPosts] = useState([]);
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false);
   const [postFilter, setPostFilter] = useState();
+  const [loading, setLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
+  const [fetchAgain, setFetchAgain] = useState(false);
 
   const fetchPosts = async () => {
+    if (loading) return;
+    setLoading(true);
     try {
-      const post = await axios.get("https://backend.dosshs.online/api/post", {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const lastPostId = posts.length > 0 ? posts[posts.length - 1]._id : null;
 
-      const getLikesPromises = post.data.map(async (post) => {
-        const likeCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/like/count/${post._id}`,
-          {
-            headers: {
-              Authorization: token,
-            },
+      const post = await axios.get(
+        `https://backend.dosshs.online/api/post?postId=${lastPostId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+
+      const newPosts = post.data;
+
+      const postsWithCounts = await Promise.all(
+        newPosts.map(async (post) => {
+          try {
+            const likeCountResponse = await axios.get(
+              `https://backend.dosshs.online/api/post/like/count/${post._id}`,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+
+            const commentCountResponse = await axios.get(
+              `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
+              {
+                headers: {
+                  Authorization: token,
+                },
+              }
+            );
+
+            const likeCount = likeCountResponse.data.likeCount;
+            const commentCount = commentCountResponse.data.commentCount;
+
+            const liked = likeCountResponse.data.likes.some(
+              (like) => like.userId === userUserId
+            );
+
+            const likedId = likeCountResponse.data.likes
+              .filter((like) => like.userId === userUserId)
+              .map((like) => like._id);
+
+            return {
+              ...post,
+              likeCount: likeCount,
+              commentCount: commentCount,
+              liked: liked,
+              likeId: likedId,
+            };
+          } catch (error) {
+            console.error(
+              "Error fetching like/comment counts for a post:",
+              error
+            );
+            // Return a default object if there's an error
+            return {
+              ...post,
+              likeCount: 0,
+              commentCount: 0,
+              liked: false,
+              likeId: [],
+            };
           }
-        );
+        })
+      );
 
-        const liked = likeCountResponse.data.likes.some(
-          (like) => like.userId === userUserId
-        );
+      // Filter out duplicates based on _id
+      const uniquePosts = postsWithCounts.filter(
+        (post, index, self) =>
+          index === self.findIndex((p) => p._id === post._id)
+      );
 
-        const likedId = likeCountResponse.data.likes
-          .filter((like) => like.userId === userUserId)
-          .map((like) => like._id);
+      setPosts((prevPosts) => [...prevPosts, ...uniquePosts]);
+      setLoading(false);
 
-        const [likeCount] = await Promise.all([likeCountResponse]);
-        const commentCountResponse = await axios.get(
-          `https://backend.dosshs.online/api/post/comment/count?postId=${post._id}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-
-        const [commentCount] = await Promise.all([commentCountResponse]);
-
-        return {
-          ...post,
-          likeCount: likeCount.data.likeCount,
-          liked: liked,
-          likeId: likedId,
-          commentCount: commentCount.data.commentCount,
-        };
-      });
-
-      const postsWithCounts = await Promise.all(getLikesPromises);
-      setPosts(postsWithCounts.reverse());
+      if (fetchAgain) setFetchAgain(false);
+      if (uniquePosts.length === 0) setShowLoading(false);
+      else CheckToFetchMore();
     } catch (error) {
       console.error("Error fetching posts:", error);
+      setLoading(false);
     }
   };
 
-  const handlePostCreated = () => {
-    fetchPosts();
+  const CheckToFetchMore = () => {
+    if (fetchPost)
+      setTimeout(() => {
+        if (!fetchAgain) setFetchAgain(true);
+      }, 3000);
   };
 
   useEffect(() => {
-    fetchPosts();
+    if (fetchPost && !loading) fetchPosts();
+  }, [fetchPost, fetchAgain]);
 
-    // console.log(posts);
-  }, []);
+  const handlePostCreated = (post) => {
+    post = {
+      ...post,
+      likeCount: 0,
+      commentCount: 0,
+    };
+    setPosts((prevPosts) => [post, ...prevPosts]);
+  };
 
   return (
     <>
@@ -158,46 +210,10 @@ export default function Home({ fullname, username, userId }) {
             </button>
           </div>
           <div className="posts-list">
-            {/* {posts
-              .filter(
-                (el) => postFilter === undefined || el.category === postFilter
-              )
-              .map((el) => {
-                <Post
-                  key={el._id}
-                  fullname={el.fullname}
-                  username={el.username}
-                  content={el.content}
-                  date={el.dateCreated}
-                  category={el.category}
-                  isAnonymous={el.isAnonymous}
-                />;
-              })} */}
-            <div className="posts-list">
-              {postFilter === 5
-                ? posts
-                    .filter((el) => el.isAnonymous === true)
-                    .map((el) => (
-                      <Post
-                        key={el._id}
-                        postId={el._id}
-                        userUsername={username}
-                        userUserId={userId}
-                        userFullName={fullname}
-                        fullname={el.fullname}
-                        username={el.username}
-                        content={el.content}
-                        date={el.dateCreated}
-                        category={el.category}
-                        isAnonymous={el.isAnonymous}
-                        likeCount={el.likeCount}
-                        liked={el.liked}
-                        likeId={el.likeId}
-                        commentCount={el.commentCount}
-                      />
-                    ))
-                : postFilter === undefined
-                ? posts.map((el) => (
+            {postFilter === 5
+              ? posts
+                  .filter((el) => el.isAnonymous === true)
+                  .map((el) => (
                     <Post
                       key={el._id}
                       postId={el._id}
@@ -216,30 +232,54 @@ export default function Home({ fullname, username, userId }) {
                       commentCount={el.commentCount}
                     />
                   ))
-                : posts
-                    .filter((el) => el.category === postFilter)
-                    .map((el) => (
-                      <Post
-                        key={el._id}
-                        postId={el._id}
-                        userUsername={username}
-                        userUserId={userId}
-                        userFullName={fullname}
-                        fullname={el.fullname}
-                        username={el.username}
-                        content={el.content}
-                        date={el.dateCreated}
-                        category={el.category}
-                        isAnonymous={el.isAnonymous}
-                        likeCount={el.likeCount}
-                        liked={el.liked}
-                        likeId={el.likeId}
-                        commentCount={el.commentCount}
-                      />
-                    ))}
+              : postFilter === undefined
+              ? posts.map((el) => (
+                  <Post
+                    key={el._id}
+                    postId={el._id}
+                    userUsername={username}
+                    userUserId={userId}
+                    userFullName={fullname}
+                    fullname={el.fullname}
+                    username={el.username}
+                    content={el.content}
+                    date={el.dateCreated}
+                    category={el.category}
+                    isAnonymous={el.isAnonymous}
+                    likeCount={el.likeCount}
+                    liked={el.liked}
+                    likeId={el.likeId}
+                    commentCount={el.commentCount}
+                  />
+                ))
+              : posts
+                  .filter((el) => el.category === postFilter)
+                  .map((el) => (
+                    <Post
+                      key={el._id}
+                      postId={el._id}
+                      userUsername={username}
+                      userUserId={userId}
+                      userFullName={fullname}
+                      fullname={el.fullname}
+                      username={el.username}
+                      content={el.content}
+                      date={el.dateCreated}
+                      category={el.category}
+                      isAnonymous={el.isAnonymous}
+                      likeCount={el.likeCount}
+                      liked={el.liked}
+                      likeId={el.likeId}
+                      commentCount={el.commentCount}
+                    />
+                  ))}
 
-              {posts.length === 0 && <PostSkeleton cards={2} />}
-            </div>
+            {posts.length === 0 && <PostSkeleton cards={1} />}
+            {showLoading ? (
+              <div ref={myRef}>
+                <PostSkeleton cards={1} />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

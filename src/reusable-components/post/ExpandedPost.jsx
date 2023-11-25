@@ -24,6 +24,8 @@ export default function ExpandedPost({
   onCommentUpdate,
   onLike,
   hasComments,
+  fetchedComments,
+  onFetchedComments,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -81,6 +83,11 @@ export default function ExpandedPost({
   }
 
   const fetchComments = async () => {
+    if (fetchedComments.length > 0) {
+      setIsCommentFetching(false);
+      return setComments(fetchedComments);
+    }
+
     const commentsRes = await axios.get(
       `https://backend.dosshs.online/api/post/comment/c?postId=${postId}`,
       {
@@ -91,10 +98,18 @@ export default function ExpandedPost({
     );
     setIsCommentFetching(false);
     setComments(commentsRes.data.comments.reverse());
+    onFetchedComments(commentsRes.data.comments.reverse());
   };
 
   const submitComment = async () => {
     if (commenting) return;
+    if (!comment) return;
+
+    const trimmedComment = comment.trim();
+    const validatedComment = trimmedComment.replace(/\u2800/g, "");
+    if (!validatedComment) {
+      return;
+    }
 
     setCommenting(true);
 
@@ -201,7 +216,11 @@ export default function ExpandedPost({
                 //   setIsPostOpen(!isPostOpen);
                 // }}
               ></div>
-              <p className="comment-count">{comments.length} Comments</p>
+              <p className="comment-count">
+                {comments.length > 1
+                  ? `${comments.length} Comments `
+                  : `${comments.length} Comment`}
+              </p>
             </div>
           </div>
           <div className="reply-to-post">

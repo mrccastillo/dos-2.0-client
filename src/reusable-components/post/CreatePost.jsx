@@ -14,10 +14,22 @@ export default function CreatePost({
   const [category, setCategoy] = useState(0);
   const [isPosting, setIsPosting] = useState("Post");
   const [isAnonymous, setIsAnonymous] = useState(false);
+  const [posting, setPosting] = useState(false);
 
   async function handlePostSubmit(e) {
-    setIsPosting("Post");
     e.preventDefault();
+    if (posting) return;
+    if (!content) return;
+
+    const trimmedPost = content.trim();
+    const validatedPost = trimmedPost.replace(/\u2800/g, "");
+    if (!validatedPost) {
+      return;
+    }
+
+    setPosting(true);
+    setIsPosting("Post");
+
     const post = {
       userId: userId,
       username: username,
@@ -31,15 +43,22 @@ export default function CreatePost({
     try {
       setIsPosting("Posting...");
       const token = Cookies.get("token");
-      await axios.post("https://backend.dosshs.online/api/post", post, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const savedPost = await axios.post(
+        "https://backend.dosshs.online/api/post",
+        post,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       onModalClose();
-      onPostCreated();
+      onPostCreated(savedPost.data.savedPost);
     } catch (e) {
+      setIsPosting("Post");
       console.error("error:", e);
+    } finally {
+      setPosting(false);
     }
   }
 

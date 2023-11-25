@@ -27,6 +27,7 @@ export default function Announce({
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [hasComments, setHasComments] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -130,7 +131,7 @@ export default function Announce({
 
   useEffect(() => {
     if (commentCount > 0) setHasComments(true);
-  });
+  }, []);
 
   return (
     <>
@@ -196,7 +197,9 @@ export default function Announce({
               className="announce-comment-count"
               style={{ marginTop: "0.3rem" }}
             >
-              {commentCounts} Comments
+              {commentCounts > 1
+                ? `${commentCounts} Comments `
+                : `${commentCounts} Comment`}
             </p>
           </div>
         </div>
@@ -231,6 +234,11 @@ export default function Announce({
               setCommentCount(commentCounts + 1);
             }}
             hasComments={hasComments}
+            fetchedComments={comments}
+            onFetchedComments={(comment) => {
+              if (comments.length > 0) return comments;
+              else setComments(comment);
+            }}
           />{" "}
           <div className="overlay"></div>
         </>

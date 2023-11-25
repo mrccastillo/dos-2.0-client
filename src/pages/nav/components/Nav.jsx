@@ -87,8 +87,15 @@ export default function Nav({
               ) : (
                 <Link to={null}>Profile</Link>
               )}
-
-              <p className="link">Account Settings</p>
+              <p
+                className="link"
+                onClick={() => {
+                  setIsNavLinkOpen(!isNavLinkOpen);
+                  setIsSettingsOpen(!isSettingsOpen);
+                }}
+              >
+                Account Settings
+              </p>
               <p className="link">Support Devs</p>
               <Link to="/" onClick={logOut} className="link --logout">
                 Log Out
