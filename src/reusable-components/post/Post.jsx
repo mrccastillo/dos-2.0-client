@@ -205,7 +205,11 @@ export default function Post({
                 setIsPostOpen(!isPostOpen);
               }}
             ></div>
-            <p className="comment-count">{commentCounts} Comments</p>
+            <p className="comment-count">
+              {commentCounts > 1
+                ? `${commentCounts} Comments `
+                : `${commentCounts} Comment`}
+            </p>
           </div>
           <div className="report-post"></div>
         </div>

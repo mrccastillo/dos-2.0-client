@@ -196,7 +196,9 @@ export default function Announce({
               className="announce-comment-count"
               style={{ marginTop: "0.3rem" }}
             >
-              {commentCounts} Comments
+              {commentCounts > 1
+                ? `${commentCounts} Comments `
+                : `${commentCounts} Comment`}
             </p>
           </div>
         </div>

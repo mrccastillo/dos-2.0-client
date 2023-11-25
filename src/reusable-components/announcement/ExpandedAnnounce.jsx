@@ -191,7 +191,12 @@ export default function ExpandedAnnounce({
                 //   setIsPostOpen(!isPostOpen);
                 // }}
               ></div>
-              <p className="comment-count">{comments.length} Comments</p>
+              <p className="comment-count">
+                {" "}
+                {comments.length > 1
+                  ? `${comments.length} Comments `
+                  : `${comments.length} Comment`}
+              </p>
             </div>
           </div>
           <div className="reply-to-post">

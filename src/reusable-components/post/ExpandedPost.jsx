@@ -95,6 +95,13 @@ export default function ExpandedPost({
 
   const submitComment = async () => {
     if (commenting) return;
+    if (!comment) return;
+
+    const trimmedComment = comment.trim();
+    const validatedComment = trimmedComment.replace(/\u2800/g, "");
+    if (!validatedComment) {
+      return;
+    }
 
     setCommenting(true);
 
@@ -201,7 +208,11 @@ export default function ExpandedPost({
                 //   setIsPostOpen(!isPostOpen);
                 // }}
               ></div>
-              <p className="comment-count">{comments.length} Comments</p>
+              <p className="comment-count">
+                {comments.length > 1
+                  ? `${comments.length} Comments `
+                  : `${comments.length} Comment`}
+              </p>
             </div>
           </div>
           <div className="reply-to-post">

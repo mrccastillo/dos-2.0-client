@@ -13,15 +13,26 @@ export default function CreateAnnouncement({
   const [content, setContent] = useState("");
   const [isCreatingAnnouncement, setIsCreatingAnnouncement] =
     useState("Announce");
+  const [announcing, setAnnouncing] = useState(false);
 
   async function handleAnnouncementSubmit(e) {
-    setIsCreatingAnnouncement("Announce");
     e.preventDefault();
+    if (announcing) return;
+    if (!content) return;
+
+    const trimmedAnnouncement = content.trim();
+    const validatedAnnouncement = trimmedAnnouncement.replace(/\u2800/g, "");
+    if (!validatedAnnouncement) {
+      return;
+    }
+
+    setAnnouncing(true);
+    setIsCreatingAnnouncement("Announce");
+
     const announce = {
       userId: userId,
       username: username,
       fullname: fullname,
-      title: "testtitle",
       content: content,
     };
 
@@ -41,8 +52,9 @@ export default function CreateAnnouncement({
       onAnnouncementCreated();
     } catch (e) {
       console.error("error:", e);
+    } finally {
+      setAnnouncing(false);
     }
-    console.log(announce);
   }
 
   function closeModal() {
