@@ -5,8 +5,11 @@ import "../stylesheets/Login.css";
 import axios from "axios";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { jwtDecode } from "jwt-decode";
+import AuthenticationModal from "../../../reusable-components/edituser/AuthenticationModal";
+import { URL } from "../../../App";
 
-export default function Login({ onDecodeUser }) {
+export default function Login({}) {
+  const storedUsernameOrEmail = Cookies.get("emailOrUsername");
   const storedValue = localStorage.getItem("isInSignInPage");
   const [isInSignInPage, setIsInSignInPage] = useState(
     storedValue === null ? true : JSON.parse(storedValue)
@@ -20,7 +23,9 @@ export default function Login({ onDecodeUser }) {
 
   //controlled elements
   //login
-  const [usernameOrEmail, setUsernameOrEmail] = useState("");
+  const [usernameOrEmail, setUsernameOrEmail] = useState(
+    storedUsernameOrEmail ? storedUsernameOrEmail : ""
+  );
   const [isRememberMe, setIsRememberMe] = useState(false);
 
   //signup
@@ -34,6 +39,12 @@ export default function Login({ onDecodeUser }) {
   const [userId, setUserId] = useState("");
   const [code, setCode] = useState("");
   const [verificationCode, setVerificationCode] = useState("");
+
+  //Recover Account
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [recoverEmail, setRecoverEmail] = useState("");
+  const [recoverUserId, setRecoverUserId] = useState("");
 
   function validate_email(email) {
     let expression = /^[^@]+@\w+(\.\w+)+\w$/;
@@ -85,10 +96,7 @@ export default function Login({ onDecodeUser }) {
         };
         setSignUpBtnMsg("Signing you up...");
         try {
-          const res = await axios.post(
-            "https://backend.dosshs.online/api/auth/signup",
-            newUser
-          );
+          const res = await axios.post(`${URL}/auth/signup`, newUser);
           if (res.data.message === "Signed Up Successfully") {
             setUserId(res.data.id);
             Cookies.set("tempToken", res.data.token, {
@@ -122,21 +130,17 @@ export default function Login({ onDecodeUser }) {
         };
         setSignUpBtnMsg("Sending you a code...");
         try {
-          const res = await axios.put(
-            `https://backend.dosshs.online/api/user/${userId}`,
-            user,
-            {
-              headers: {
-                Authorization: Cookies.get("tempToken"),
-              },
-            }
-          );
+          const res = await axios.put(`${URL}/user/${userId}`, user, {
+            headers: {
+              Authorization: Cookies.get("tempToken"),
+            },
+          });
           Cookies.set("tempToken", res.data.token, {
             expires: 24 * 60 * 60,
           }); // 1 day expiration
           if (res.data.message === "Account Successfully Updated") {
             const emailRes = await axios.put(`
-              https://backend.dosshs.online/api/mail/signup/${userId}
+            ${URL}/mail/signup/${userId}
             `);
             setVerificationCode(emailRes.data.verificationToken);
             setSteps((prevStep) => prevStep + 1);
@@ -159,7 +163,7 @@ export default function Login({ onDecodeUser }) {
       } else {
         setSignUpBtnMsg("Creating your account...");
         const verifyRes = await axios.get(`
-          https://backend.dosshs.online/api/verify/email?token=${code}
+        ${URL}/verify/email?token=${code}
         `);
 
         if (
@@ -185,6 +189,8 @@ export default function Login({ onDecodeUser }) {
   }
 
   async function handleLogInSubmit(e) {
+    setErrorMsg("");
+    setSuccessMsg("");
     e.preventDefault();
     if (!usernameOrEmail || !password) {
       setErrorMsg("Please fill out the fields");
@@ -198,17 +204,18 @@ export default function Login({ onDecodeUser }) {
 
     try {
       setLoginBtnMsg("LOGGING IN");
-      const res = await axios.post(
-        "https://backend.dosshs.online/api/auth/login",
-        user
-      );
+      const res = await axios.post(`${URL}/auth/login`, user);
       const User = jwtDecode(res.data.token);
       const parsedUser = JSON.parse(User.user);
 
       if (parsedUser.nameValid && parsedUser.emailValid) {
-        setSuccessMsg("Logged In Successfully");
         Cookies.set("token", res.data.token, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
         Cookies.set("userId", parsedUser._id, { expires: 30 * 24 * 60 * 60 }); // 30 day expiration
+        if (isRememberMe)
+          Cookies.set("emailOrUsername", usernameOrEmail, {
+            expires: 30 * 24 * 60 * 60,
+          });
+        setSuccessMsg("Logged In Successfully");
         setTimeout(() => {
           setIsLoggedIn(true);
         }, 1000);
@@ -229,7 +236,7 @@ export default function Login({ onDecodeUser }) {
         setUserId(parsedUser._id);
         try {
           const emailRes = await axios.put(`
-              https://backend.dosshs.online/api/mail/signup/${userId}
+          ${URL}/mail/signup/${userId}
             `);
           setVerificationCode(emailRes.data.verificationToken);
         } catch (err) {
@@ -240,11 +247,34 @@ export default function Login({ onDecodeUser }) {
         setEmail(parsedUser.email);
         setUsername(parsedUser.username);
         setCode("");
-        setErrorMsg("");
       }
     } catch (err) {
       setLoginBtnMsg("LOG IN");
       return setErrorMsg(err.response.data.message);
+    }
+  }
+
+  async function handleForgotPassword(e) {
+    e.preventDefault();
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      const user = await axios.get(
+        `${URL}/auth/find?account=${usernameOrEmail}`
+      );
+
+      if (user.status === 200) {
+        setSuccessMsg("User Found!");
+        setRecoverEmail(user.data.other.email);
+        setRecoverUserId(user.data.other._id);
+        setTimeout(() => {
+          setIsAuthModalOpen(true);
+        }, 1000);
+      } else {
+        setErrorMsg("User not found");
+      }
+    } catch (err) {
+      return console.error(err);
     }
   }
 
@@ -278,8 +308,9 @@ export default function Login({ onDecodeUser }) {
                     {isInSignInPage ? "Hello World!" : "Create Account"}
                   </h1>
                   <p className="form-subheader">
-                    {" "}
-                    {isInSignInPage
+                    {isForgotPassword
+                      ? "Recover your Account"
+                      : isInSignInPage
                       ? "Sign into your DOS Account"
                       : "Join DOS Now!"}
                   </p>
@@ -334,20 +365,22 @@ export default function Login({ onDecodeUser }) {
                           />
                         </>
                       )}
-                      <input
-                        type="password"
-                        className="login-input --white-btn"
-                        style={{
-                          borderColor: "#4f709c",
-                          backgroundColor: "white",
-                          color: "#000",
-                        }}
-                        value={password}
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                        }}
-                        placeholder="Enter your password"
-                      />
+                      {!isForgotPassword && (
+                        <input
+                          type="password"
+                          className="login-input --white-btn"
+                          style={{
+                            borderColor: "#4f709c",
+                            backgroundColor: "white",
+                            color: "#000",
+                          }}
+                          value={password}
+                          onChange={(e) => {
+                            setPassword(e.target.value);
+                          }}
+                          placeholder="Enter your password"
+                        />
+                      )}
                       {!isInSignInPage && (
                         <input
                           type="text"
@@ -457,14 +490,25 @@ export default function Login({ onDecodeUser }) {
                           />
                           <label htmlFor="remember-me">Remember Me</label>
                         </div>
-                        <p>Forgot Password</p>
+                        <p
+                          style={{ cursor: "pointer" }}
+                          onClick={() => setIsForgotPassword(!isForgotPassword)}
+                        >
+                          {!isForgotPassword
+                            ? "Forgot Password"
+                            : "Go back Login"}
+                        </p>
                       </>
                     )}
                   </div>
                   <p className="--server-msg">{errorMsg}</p>
                   <p className="--server-success-msg">{successMsg}</p>
                 </div>
-                {isInSignInPage ? (
+                {isForgotPassword ? (
+                  <button className="--blue-btn" onClick={handleForgotPassword}>
+                    FIND
+                  </button>
+                ) : isInSignInPage ? (
                   <button className="--blue-btn" onClick={handleLogInSubmit}>
                     {loginBtnMsg}
                   </button>
@@ -526,6 +570,16 @@ export default function Login({ onDecodeUser }) {
             </div>
           </div>
         </div>
+        {isAuthModalOpen && (
+          <>
+            <AuthenticationModal
+              onCloseAuthentication={() => setIsAuthModalOpen(!isAuthModalOpen)}
+              email={recoverEmail}
+              recoverUserId={recoverUserId}
+            />
+          </>
+        )}
+        {isAuthModalOpen && <div className="overlay"></div>}
       </HelmetProvider>
     );
   }

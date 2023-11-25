@@ -4,6 +4,7 @@ import CommentSkeleton from "../skeletonloading/CommentsSkeleton";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import { URL } from "../../App";
 
 export default function ExpandedPost({
   token,
@@ -48,28 +49,21 @@ export default function ExpandedPost({
           userId: userUserId,
           username: userUsername,
         };
-        const likeRes = await axios.post(
-          "https://backend.dosshs.online/api/post/like",
-          likePost,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        const likeRes = await axios.post(`${URL}/post/like`, likePost, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(likeRes.data.like._id);
         onLike(likeRes.data.like._id);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts + 1);
       } else {
-        await axios.delete(
-          `https://backend.dosshs.online/api/post/like/${postLikeId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        await axios.delete(`${URL}/post/like/${postLikeId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(null);
         onLike(null);
         setIsLiked(!isLiked);
@@ -88,17 +82,21 @@ export default function ExpandedPost({
       return setComments(fetchedComments);
     }
 
-    const commentsRes = await axios.get(
-      `https://backend.dosshs.online/api/post/comment/c?postId=${postId}`,
-      {
-        headers: {
-          Authorization: token,
-        },
-      }
-    );
-    setIsCommentFetching(false);
-    setComments(commentsRes.data.comments.reverse());
-    onFetchedComments(commentsRes.data.comments.reverse());
+    try {
+      const commentsRes = await axios.get(
+        `${URL}/post/comment/c?postId=${postId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setIsCommentFetching(false);
+      setComments(commentsRes.data.comments.reverse());
+      onFetchedComments(commentsRes.data.comments);
+    } catch (err) {
+      return console.error(err);
+    }
   };
 
   const submitComment = async () => {
@@ -122,22 +120,25 @@ export default function ExpandedPost({
       content: comment,
     };
     try {
-      await axios.post(
-        "https://backend.dosshs.online/api/post/comment",
-        commentObj,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      const res = await axios.post(`${URL}/post/comment`, commentObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
       onCommentUpdate();
+      if (comments.length > 0) {
+        onFetchedComments([res.data.comment, ...comments]);
+        setComments((prevComments) => [res.data.comment, ...prevComments]);
+      } else {
+        setComments((prevComments) => [res.data.comment, ...prevComments]);
+        onFetchedComments([res.data.comment]);
+      }
     } catch (err) {
       console.error(err);
     } finally {
       setComment("");
       setCommenting(false);
-      fetchComments();
     }
   };
 

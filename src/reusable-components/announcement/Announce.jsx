@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import axios from "axios";
 import ExpandedAnnounce from "./ExpandedAnnounce";
+import { URL } from "../../App";
 
 export default function Announce({
   userUserId,
@@ -26,7 +27,6 @@ export default function Announce({
   const [announceLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
-  const [hasComments, setHasComments] = useState(false);
   const [comments, setComments] = useState([]);
 
   const toggleReadMore = () => {
@@ -45,7 +45,7 @@ export default function Announce({
         };
 
         const likeRes = await axios.post(
-          "https://backend.dosshs.online/api/announcement/like",
+          `${URL}/announcement/like`,
           likeAnnounce,
           {
             headers: {
@@ -57,14 +57,11 @@ export default function Announce({
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts + 1);
       } else {
-        await axios.delete(
-          `https://backend.dosshs.online/api/announcement/like/${announceLikeId}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
+        await axios.delete(`${URL}/announcement/like/${announceLikeId}`, {
+          headers: {
+            Authorization: token,
+          },
+        });
         setLikeId(null);
         setIsLiked(!isLiked);
         setlikeCounts(likeCounts - 1);
@@ -128,10 +125,6 @@ export default function Announce({
 
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
-
-  useEffect(() => {
-    if (commentCount > 0) setHasComments(true);
-  }, []);
 
   return (
     <>
@@ -233,11 +226,10 @@ export default function Announce({
             onCommentUpdate={() => {
               setCommentCount(commentCounts + 1);
             }}
-            hasComments={hasComments}
+            hasComments={commentCounts > 0 ? true : false}
             fetchedComments={comments}
             onFetchedComments={(comment) => {
-              if (comments.length > 0) return comments;
-              else setComments(comment);
+              setComments(comment);
             }}
           />{" "}
           <div className="overlay"></div>

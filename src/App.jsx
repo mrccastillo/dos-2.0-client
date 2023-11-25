@@ -8,6 +8,8 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import axios from "axios";
 
+export const URL = import.meta.env.VITE_SERVER_URL;
+
 function App() {
   const token = Cookies.get("token");
   const [user, setUser] = useState([]);
@@ -16,7 +18,7 @@ function App() {
 
   const verifyToken = async () => {
     try {
-      await axios.get("https://backend.dosshs.online/api/jwt/token", {
+      await axios.get(`${URL}/jwt/token`, {
         headers: {
           Authorization: token,
         },
@@ -39,16 +41,11 @@ function App() {
     const parsedUser = JSON.parse(User.user);
 
     setUser(parsedUser);
-    // Cookies.set("username", parsedUser.username, {
-    //   expires: 30 * 24 * 60 * 60,
-    // }); // 30 day expiration
   };
 
   useEffect(() => {
     if (token) decodeUser();
   }, []);
-
-  //nasa Dashboard at Nav ung temp fix sa delay marecognize ung token
 
   return (
     <Router>

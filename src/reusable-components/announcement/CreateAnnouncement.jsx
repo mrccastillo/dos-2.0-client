@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import "./CreateAnnouncement.css";
 import Cookies from "js-cookie";
+import { URL } from "../../App";
 
 export default function CreateAnnouncement({
   fullname,
@@ -39,15 +40,11 @@ export default function CreateAnnouncement({
     try {
       setIsCreatingAnnouncement("Posting your Announcement...");
       const token = Cookies.get("token");
-      await axios.post(
-        "https://backend.dosshs.online/api/announcement",
-        announce,
-        {
-          headers: {
-            Authorization: token,
-          },
-        }
-      );
+      await axios.post(`${URL}/announcement`, announce, {
+        headers: {
+          Authorization: token,
+        },
+      });
       onModalClose();
       onAnnouncementCreated();
     } catch (e) {

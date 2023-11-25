@@ -4,10 +4,18 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import EditPasswordModal from "./EditPasswordModal";
 
-export default function AuthenticationModal({ onCloseAuthentication, email }) {
-  const userId = Cookies.get("userId");
+export default function AuthenticationModal({
+  onCloseAuthentication,
+  email,
+  recoverUserId,
+}) {
+  const userId = recoverUserId ? recoverUserId : Cookies.get("userId");
   const [message, setMessage] = useState(
-    `Send a verification code to ${email} to confirm it's you before changing your password.`
+    recoverUserId
+      ? `Send a verification code to
+       ${obfuscateEmail(email)} to confirm your identity
+       and recover your account.`
+      : `Send a verification code to ${email} to confirm it's you before changing your password.`
   );
   const [buttonMsg, setButtonMsg] = useState("SEND");
   const [verificationCode, setVerificationCode] = useState("");
@@ -19,6 +27,28 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
   const [errMsg, setErrMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
+  function obfuscateEmail(email) {
+    // Split the email address into local part and domain part
+    const [localPart, domainPart] = email.split("@");
+
+    // Hide characters in the local part
+    const maskedLocalPart =
+      localPart.substring(0, 1) +
+      "*".repeat(localPart.length - 2) +
+      localPart.slice(-1);
+
+    // Hide characters in the domain part
+    const maskedDomainPart =
+      domainPart.substring(0, 1) +
+      "*".repeat(domainPart.length - 2) +
+      domainPart.slice(-1);
+
+    // Construct the masked email address
+    const maskedEmail = maskedLocalPart + "@" + maskedDomainPart;
+
+    return maskedEmail;
+  }
+
   const handleSendEmail = async () => {
     setErrMsg("");
     setSuccessMsg("");
@@ -28,10 +58,11 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
     setButtonMsg("SENDING");
     try {
       const emailRes = await axios.put(`
-              https://backend.dosshs.online/api/mail/verification/${userId}
+      ${URL}/mail/verification/${userId}
             `);
       setVerificationCode(emailRes.data.verificationToken);
-      setMessage("Please verify your identity by using the code sent.");
+      setMessage(`Please verify your identity by using the
+      code sent to you.`);
       setCodeSent(true);
       setButtonMsg("VERIFY");
       setSuccessMsg("Code Sent Successfully");
@@ -52,7 +83,7 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
     setCodeSending(true);
     try {
       const verifyRes = await axios.get(`
-              https://backend.dosshs.online/api/verify/account?token=${verificationCode}
+      ${URL}/verify/account?token=${verificationCode}
             `);
       if (
         verifyRes.data.message === "Account Successfully Verified" ||
@@ -74,11 +105,18 @@ export default function AuthenticationModal({ onCloseAuthentication, email }) {
   };
 
   if (verified) {
-    return <EditPasswordModal onCloseModal={() => onCloseAuthentication()} />;
+    return (
+      <EditPasswordModal
+        onCloseModal={() => onCloseAuthentication()}
+        recoverUserId={recoverUserId}
+      />
+    );
   } else {
     return (
       <div className="authentication-modal">
-        <h2 className="authentication-header">Authentication</h2>
+        <h2 className="authentication-header">
+          {recoverUserId ? "Recover Account" : "Authentication"}
+        </h2>
         <div className="code-container">
           {message.split("\n").map((line, index) => (
             <p
