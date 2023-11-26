@@ -14,8 +14,6 @@ function App() {
   const token = Cookies.get("token");
   const [user, setUser] = useState([]);
 
-  //test push
-
   const verifyToken = async () => {
     try {
       await axios.get(`${URL}/jwt/token`, {

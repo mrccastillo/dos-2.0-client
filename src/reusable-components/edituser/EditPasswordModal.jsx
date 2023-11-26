@@ -187,6 +187,6 @@ export default function handleChangePass({ onCloseModal, recoverUserId }) {
       </>
     );
   } else {
-    return <SuccessModal />;
+    return <SuccessModal isRecover={recoverUserId ? true : false} />;
   }
 }

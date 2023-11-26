@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { useState } from "react";
 import AuthenticationModal from "./AuthenticationModal";
 import SuccessModal from "./SuccessModal";
+import { URL } from "../../App";
 
 export default function EditUserInfo({
   username,
@@ -54,23 +55,6 @@ export default function EditUserInfo({
     setUpdating(true);
 
     try {
-      if (user.username) {
-        const res = await axios.get(
-          `${URL}/user/find?account=${usernameEdit}`,
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        );
-        if (res.data.other) return setErrorMsg("Username is taken");
-      }
-    } catch (err) {
-      setErrorMsg("An error occurred, Please report it to the administrator");
-      return console.error(err);
-    }
-
-    try {
       const res = await axios.put(
         `${URL}/user/${Cookies.get("userId")}`,
         user,
@@ -87,6 +71,8 @@ export default function EditUserInfo({
         }); // 30 day expiration
       }
     } catch (err) {
+      if (err.response.data.err.keyValue.username)
+        return setErrorMsg("Username is taken.");
       setErrorMsg("An error occurred, Please report it to the administrator");
       return console.error(err);
     } finally {
@@ -252,7 +238,7 @@ export default function EditUserInfo({
           />
         </>
       )}
-      {isSuccessModalOpen && <SuccessModal />}
+      {isSuccessModalOpen && <SuccessModal isRecover={false} />}
     </>
   );
 }
