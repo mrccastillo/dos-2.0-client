@@ -479,16 +479,20 @@ export default function Login({}) {
                     {isInSignInPage && (
                       <>
                         <div>
-                          <input
-                            type="checkbox"
-                            name="isRememberMe"
-                            id="remember-me"
-                            value={isRememberMe}
-                            onChange={(e) => {
-                              setIsRememberMe(e.target.checked);
-                            }}
-                          />
-                          <label htmlFor="remember-me">Remember Me</label>
+                          {!isForgotPassword && (
+                            <>
+                              <input
+                                type="checkbox"
+                                name="isRememberMe"
+                                id="remember-me"
+                                value={isRememberMe}
+                                onChange={(e) => {
+                                  setIsRememberMe(e.target.checked);
+                                }}
+                              />
+                              <label htmlFor="remember-me">Remember Me</label>
+                            </>
+                          )}
                         </div>
                         <p
                           style={{ cursor: "pointer" }}
@@ -533,14 +537,9 @@ export default function Login({}) {
                   {isInSignInPage ? "Welcome Back!" : "Welcome to DOS"}
                 </h2>
                 <p className="message-content">
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                  Voluptate quibusdam quas commodi dolores molestias dignissimos
-                  laudantium. Et iste quae sapiente facere. Earum libero placeat
-                  quidem officia iste doloribus vero sequi! Quibusdam atque
-                  expedita, non fuga, illo tempore minus corrupti sequi
-                  voluptatem consequatur tempora exercitationem cum consectetur
-                  repudiandae, facere pariatur recusandae earum corporis debitis
-                  sint sunt numquam. Eligendi officiis quam debitis.
+                  {isInSignInPage
+                    ? "DOS, a dynamic and engaging platform designed for PUPSHS Students. With a friendly interface, a safe, moderated environment, DOS is the perfect space to share your thoughts and connect with your fellow students. Whether you want to post anonymously or publicly, DOS offers a variety of ways to share your personal reflections, funny anecdotes, or motivational messages. With the ability to post announcements, DOS is also a valuable tool to help keep everyone in the loop."
+                    : "New to DOS? Create an account now and experience a dynamic and engaging platform designed for PUPSHS Students. With a friendly interface, a safe, moderated environment, DOS is the perfect space to share your thoughts and connect with your fellow students. Whether you want to post anonymously or publicly, DOS offers a variety of ways to share your personal reflections, funny anecdotes, or motivational messages. With the ability to post announcements, DOS is also a valuable tool to help keep everyone in the loop. So why not join DOS today?"}
                 </p>
               </div>
               <div className="not-signedin-container">
@@ -570,6 +569,7 @@ export default function Login({}) {
             </div>
           </div>
         </div>
+
         {isAuthModalOpen && (
           <>
             <AuthenticationModal

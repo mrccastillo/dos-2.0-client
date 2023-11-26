@@ -1,6 +1,6 @@
 import "./SuccessModal.css";
 
-export default function SuccessModal(isRecover) {
+export default function SuccessModal({ isRecover }) {
   return (
     <div className="success-change-modal">
       <div
@@ -29,7 +29,7 @@ export default function SuccessModal(isRecover) {
           location.reload();
         }}
       >
-        {isRecover ? "CONTINUE" : "LOGIN"}
+        {isRecover ? "CONTINUE" : "REFRESH"}
       </button>
     </div>
   );

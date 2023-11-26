@@ -3,6 +3,7 @@ import "./AuthenticationModal.css";
 import axios from "axios";
 import Cookies from "js-cookie";
 import EditPasswordModal from "./EditPasswordModal";
+import { URL } from "../../App";
 
 export default function AuthenticationModal({
   onCloseAuthentication,
@@ -67,7 +68,7 @@ export default function AuthenticationModal({
       setButtonMsg("VERIFY");
       setSuccessMsg("Code Sent Successfully");
     } catch (err) {
-      setErrMsg(err.data.message);
+      setErrMsg(err.data);
       return console.error(err);
     } finally {
       setCodeSending(false);
