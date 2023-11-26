@@ -14,7 +14,6 @@ export default function handleChangePass({ onCloseModal, recoverUserId }) {
   const [successMsg, setSuccessMsg] = useState("");
   const [isAuthenticationOpen, setIsAuthenticationOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
-  const [userId, setUserId] = useState(recoverUserId);
 
   async function handleChangePass() {
     setErrorMsg("");
@@ -72,6 +71,7 @@ export default function handleChangePass({ onCloseModal, recoverUserId }) {
   async function handleRecover() {
     setErrorMsg("");
     setSuccessMsg("");
+
     if (!newPass || !confirmPass) {
       return setErrorMsg("Please fill out the fields.");
     }
@@ -84,17 +84,20 @@ export default function handleChangePass({ onCloseModal, recoverUserId }) {
     setUpdating(true);
     setSuccessMsg("Updating");
 
-    try {
-      const user = {
-        password: currentPass,
-      };
+    const user = {
+      password: newPass,
+    };
 
-      const res = await axios.get(`${URL}/auth/recover?userId=${userId}`, user);
+    try {
+      const res = await axios.put(
+        `${URL}/auth/recover?userId=${recoverUserId}`,
+        user
+      );
       if (res.data.message === "Account Successfully Recovered") {
         Cookies.set("token", res.data.token, {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
-        Cookies.set("userId", userId, {
+        Cookies.set("userId", recoverUserId, {
           expires: 30 * 24 * 60 * 60,
         }); // 30 day expiration
 
@@ -105,17 +108,11 @@ export default function handleChangePass({ onCloseModal, recoverUserId }) {
         }, 1000);
       }
     } catch (err) {
-      if (err.response.status === 404) {
-        setErrorMsg(
-          "Error occured while updating your password, try again later"
-        );
-        return console.error(err);
-      } else {
-        setErrorMsg(
-          "Error occured while updating your password, try again later. If error persists contact the developers : )"
-        );
-        return console.error(err);
-      }
+      setSuccessMsg("");
+      setErrorMsg(
+        "Error occured while updating your password, try again later. If error persists contact the developers : )"
+      );
+      return console.error(err);
     } finally {
       setUpdating(false);
     }
