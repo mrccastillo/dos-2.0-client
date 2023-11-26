@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CommentsReply from "./CommentsReply";
 import "./Reply.css";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -20,6 +21,7 @@ export default function Reply({
   const [replyCount, setReplyCount] = useState(0);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [likeInProgress, setLikeInProgress] = useState(false);
+  const [isCommentReplyOpen, setIsCommentReplyOpen] = useState(false);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -141,34 +143,35 @@ export default function Reply({
   }, []);
 
   return (
-    <div className="reply">
-      <div className="post-header">
-        <div
-          className="profile-pic"
-          //   style={{ width: "3.5rem", height: "3.5rem" }}
-        ></div>
-        <div className="post-author">
-          <p className="display-name">
-            {/*isAnonymous ? "Anonymous" : fullname*/}
-            {fullname}
-          </p>
-          <p className="username">
-            {/* {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>} */}
-            @{username}
-          </p>
-          <p
-            className="date"
-            style={{
-              position: "absolute",
-              top: "1.5rem",
-              right: "1rem",
-            }}
-          >
-            {formatDate(date)}
-          </p>
-        </div>
-      </div>{" "}
-      {/* {content.split("\n").map((line, index) => (
+    <>
+      <div className="reply">
+        <div className="post-header">
+          <div
+            className="profile-pic"
+            //   style={{ width: "3.5rem", height: "3.5rem" }}
+          ></div>
+          <div className="post-author">
+            <p className="display-name">
+              {/*isAnonymous ? "Anonymous" : fullname*/}
+              {fullname}
+            </p>
+            <p className="username">
+              {/* {!isAnonymous && <Link to={`/${username}`}>@{username}</Link>} */}
+              @{username}
+            </p>
+            <p
+              className="date"
+              style={{
+                position: "absolute",
+                top: "1.5rem",
+                right: "1rem",
+              }}
+            >
+              {formatDate(date)}
+            </p>
+          </div>
+        </div>{" "}
+        {/* {content.split("\n").map((line, index) => (
         <p
           key={index}
           style={{
@@ -180,51 +183,74 @@ export default function Reply({
           {line}
         </p>
       ))} */}
-      {content.split("\n").map((line, index) => (
-        <p
-          key={index}
+        {content.split("\n").map((line, index) => (
+          <p
+            key={index}
+            style={{
+              fontSize: "0.85rem",
+              marginTop: "0.1rem",
+              marginLeft: "3.5rem",
+            }}
+          >
+            {isCollapsed ? line.slice(0, 120) : line}
+          </p>
+        ))}
+        {content.length > 120 && (
+          <p
+            className="read-more"
+            style={{ marginLeft: "3.5rem" }}
+            onClick={toggleReadMore}
+          >
+            {isCollapsed ? "...read more" : "...show less"}
+          </p>
+        )}
+        <div
+          className="post-interaction"
           style={{
-            fontSize: "0.85rem",
-            marginTop: "0.1rem",
-            marginLeft: "3.5rem",
+            padding: "1.5rem 2.5rem",
           }}
         >
-          {isCollapsed ? line.slice(0, 120) : line}
-        </p>
-      ))}
-      {content.length > 120 && (
-        <p
-          className="read-more"
-          style={{ marginLeft: "3.5rem" }}
-          onClick={toggleReadMore}
-        >
-          {isCollapsed ? "...read more" : "...show less"}
-        </p>
-      )}
-      <div
-        className="post-interaction"
-        style={{
-          padding: "1.5rem 2.5rem",
-        }}
-      >
-        <div className="like-container">
-          <div
-            className={isLiked ? "like-icon --isLiked" : "like-icon"}
-            onClick={handleLike}
-          ></div>
-          {likeCount}
+          <div className="like-container">
+            <div
+              className={isLiked ? "like-icon --isLiked" : "like-icon"}
+              onClick={handleLike}
+            ></div>
+            {likeCount}
+          </div>
+          <div className="comment-container">
+            <div
+              className="comment-icon"
+              onClick={() => {
+                setIsCommentReplyOpen(!isCommentReplyOpen);
+              }}
+            ></div>
+            {replyCount} Replies
+          </div>
         </div>
-        <div className="comment-container">
-          <div
-            className="comment-icon"
-            // onClick={() => {
-            //   setIsPostOpen(!isPostOpen);
-            // }}
-          ></div>
-          {replyCount} Replies
-        </div>
+        {isCommentReplyOpen && (
+          <div className="reply-to-post" style={{ height: "5rem" }}>
+            <div className="user-reply">
+              <div className="profile-pic"></div>
+              <textarea
+                placeholder="Post your reply"
+                className="reply-textarea"
+                // value={commentId}
+                // onChange={(e) => {
+                //   setComment(e.target.value);
+                // }}
+              ></textarea>
+            </div>
+            <button className="reply-btn">Reply</button>
+          </div>
+        )}
+        {isCommentReplyOpen && (
+          <>
+            <CommentsReply />
+            {/* <CommentsReply />
+            <CommentsReply /> */}
+          </>
+        )}
       </div>
-      {/* <Reply /> */}
-    </div>
+    </>
   );
 }
