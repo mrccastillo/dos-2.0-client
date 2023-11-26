@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react";
 import "../stylesheets/Error404.css";
 
 export default function Error404() {
+  const [emoticon, setEmoticon] = useState("");
   const randomEmoticon = () => {
     const randomNumber = Math.floor(Math.random() * 10) + 1;
-    console.log(randomNumber);
     switch (randomNumber) {
       case 1:
         return "(⁠っ⁠˘̩⁠╭⁠╮⁠˘̩⁠)⁠っ";
@@ -28,14 +29,17 @@ export default function Error404() {
     }
   };
 
+  useEffect(() => {
+    setEmoticon(randomEmoticon());
+  }, []);
+
   return (
     <div className="error-page-background">
       <div className="error-msg-container">
         <h2 className="error">
           OOPS!
           <br />
-          {randomEmoticon()}
-          {/* (⁠๑⁠´⁠•⁠.̫⁠ ⁠•⁠ ⁠`⁠๑⁠) */}
+          {emoticon}
         </h2>
         <p className="error-content">
           We’re very sorry for the inconvenience. Looks like your trying to

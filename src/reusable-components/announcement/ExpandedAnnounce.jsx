@@ -90,7 +90,7 @@ export default function ExpandedAnnounce({
     );
     setIsCommentFetching(false);
     setComments(commentsRes.data.comments.reverse());
-    onFetchedComments(commentsRes.data.comments.reverse());
+    onFetchedComments(commentsRes.data.comments);
   };
 
   const submitComment = async () => {
