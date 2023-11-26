@@ -183,7 +183,9 @@ export default function ExpandedPost({
                 ? "PUP"
                 : category === 2
                 ? "Question"
-                : category === 3 && "Rant"}
+                : category === 3
+                ? "Rant"
+                : category === 4 && "Confession"}
             </p>
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>

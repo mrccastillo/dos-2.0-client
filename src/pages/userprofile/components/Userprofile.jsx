@@ -35,11 +35,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchUser = async () => {
     try {
-      await axios.get(`${URL}/auth/find?account=${username}`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      await axios.get(`${URL}/auth/find?account=${username}`);
     } catch (err) {
       setUserFound(false);
       return console.error(err);
@@ -120,7 +116,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchPosts = async () => {
     try {
-      const post = await axios.get(`${URL}/post`, {
+      const post = await axios.get(`${URL}/post?username=${username}`, {
         headers: {
           Authorization: token,
         },
@@ -166,12 +162,8 @@ export default function Userprofile({ userLoggedIn }) {
         };
       });
 
-      //
-
-      // });
-
       const postsWithCounts = await Promise.all(getPostLikesPromises);
-      setPosts(postsWithCounts.reverse());
+      setPosts(postsWithCounts);
       setPostFetched(true);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -180,6 +172,10 @@ export default function Userprofile({ userLoggedIn }) {
 
   const handlePostCreated = () => {
     fetchPosts();
+  };
+
+  const handleAnnounceCreated = () => {
+    fetchAnnouncements();
   };
 
   useEffect(() => {
@@ -290,6 +286,9 @@ export default function Userprofile({ userLoggedIn }) {
                     filteredAnnouncements.map((el) => (
                       <Announce
                         key={el._id}
+                        userUsername={userLoggedIn.username}
+                        userUserId={userLoggedIn._id}
+                        userFullName={userLoggedIn.fullname}
                         announceId={el._id}
                         fullname={el.fullname}
                         username={el.username}
@@ -299,8 +298,6 @@ export default function Userprofile({ userLoggedIn }) {
                         likeCount={el.likeCount}
                         likeId={el.likeId}
                         commentCount={el.commentCount}
-                        userUsername={userLoggedIn.username}
-                        userUserId={userLoggedIn._id}
                       />
                     ))
                   ) : (
@@ -321,6 +318,9 @@ export default function Userprofile({ userLoggedIn }) {
                         <Post
                           key={el._id}
                           postId={el._id}
+                          userUsername={userLoggedIn.username}
+                          userUserId={userLoggedIn._id}
+                          userFullName={userLoggedIn.fullname}
                           fullname={el.fullname}
                           username={el.username}
                           content={el.content}
@@ -331,8 +331,6 @@ export default function Userprofile({ userLoggedIn }) {
                           liked={el.liked}
                           likeId={el.likeId}
                           commentCount={el.commentCount}
-                          userUsername={userLoggedIn.username}
-                          userUserId={userLoggedIn._id}
                         />
                       ))
                   ) : (
@@ -364,7 +362,7 @@ export default function Userprofile({ userLoggedIn }) {
             fullname={user.fullname}
             username={user.username}
             userId={user._id}
-            onAnnouncementCreated={handlePostCreated}
+            onAnnouncementCreated={handleAnnounceCreated}
             onModalClose={() => {
               setIsCreateAnnounceOpen(!isCreateAnnounceOpen);
             }}
