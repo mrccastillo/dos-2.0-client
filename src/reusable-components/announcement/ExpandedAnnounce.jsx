@@ -233,6 +233,8 @@ export default function ExpandedAnnounce({
                   username={comment.username}
                   content={comment.content}
                   date={comment.dateCreated}
+                  userFullName={userFullName}
+                  isPost={false}
                 />
               ))
             )}
