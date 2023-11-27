@@ -228,7 +228,7 @@ export default function EditUserInfo({
           Save Changes
         </button>
       </div>
-      {isSuccessModalOpen && (
+      {isChangePasswordOpen && (
         <>
           <AuthenticationModal
             onCloseAuthentication={() =>

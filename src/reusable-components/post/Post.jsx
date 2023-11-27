@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ExpandedPost from "./ExpandedPost";
+import EditPost from "./EditPost";
+import ReportPost from "./ReportPost";
+import DeletePost from "./DeletePost";
+import EditIcon from "@mui/icons-material/Edit";
 import "./Post.css";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -30,7 +34,10 @@ export default function Post({
   const [postLikeId, setLikeId] = useState(likeId);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isEditPostOpen, setIsEditPostOpen] = useState(false);
   const [comments, setComments] = useState([]);
+  const [isDeletePostOpen, setIsDeletePostOpen] = useState(false);
+  const [isReportPostOpen, setIsReportPostOpen] = useState(false);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -146,11 +153,16 @@ export default function Post({
                   <p className="date">{formatDate(date)}</p>
                 </div>
               </div>
-              <div className="delete"></div>
+              <div
+                className="delete"
+                onClick={() => {
+                  setIsDeletePostOpen(!isDeletePostOpen);
+                }}
+              ></div>
             </div>
             <div className="report-post-container"></div>
           </div>
-          <div className="post-content">
+          <div className="post-content" style={{ position: "relative" }}>
             <p className="category">
               #
               {category === 0
@@ -168,11 +180,22 @@ export default function Post({
                 {isCollapsed ? line.slice(0, 120) : line}
               </p>
             ))}
-            {content.length > 120 && (
+            {content.length >= 120 && (
               <p className="read-more" onClick={toggleReadMore}>
                 {isCollapsed ? "...read more" : "...show less"}
               </p>
             )}
+            <EditIcon
+              style={{
+                position: "absolute",
+                bottom: "0.5rem",
+                right: "0.5rem",
+                fontSize: "0.8rem",
+              }}
+              onClick={() => {
+                setIsEditPostOpen(!isEditPostOpen);
+              }}
+            ></EditIcon>
           </div>
         </div>
         <div className="post-interaction">
@@ -201,9 +224,41 @@ export default function Post({
                 : `${commentCounts} Comment`}
             </p>
           </div>
-          <div className="report-post"></div>
+          <div
+            className="report-post"
+            onClick={() => {
+              setIsReportPostOpen(!isReportPostOpen);
+            }}
+          ></div>
         </div>
       </div>
+      {isReportPostOpen && (
+        <>
+          <ReportPost
+            onCloseReport={() => {
+              setIsReportPostOpen(!isReportPostOpen);
+            }}
+          />
+          <div className="overlay"></div>
+        </>
+      )}
+      {isDeletePostOpen && (
+        <>
+          <DeletePost
+            onCloseDeleteModal={() => {
+              setIsDeletePostOpen(!isDeletePostOpen);
+            }}
+          />
+          <div className="overlay"></div>
+        </>
+      )}
+      {isEditPostOpen && (
+        <EditPost
+          onCloseEditPost={() => {
+            setIsEditPostOpen(!isEditPostOpen);
+          }}
+        />
+      )}
       {isPostOpen && (
         <>
           <ExpandedPost

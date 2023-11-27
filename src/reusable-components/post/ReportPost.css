@@ -1,0 +1,50 @@
+.report-post-modal {
+  width: 27rem;
+  height: 30rem;
+  background-color: antiquewhite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgb(255, 255, 255);
+  z-index: 2;
+  border-radius: 1rem;
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.report-post-header {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid black;
+}
+
+.report-post-inputs {
+  height: 23.7rem;
+  margin-top: 1rem;
+  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.report-inputs {
+  margin-top: 1rem;
+  padding-left: 1rem q;
+  text-align: start;
+}
+
+.report-inputs label {
+  margin-left: 1rem;
+}
+
+.others-input {
+  width: 100%;
+  margin-top: 0.5rem;
+  border: 0;
+  border-bottom: 1px solid black;
+  padding-bottom: 0.2rem;
+}
+
+.others-input:focus {
+  outline: 0;
+}

@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import "../stylesheets/Nav.css";
 import { useEffect, useState } from "react";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
+import Feedback from "../../../reusable-components/feedback/Feedback";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { URL } from "../../../App";
@@ -17,6 +18,7 @@ export default function Nav({
   const token = Cookies.get("token");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
   const logOut = async () => {
     try {
@@ -65,7 +67,7 @@ export default function Nav({
               <p
                 className="navlink settings-icon"
                 onClick={() => {
-                  setIsSettingsOpen(!isSettingsOpen);
+                  setIsFeedbackOpen(!isFeedbackOpen);
                 }}
               ></p>
             </div>
@@ -121,6 +123,13 @@ export default function Nav({
           email={email}
           onCloseSettings={() => {
             setIsSettingsOpen(!isSettingsOpen);
+          }}
+        />
+      )}
+      {isFeedbackOpen && (
+        <Feedback
+          onCloseFeedback={() => {
+            setIsFeedbackOpen(!isFeedbackOpen);
           }}
         />
       )}

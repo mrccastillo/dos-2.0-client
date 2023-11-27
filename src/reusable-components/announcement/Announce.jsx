@@ -147,7 +147,7 @@ export default function Announce({
           <div className="post-content --announce">
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
-                {isCollapsed ? line.slice(0, 120) : line}
+                {isCollapsed ? line.slice(0, 119) : line}
               </p>
             ))}
             {content.length > 120 && (

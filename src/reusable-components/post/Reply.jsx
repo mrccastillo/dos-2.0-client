@@ -25,6 +25,8 @@ export default function Reply({
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCommentReplyOpen, setIsCommentReplyOpen] = useState(false);
+  const [reply, setReply] = useState("");
+  const [replying, setReplying] = useState(false);
 
   const toggleReadMore = () => {
     setIsCollapsed(!isCollapsed);
@@ -327,6 +329,8 @@ export default function Reply({
                 userUsername={userUsername}
               />
             ))}
+            {/* <CommentsReply />
+            <CommentsReply /> */}
           </>
         )}
       </div>

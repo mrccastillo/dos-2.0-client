@@ -9,4 +9,5 @@
   padding: 1rem;
   border-radius: 1rem;
   position: relative;
+  animation: postPopUp 300ms ease-out;
 }
