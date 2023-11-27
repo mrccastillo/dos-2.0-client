@@ -12,13 +12,16 @@ export default function Reply({
   date,
   commentId,
   userUsername,
+  userFullName,
+  isPost,
 }) {
   const token = Cookies.get("token");
   const userId = Cookies.get("userId");
   const [likeId, setLikeId] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [replyCount, setReplyCount] = useState(0);
+  const [replies, setReplies] = useState([]);
+  const [replyCount, setReplyCount] = useState(replies.length);
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [likeInProgress, setLikeInProgress] = useState(false);
   const [isCommentReplyOpen, setIsCommentReplyOpen] = useState(false);
@@ -80,6 +83,26 @@ export default function Reply({
     return `${timeAgo} ${timeUnit}${timeAgo > 1 ? "s" : ""} ago`;
   };
 
+  const fetchReplies = async () => {
+    try {
+      const query = isPost ? "postCommentId" : "announcementCommentId";
+      const path = isPost ? "post" : "announcement";
+
+      const commentsRes = await axios.get(
+        `${URL}/${path}/comment/c?${query}=${commentId}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setReplies(commentsRes.data.comments.reverse());
+      setReplyCount(commentsRes.data.comments.length);
+    } catch (err) {
+      return console.error(err);
+    }
+  };
+
   const fetchLikes = async () => {
     try {
       const likes = await axios.get(`${URL}/comment?commentId=${commentId}`, {
@@ -138,9 +161,55 @@ export default function Reply({
     }
   }
 
+  const submitReply = async () => {
+    if (replying) return;
+    if (!reply) return;
+
+    const trimmedReply = reply.trim();
+    const validatedReply = trimmedReply.replace(/\u2800/g, "");
+    if (!validatedReply) {
+      return;
+    }
+
+    setReplying(true);
+
+    const commentObj = {
+      profilePicture: "",
+      userId: userId,
+      fullname: userFullName,
+      username: userUsername,
+      content: reply,
+    };
+
+    if (isPost) commentObj.postCommentId = commentId;
+    else commentObj.announcementCommentId = commentId;
+
+    const path = isPost ? "post" : "announcement";
+
+    try {
+      const res = await axios.post(`${URL}/${path}/comment`, commentObj, {
+        headers: {
+          Authorization: token,
+        },
+      });
+
+      setReplies((prev) => [res.data.comment, ...prev]);
+    } catch (err) {
+      return console.error(err);
+    } finally {
+      setReply("");
+      setReplying(false);
+    }
+  };
+
   useEffect(() => {
     fetchLikes();
+    fetchReplies();
   }, []);
+
+  useEffect(() => {
+    setReplyCount(replies.length);
+  }, [replies]);
 
   return (
     <>
@@ -234,20 +303,30 @@ export default function Reply({
               <textarea
                 placeholder="Post your reply"
                 className="reply-textarea"
-                // value={commentId}
-                // onChange={(e) => {
-                //   setComment(e.target.value);
-                // }}
+                value={reply}
+                onChange={(e) => {
+                  setReply(e.target.value);
+                }}
               ></textarea>
             </div>
-            <button className="reply-btn">Reply</button>
+            <button className="reply-btn" onClick={submitReply}>
+              Reply
+            </button>
           </div>
         )}
         {isCommentReplyOpen && (
           <>
-            <CommentsReply />
-            {/* <CommentsReply />
-            <CommentsReply /> */}
+            {replies.map((el) => (
+              <CommentsReply
+                key={el._id}
+                commentId={el._id}
+                fullname={el.fullname}
+                username={el.username}
+                content={el.content}
+                date={el.dateCreated}
+                userUsername={userUsername}
+              />
+            ))}
           </>
         )}
       </div>

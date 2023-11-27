@@ -256,6 +256,8 @@ export default function ExpandedPost({
                   username={comment.username}
                   content={comment.content}
                   date={comment.dateCreated}
+                  userFullName={userFullName}
+                  isPost={true}
                 />
               ))
             )}
