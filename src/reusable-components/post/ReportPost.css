@@ -33,6 +33,13 @@
   text-align: start;
 }
 
+.roblox-face {
+  width: 10rem;
+  height: 10rem;
+  background: url("../../assets/images/roblox.png");
+  background-size: cover;
+}
+
 .report-inputs label {
   margin-left: 1rem;
 }

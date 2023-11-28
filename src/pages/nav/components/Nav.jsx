@@ -3,6 +3,7 @@ import "../stylesheets/Nav.css";
 import { useEffect, useState } from "react";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Feedback from "../../../reusable-components/feedback/Feedback";
+import SendNotif from "../../../reusable-components/sendNotif/sendNotif";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { URL } from "../../../App";
@@ -113,6 +114,8 @@ export default function Nav({
           </div>
         </div>
       </nav>
+
+      {/* <SendNotif /> */}
       {isSettingsOpen && (
         <EditUserInfo
           fullname={fullname}

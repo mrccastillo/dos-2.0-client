@@ -4,7 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { URL } from "../../App";
 
-function Feedback({ onCloseFeedback }) {
+function SendNotif({}) {
   //   const [content, setContent] = useState("");
   //   const [category, setCategoy] = useState(0);
   //   const [isPosting, setIsPosting] = useState("Post");
@@ -67,6 +67,34 @@ function Feedback({ onCloseFeedback }) {
           <div className="post-announcement-modal-header">
             <h2>Send Feedback</h2>
           </div>
+          <div
+            style={{
+              //   height: "3.5rem",
+              paddingBottom: "1rem",
+              borderBottom: "1px solid rgba(0, 0, 0, 0.243)",
+              textAlign: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <p
+              style={{
+                fontSize: "0.85rem",
+                color: "white",
+                marginBottom: "0.5rem",
+              }}
+            >
+              User ID/Username
+            </p>
+            <input
+              type="text"
+              style={{
+                width: "15rem",
+                height: "1.6rem",
+                borderRadius: "0.8rem",
+                border: "0",
+              }}
+            />
+          </div>
           <div className="post-announcement-modal-content">
             <div className="post-author-info">
               <div className="post-header">
@@ -77,7 +105,7 @@ function Feedback({ onCloseFeedback }) {
                     style={{ fontWeight: 500 }}
                   >
                     {/* {fullname} */}
-                    Marc Castillo
+                    DOSAdmin
                   </p>
                   <p className="username --white-text">@username</p>
                 </div>
@@ -86,13 +114,14 @@ function Feedback({ onCloseFeedback }) {
             <textarea
               className="create-post-announce-content"
               placeholder="Content posted"
+              style={{ height: "5rem" }}
               //   value={content}
               //   onChange={(e) => {
               //     setContent(e.target.value);
               //   }}
             ></textarea>
             <div className="post-category">
-              <select
+              {/* <select
                 className="select"
                 style={{ width: "15rem", padding: "0 1rems" }}
                 // onClick={(e) => {
@@ -104,7 +133,7 @@ function Feedback({ onCloseFeedback }) {
                 <option value="2">Question</option>
                 <option value="3">Rant</option>
                 <option value="4">Confession</option>
-              </select>
+              </select> */}
               {/* <div className="anonymous-btn">
                 <input
                   type="checkbox"
@@ -123,13 +152,11 @@ function Feedback({ onCloseFeedback }) {
         <div className="btn-container">
           <button className="submit-post">{/*isPosting*/}Edit Post</button>
         </div>
-        <p className="close-btn" onClick={onCloseFeedback}>
-          &times;
-        </p>
+        <p className="close-btn">&times;</p>
       </form>
       <div className="overlay"></div>
     </>
   );
 }
 
-export default Feedback;
+export default SendNotif;
