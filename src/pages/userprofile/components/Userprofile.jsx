@@ -56,11 +56,14 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchAnnouncements = async () => {
     try {
-      const announcement = await axios.get(`${URL}/announcement`, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const announcement = await axios.get(
+        `${URL}/announcement/user/a?username=${username}`,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
 
       const getAnnouncementLikesPromises = announcement.data.map(
         async (announcement) => {
@@ -116,7 +119,7 @@ export default function Userprofile({ userLoggedIn }) {
 
   const fetchPosts = async () => {
     try {
-      const post = await axios.get(`${URL}/post?username=${username}`, {
+      const post = await axios.get(`${URL}/post/user/p?username=${username}`, {
         headers: {
           Authorization: token,
         },
@@ -163,7 +166,7 @@ export default function Userprofile({ userLoggedIn }) {
       });
 
       const postsWithCounts = await Promise.all(getPostLikesPromises);
-      setPosts(postsWithCounts);
+      setPosts(postsWithCounts.reverse());
       setPostFetched(true);
     } catch (error) {
       console.error("Error fetching posts:", error);
@@ -192,7 +195,7 @@ export default function Userprofile({ userLoggedIn }) {
         }
       } catch (error) {
         if (isMounted) {
-          setUserFound(false); // Set userFound to false on error
+          setUserFound(false);
         }
         console.error("Error fetching data:", error);
       }

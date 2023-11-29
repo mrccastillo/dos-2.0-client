@@ -17,6 +17,7 @@ export default function Nav({
   fullname,
 }) {
   const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
@@ -131,6 +132,12 @@ export default function Nav({
       )}
       {isFeedbackOpen && (
         <Feedback
+          fullname={fullname}
+          username={user}
+          userId={userId}
+          onModalClose={() => {
+            setIsCreatePostOpen(!isCreatePostOpen);
+          }}
           onCloseFeedback={() => {
             setIsFeedbackOpen(!isFeedbackOpen);
           }}
