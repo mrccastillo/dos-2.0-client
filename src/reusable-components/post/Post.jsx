@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import ExpandedPost from "./ExpandedPost";
 import EditPost from "./EditPost";
 import ReportPost from "./ReportPost";
-import DeletePost from "./DeletePost";
 import EditIcon from "@mui/icons-material/Edit";
 import "./Post.css";
 import axios from "axios";
@@ -27,6 +26,7 @@ export default function Post({
   commentCount,
 }) {
   const token = Cookies.get("token");
+  const [postContent, setContent] = useState(content);
   const [isLiked, setIsLiked] = useState(liked);
   const [isPostOpen, setIsPostOpen] = useState(false);
   const [likeCounts, setlikeCounts] = useState(likeCount);
@@ -36,7 +36,6 @@ export default function Post({
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [isEditPostOpen, setIsEditPostOpen] = useState(false);
   const [comments, setComments] = useState([]);
-  const [isDeletePostOpen, setIsDeletePostOpen] = useState(false);
   const [isReportPostOpen, setIsReportPostOpen] = useState(false);
 
   const toggleReadMore = () => {
@@ -153,12 +152,7 @@ export default function Post({
                   <p className="date">{formatDate(date)}</p>
                 </div>
               </div>
-              <div
-                className="delete"
-                onClick={() => {
-                  setIsDeletePostOpen(!isDeletePostOpen);
-                }}
-              ></div>
+              <div className="delete"></div>
             </div>
             <div className="report-post-container"></div>
           </div>
@@ -175,27 +169,29 @@ export default function Post({
                 ? "Rant"
                 : category === 4 && "Confession"}
             </p>
-            {content.split("\n").map((line, index) => (
+            {postContent.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
                 {isCollapsed ? line.slice(0, 120) : line}
               </p>
             ))}
-            {content.length >= 120 && (
+            {postContent.length >= 120 && (
               <p className="read-more" onClick={toggleReadMore}>
                 {isCollapsed ? "...read more" : "...show less"}
               </p>
             )}
-            <EditIcon
-              style={{
-                position: "absolute",
-                bottom: "0.5rem",
-                right: "0.5rem",
-                fontSize: "0.8rem",
-              }}
-              onClick={() => {
-                setIsEditPostOpen(!isEditPostOpen);
-              }}
-            ></EditIcon>
+            {username === userUsername && (
+              <EditIcon
+                style={{
+                  position: "absolute",
+                  bottom: "0.5rem",
+                  right: "0.5rem",
+                  fontSize: "0.8rem",
+                }}
+                onClick={() => {
+                  setIsEditPostOpen(!isEditPostOpen);
+                }}
+              />
+            )}
           </div>
         </div>
         <div className="post-interaction">
@@ -242,19 +238,18 @@ export default function Post({
           <div className="overlay"></div>
         </>
       )}
-      {isDeletePostOpen && (
-        <>
-          <DeletePost
-            onCloseDeleteModal={() => {
-              setIsDeletePostOpen(!isDeletePostOpen);
-            }}
-          />
-          <div className="overlay"></div>
-        </>
-      )}
       {isEditPostOpen && (
         <EditPost
+          postId={postId}
+          fullname={fullname}
+          username={username}
+          postcontent={postContent}
+          isAnonymous={isAnonymous}
           onCloseEditPost={() => {
+            setIsEditPostOpen(!isEditPostOpen);
+          }}
+          onUpdatePost={(updatedContent) => {
+            setContent(updatedContent);
             setIsEditPostOpen(!isEditPostOpen);
           }}
         />
@@ -268,7 +263,7 @@ export default function Post({
             userUsername={userUsername}
             userFullName={userFullName}
             category={category}
-            content={content}
+            content={postContent}
             username={username}
             isAnonymous={isAnonymous}
             date={formatDate(date)}

@@ -12,7 +12,7 @@ export default function CreatePost({
   onModalClose,
 }) {
   const [content, setContent] = useState("");
-  const [category, setCategoy] = useState(0);
+  const [category, setCategory] = useState(0);
   const [isPosting, setIsPosting] = useState("Post");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [posting, setPosting] = useState(false);
@@ -100,7 +100,7 @@ export default function CreatePost({
               <select
                 className="select"
                 onClick={(e) => {
-                  setCategoy(e.target.value);
+                  setCategory(e.target.value);
                 }}
               >
                 <option value="0">General</option>
@@ -116,7 +116,6 @@ export default function CreatePost({
                   value={isAnonymous}
                   onClick={(e) => {
                     setIsAnonymous(e.target.checked);
-                    // console.log(isAnonymous);
                   }}
                 />
                 <label htmlFor="isAnonymous">Post Anonymously</label>

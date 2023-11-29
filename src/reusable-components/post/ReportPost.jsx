@@ -6,7 +6,7 @@ function ReportPost({ onCloseReport }) {
   const [isOthersOpen, setIsOthersOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  function handleReportSubmit(e) {
+  function handleReportChange(e) {
     setIsSuccess(false);
     const { name, checked, value, type } = e.target;
     setInputData((prevData) => ({
@@ -30,7 +30,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="violence"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="violence"
                 />
                 <label htmlFor="violence">Violence</label>
@@ -39,7 +39,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="harrassments"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="harrassments"
                 />
                 <label htmlFor="harrassments">Harrassments</label>
@@ -48,7 +48,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="suicide"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="suicide"
                 />
                 <label htmlFor="suicide">Suicide</label>
@@ -57,7 +57,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="false-information"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="falseInformation"
                 />
                 <label htmlFor="false-information">False Information</label>
@@ -66,7 +66,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="spam"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="spam"
                 />
                 <label htmlFor="spam">Spam</label>
@@ -75,7 +75,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="hate"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="hate"
                 />
                 <label htmlFor="hate">Hate Speech</label>
@@ -84,7 +84,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="checkbox"
                   id="abuse"
-                  onChange={handleReportSubmit}
+                  onChange={handleReportChange}
                   name="abuse"
                 />
                 <label htmlFor="abuse">Abuse</label>
@@ -107,7 +107,7 @@ function ReportPost({ onCloseReport }) {
                     placeholder="Enter"
                     className="others-input"
                     name="others"
-                    onChange={handleReportSubmit}
+                    onChange={handleReportChange}
                   />
                 )}
               </div>
