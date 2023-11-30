@@ -12,6 +12,7 @@ export default function CreateAnnouncement({
   onModalClose,
 }) {
   const [content, setContent] = useState("");
+  const [category, setCategory] = useState(4);
   const [isCreatingAnnouncement, setIsCreatingAnnouncement] =
     useState("Announce");
   const [announcing, setAnnouncing] = useState(false);
@@ -35,6 +36,7 @@ export default function CreateAnnouncement({
       username: username,
       fullname: fullname,
       content: content,
+      category: category,
     };
 
     try {
@@ -92,11 +94,13 @@ export default function CreateAnnouncement({
               }}
             ></textarea>
             <div className="post-category">
-              <select className="select">
-                <option value="">General</option>
-                <option value="">PUP</option>
-                <option value="">Question</option>
-                <option value="">Rant</option>
+              <select
+                className="select"
+                onClick={(e) => {
+                  setCategory(e.target.value);
+                }}
+              >
+                <option value="4">ICT 12 - 2</option>
               </select>
             </div>
           </div>
