@@ -1,20 +1,49 @@
 import { useState } from "react";
 import "./ReportPost.css";
+import axios from "axios";
+import Cookies from "js-cookie";
+import { URL } from "../../App";
 
-function ReportPost({ onCloseReport }) {
-  const [inputData, setInputData] = useState({});
+function ReportPost({ postId, onCloseReport }) {
+  const token = Cookies.get("token");
+  const userId = Cookies.get("userId");
+  const [inputData, setInputData] = useState("");
   const [isOthersOpen, setIsOthersOpen] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [reportType, setReportType] = useState(0);
+  const [errMsg, setErrMsg] = useState("");
 
-  function handleReportChange(e) {
-    setIsSuccess(false);
-    const { name, checked, value, type } = e.target;
-    setInputData((prevData) => ({
-      ...prevData,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-    console.log(inputData);
+  function handleReportChange(type) {
+    setErrMsg();
+    if (type === 0) setIsOthersOpen(true);
+    else setIsOthersOpen(false);
+    setReportType(type);
   }
+
+  const submitReport = async () => {
+    setErrMsg();
+    if (reportType === 0 && inputData === "")
+      return setErrMsg("Please specify");
+
+    const report = {
+      userId: userId,
+      postId: postId,
+      reportCategory: reportType,
+    };
+
+    if (reportType === 0) report.reportContent = inputData;
+
+    try {
+      await axios.post(`${URL}/post/report`, report, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      setIsSuccess(true);
+    } catch (err) {
+      return console.error(err);
+    }
+  };
 
   return (
     <>
@@ -30,7 +59,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="violence"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(1)}
                   name="report"
                 />
                 <label htmlFor="violence">Violence</label>
@@ -39,7 +68,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="harrassments"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(2)}
                   name="report"
                 />
                 <label htmlFor="harrassments">Harrassments</label>
@@ -48,7 +77,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="suicide"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(3)}
                   name="report"
                 />
                 <label htmlFor="suicide">Suicide</label>
@@ -57,7 +86,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="false-information"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(4)}
                   name="report"
                 />
                 <label htmlFor="false-information">False Information</label>
@@ -66,7 +95,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="spam"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(5)}
                   name="report"
                 />
                 <label htmlFor="spam">Spam</label>
@@ -75,7 +104,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="hate"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(6)}
                   name="report"
                 />
                 <label htmlFor="hate">Hate Speech</label>
@@ -84,7 +113,7 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="abuse"
-                  onChange={handleReportChange}
+                  onChange={() => handleReportChange(7)}
                   name="report"
                 />
                 <label htmlFor="abuse">Abuse</label>
@@ -93,11 +122,8 @@ function ReportPost({ onCloseReport }) {
                 <input
                   type="radio"
                   id="something-else"
-                  onClick={() => {
-                    setIsOthersOpen(!isOthersOpen);
-                  }}
                   name="report"
-                  //   onChange={handleReportSubmit}
+                  onChange={() => handleReportChange(0)}
                 />
                 <label htmlFor="something-else">
                   Something else, please specify
@@ -108,10 +134,14 @@ function ReportPost({ onCloseReport }) {
                     placeholder="Enter"
                     className="others-input"
                     name="others"
-                    onChange={handleReportChange}
+                    value={inputData}
+                    onChange={(e) => {
+                      setInputData(e.target.value);
+                    }}
                   />
                 )}
               </div>
+              <p className="--server-msg">{errMsg}</p>
             </div>
             <button
               style={{
@@ -123,9 +153,9 @@ function ReportPost({ onCloseReport }) {
                 borderRadius: "1rem",
                 alignSelf: "center",
               }}
-              // onClick={() => {
-              //   setIsSuccess(true);
-              // }}
+              onClick={() => {
+                submitReport();
+              }}
             >
               Submit
             </button>
@@ -154,7 +184,7 @@ function ReportPost({ onCloseReport }) {
                   marginBottom: "0.5rem",
                 }}
               >
-                THANK YOU FOR KEEPING THE DOS A SAFE PLACE!
+                THANK YOU FOR KEEPING DOS A SAFE PLACE!
               </p>
               <div className="roblox-face"></div>
               <button

@@ -137,7 +137,7 @@ function Feedback({ fullname, username, userId, onCloseFeedback }) {
                 marginBottom: "0.5rem",
               }}
             >
-              THANK YOU FOR KEEPING THE DOS A SAFE PLACE!
+              THANK YOU FOR YOUR CONTRIBUTION TO DOS!
             </p>
             <div className="roblox-face"></div>
             <button
