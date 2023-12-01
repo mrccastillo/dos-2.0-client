@@ -70,6 +70,10 @@
   background: url("../../../assets/images/settings.png");
   background-size: cover;
 }
+.feedback-icon {
+  background: url("../../../assets/images/feedback.png");
+  background-size: cover;
+}
 .home-icon {
   background: url("../../../assets/images/home.png");
   background-size: cover;

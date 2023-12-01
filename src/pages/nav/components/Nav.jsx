@@ -67,7 +67,7 @@ export default function Nav({
                 className="navlink home-icon"
               ></Link>
               <p
-                className="navlink settings-icon"
+                className="navlink feedback-icon"
                 onClick={() => {
                   setIsFeedbackOpen(!isFeedbackOpen);
                 }}
