@@ -3,6 +3,7 @@ import "../stylesheets/Nav.css";
 import { useEffect, useState } from "react";
 import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Feedback from "../../../reusable-components/feedback/Feedback";
+import SupportUs from "../../../reusable-components/supportdos/SupportUs";
 import SendNotif from "../../../reusable-components/sendNotif/sendNotif";
 import Cookies from "js-cookie";
 import axios from "axios";
@@ -21,6 +22,7 @@ export default function Nav({
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isSupportDevsOpen, setIsSupportDevsOpen] = useState(false);
 
   const logOut = async () => {
     try {
@@ -99,7 +101,15 @@ export default function Nav({
               >
                 Account Settings
               </p>
-              <p className="link">Support Devs</p>
+              <p
+                className="link"
+                onClick={() => {
+                  setIsSupportDevsOpen(!isSupportDevsOpen);
+                  setIsNavLinkOpen(!isNavLinkOpen);
+                }}
+              >
+                Support DOS
+              </p>
               <Link to="/" onClick={logOut} className="link --logout">
                 Log Out
               </Link>
@@ -115,7 +125,13 @@ export default function Nav({
           </div>
         </div>
       </nav>
-
+      {isSupportDevsOpen && (
+        <SupportUs
+          onCloseModal={() => {
+            setIsSupportDevsOpen(false);
+          }}
+        />
+      )}
       {/* <SendNotif /> */}
       {isSettingsOpen && (
         <EditUserInfo
@@ -144,7 +160,9 @@ export default function Nav({
         />
       )}
 
-      {(isNavLinkOpen || isSettingsOpen) && <div className="overlay"></div>}
+      {(isNavLinkOpen || isSettingsOpen || isSupportDevsOpen) && (
+        <div className="overlay"></div>
+      )}
     </>
   );
 }
