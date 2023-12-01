@@ -34,7 +34,7 @@ function SupportUs({ onCloseModal }) {
       >
         <div className="gcash"></div>
         <p style={{ fontSize: "0.8rem", textAlign: "justify" }}>
-          Your generous donations will play a vital role in advancing the
+          Your generous GCASH donations will play a vital role in advancing the
           development of our platform, ensuring its seamless operation.
           Additionally, your support will enable us to{" "}
           <b>

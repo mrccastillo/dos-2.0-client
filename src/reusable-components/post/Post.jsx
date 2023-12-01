@@ -231,6 +231,7 @@ export default function Post({
       {isReportPostOpen && (
         <>
           <ReportPost
+            postId={postId}
             onCloseReport={() => {
               setIsReportPostOpen(!isReportPostOpen);
             }}

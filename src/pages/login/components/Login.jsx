@@ -72,7 +72,11 @@ export default function Login({}) {
         username === "dosboard" ||
         username === "Dosboard" ||
         username === "login" ||
-        username === "Login"
+        username === "Login" ||
+        username === "singup" ||
+        username === "Signup" ||
+        username === "home" ||
+        username === "Home"
       ) {
         setErrorMsg("Invalid Username");
         return;
@@ -383,7 +387,7 @@ export default function Login({}) {
                       )}
                       {!isInSignInPage && (
                         <input
-                          type="text"
+                          type="password"
                           className="login-input --white-btn"
                           style={{
                             borderColor: "#4f709c",
