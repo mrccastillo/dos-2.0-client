@@ -295,7 +295,7 @@ export default function Reply({
                 setIsCommentReplyOpen(!isCommentReplyOpen);
               }}
             ></div>
-            {replyCount} Replies
+            {replyCount > 1 ? `${replyCount} Replies` : `${replyCount} Reply`}
           </div>
         </div>
         {isCommentReplyOpen && (

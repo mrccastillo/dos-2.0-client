@@ -500,7 +500,7 @@ export default function Login({}) {
                         >
                           {!isForgotPassword
                             ? "Forgot Password"
-                            : "Go back Login"}
+                            : "Return to Login"}
                         </p>
                       </>
                     )}
