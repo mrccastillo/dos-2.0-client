@@ -38,6 +38,8 @@ export default function Announce({
     setLikeInProgress(true);
     try {
       if (!isLiked) {
+        setIsLiked(!isLiked);
+        setlikeCounts(likeCounts + 1);
         const likeAnnounce = {
           announcementId: announceId,
           userId: userUserId,
@@ -54,17 +56,15 @@ export default function Announce({
           }
         );
         setLikeId(likeRes.data.like._id);
-        setIsLiked(!isLiked);
-        setlikeCounts(likeCounts + 1);
       } else {
+        setIsLiked(!isLiked);
+        setlikeCounts(likeCounts - 1);
         await axios.delete(`${URL}/announcement/like/${announceLikeId}`, {
           headers: {
             Authorization: token,
           },
         });
         setLikeId(null);
-        setIsLiked(!isLiked);
-        setlikeCounts(likeCounts - 1);
       }
     } catch (err) {
       console.error(err);

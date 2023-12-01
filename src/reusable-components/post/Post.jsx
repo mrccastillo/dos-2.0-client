@@ -49,6 +49,8 @@ export default function Post({
 
     try {
       if (!isLiked) {
+        setIsLiked(!isLiked);
+        setlikeCounts(likeCounts + 1);
         const likePost = {
           postId: postId,
           userId: userUserId,
@@ -60,17 +62,15 @@ export default function Post({
           },
         });
         setLikeId(likeRes.data.like._id);
-        setIsLiked(!isLiked);
-        setlikeCounts(likeCounts + 1);
       } else {
+        setIsLiked(!isLiked);
+        setlikeCounts(likeCounts - 1);
         await axios.delete(`${URL}/post/like/${postLikeId}`, {
           headers: {
             Authorization: token,
           },
         });
         setLikeId(null);
-        setIsLiked(!isLiked);
-        setlikeCounts(likeCounts - 1);
       }
     } catch (err) {
       console.error(err);

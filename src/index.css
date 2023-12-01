@@ -177,6 +177,15 @@ a {
   transition: all 0.5s;
 }
 
+.gcash {
+  background: url("/src/assets/images/gcash.png");
+  width: 10rem;
+  height: 10rem;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 1rem;
+}
+
 .read-more {
   font-size: 0.8rem;
   cursor: pointer;

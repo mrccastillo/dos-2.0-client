@@ -28,74 +28,75 @@ function ReportPost({ onCloseReport }) {
               </p>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="violence"
                   onChange={handleReportChange}
-                  name="violence"
+                  name="report"
                 />
                 <label htmlFor="violence">Violence</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="harrassments"
                   onChange={handleReportChange}
-                  name="harrassments"
+                  name="report"
                 />
                 <label htmlFor="harrassments">Harrassments</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="suicide"
                   onChange={handleReportChange}
-                  name="suicide"
+                  name="report"
                 />
                 <label htmlFor="suicide">Suicide</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="false-information"
                   onChange={handleReportChange}
-                  name="falseInformation"
+                  name="report"
                 />
                 <label htmlFor="false-information">False Information</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="spam"
                   onChange={handleReportChange}
-                  name="spam"
+                  name="report"
                 />
                 <label htmlFor="spam">Spam</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="hate"
                   onChange={handleReportChange}
-                  name="hate"
+                  name="report"
                 />
                 <label htmlFor="hate">Hate Speech</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="abuse"
                   onChange={handleReportChange}
-                  name="abuse"
+                  name="report"
                 />
                 <label htmlFor="abuse">Abuse</label>
               </div>
               <div className="report-inputs">
                 <input
-                  type="checkbox"
+                  type="radio"
                   id="something-else"
                   onClick={() => {
                     setIsOthersOpen(!isOthersOpen);
                   }}
+                  name="report"
                   //   onChange={handleReportSubmit}
                 />
                 <label htmlFor="something-else">
