@@ -5,6 +5,7 @@ import EditUserInfo from "../../../reusable-components/edituser/EditUserInfo";
 import Feedback from "../../../reusable-components/feedback/Feedback";
 import SupportUs from "../../../reusable-components/supportdos/SupportUs";
 import SendNotif from "../../../reusable-components/sendNotif/sendNotif";
+import FeatureNotAvail from "../../../reusable-components/announcement/featurenotavail/FeatureNotAvail";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { URL } from "../../../App";
@@ -22,7 +23,16 @@ export default function Nav({
   const [isNavLinkOpen, setIsNavLinkOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
+  const [isNotAvail, setIsNotAvail] = useState(false);
   const [isSupportDevsOpen, setIsSupportDevsOpen] = useState(false);
+
+  const handleCloseNotAvail = () => {
+    setIsNotAvail(false);
+  };
+
+  const handleOpenNotAvail = () => {
+    setIsNotAvail(true);
+  };
 
   const logOut = async () => {
     try {
@@ -61,8 +71,11 @@ export default function Nav({
               className="logo"
             ></Link>
             <div className="navlinks-container">
-              <p className="navlink bell-icon"></p>
-              <p className="navlink announcement-icon"></p>
+              <p className="navlink bell-icon" onClick={handleOpenNotAvail}></p>
+              <p
+                className="navlink announcement-icon"
+                onClick={handleOpenNotAvail}
+              ></p>
               <Link
                 to="/home"
                 style={{ textDecoration: "none" }}
@@ -133,6 +146,7 @@ export default function Nav({
         />
       )}
       {/* <SendNotif /> */}
+      {isNotAvail && <FeatureNotAvail onCloseModal={handleCloseNotAvail} />}
       {isSettingsOpen && (
         <EditUserInfo
           fullname={fullname}
@@ -160,7 +174,7 @@ export default function Nav({
         />
       )}
 
-      {(isNavLinkOpen || isSettingsOpen || isSupportDevsOpen) && (
+      {(isNavLinkOpen || isSettingsOpen || isSupportDevsOpen || isNotAvail) && (
         <div className="overlay"></div>
       )}
     </>

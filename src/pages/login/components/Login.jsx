@@ -6,6 +6,7 @@ import axios from "axios";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { jwtDecode } from "jwt-decode";
 import AuthenticationModal from "../../../reusable-components/edituser/AuthenticationModal";
+import TermsConditions from "./TermsConditions";
 import { URL } from "../../../App";
 
 export default function Login({}) {
@@ -20,6 +21,7 @@ export default function Login({}) {
   const [successMsg, setSuccessMsg] = useState("");
   const [signUpBtnMsg, setSignUpBtnMsg] = useState("NEXT");
   const [loginBtnMsg, setLoginBtnMsg] = useState("LOG IN");
+  const [isTermsConditionsOpen, setIsTermsConditionsOpen] = useState(true);
 
   //controlled elements
   //login
@@ -452,6 +454,18 @@ export default function Login({}) {
                         <option value={2}>ICT 12 - 2</option>
                         <option value={3}>PUPian</option>
                       </select>
+                      <p
+                        style={{
+                          fontSize: "0.9rem",
+                          textDecoration: "underline",
+                          cursor: "pointer",
+                        }}
+                        onClick={() => {
+                          setIsTermsConditionsOpen(true);
+                        }}
+                      >
+                        Terms and Conditions
+                      </p>
                     </>
                   ) : (
                     steps >= 2 && (
@@ -573,7 +587,16 @@ export default function Login({}) {
             </div>
           </div>
         </div>
-
+        {isTermsConditionsOpen && (
+          <>
+            <TermsConditions
+              onCloseModal={() => {
+                setIsTermsConditionsOpen(false);
+              }}
+            />
+            <div className="overlay"></div>
+          </>
+        )}
         {isAuthModalOpen && (
           <>
             <AuthenticationModal
