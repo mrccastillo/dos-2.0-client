@@ -72,10 +72,11 @@ export default function Nav({
             ></Link>
             <div className="navlinks-container">
               <p className="navlink bell-icon" onClick={handleOpenNotAvail}></p>
-              <p
+              <Link
+                to="/dosannouncement"
                 className="navlink announcement-icon"
                 onClick={handleOpenNotAvail}
-              ></p>
+              ></Link>
               <Link
                 to="/home"
                 style={{ textDecoration: "none" }}

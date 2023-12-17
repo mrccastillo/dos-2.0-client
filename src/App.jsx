@@ -3,6 +3,7 @@ import Dashboard from "./pages/dashboard/components/Dashboard";
 import Userprofile from "./pages/userprofile/components/Userprofile";
 import Login from "./pages/login/components/Login";
 import Error404 from "./pages/pagenotfound/components/Error404";
+import DosAnnouncement from "./pages/DOSAnnouncement/DosAnnouncement";
 import { useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
@@ -71,6 +72,10 @@ function App() {
         <Route
           path="/dosboard"
           element={token ? <Dashboard user={user} /> : <Login />}
+        />
+        <Route
+          path="/dosannouncement"
+          element={token ? <DosAnnouncement user={user} /> : <Login />}
         />
         <Route
           path="/:username"

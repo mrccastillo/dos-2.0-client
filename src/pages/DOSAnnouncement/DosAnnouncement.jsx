@@ -1,30 +1,16 @@
-import Nav from "../../nav/components/Nav";
-import Announcements from "./Announcement";
-import DosAnnouncement from "../../DOSAnnouncement/DosAnnouncement";
-import Home from "./Home";
-import "../stylesheets/Dashboard.css";
-import { useState, useEffect } from "react";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+import NonAdminAnnouncement from "./NonAdminAnnouncement";
+import AdminAnnouncement from "./AdminAnnouncement";
+import Nav from "../nav/components/Nav";
 import { Link } from "react-router-dom";
+import "../dashboard/stylesheets/Home.css";
+import "../dashboard/stylesheets/Announcement.css";
+import "../dashboard/stylesheets/Dashboard.css";
 
-export default function Dashboard({ user, onDecodeUser }) {
-  useEffect(() => {
-    if (window.localStorage) {
-      if (!localStorage.getItem("firstLoad")) {
-        localStorage["firstLoad"] = true;
-        window.location.reload();
-      }
-    }
-    localStorage.removeItem("isInSignInPage");
-  }, []);
-
+function DosAnnouncement({ user }) {
+  // const token = Cookies.get("token");
+  // const userUserId = Cookies.get("userId");
   return (
-    <HelmetProvider>
-      <Helmet>
-        <title>DOSBoard</title>
-        <meta property="og:title" content={`${user.fullname}`} />
-      </Helmet>
-
+    <>
       <div className="container">
         <Nav
           user={user.username}
@@ -47,24 +33,21 @@ export default function Dashboard({ user, onDecodeUser }) {
             </h2>
           </div>
           <div className="posts-announcements-container">
-            <Announcements
+            <AdminAnnouncement
               fullname={user.fullname}
               username={user.username}
               userId={user._id}
             />
-            <Home
+            <NonAdminAnnouncement
               fullname={user.fullname}
               username={user.username}
               userId={user._id}
             />
-            {/* <DosAnnouncement
-              fullname={user.fullname}
-              username={user.username}
-              userId={user._id}
-            /> */}
           </div>
         </div>
       </div>
-    </HelmetProvider>
+    </>
   );
 }
+
+export default DosAnnouncement;
