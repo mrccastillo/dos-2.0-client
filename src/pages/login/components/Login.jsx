@@ -19,9 +19,9 @@ export default function Login({}) {
   const [steps, setSteps] = useState(0);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
-  const [signUpBtnMsg, setSignUpBtnMsg] = useState("NEXT");
+  const [signUpBtnMsg, setSignUpBtnMsg] = useState("SIGN UP");
   const [loginBtnMsg, setLoginBtnMsg] = useState("LOG IN");
-  const [isTermsConditionsOpen, setIsTermsConditionsOpen] = useState(true);
+  const [isTermsConditionsOpen, setIsTermsConditionsOpen] = useState(false);
 
   //controlled elements
   //login
@@ -388,20 +388,43 @@ export default function Login({}) {
                         />
                       )}
                       {!isInSignInPage && (
-                        <input
-                          type="password"
-                          className="login-input --white-btn"
-                          style={{
-                            borderColor: "#4f709c",
-                            backgroundColor: "white",
-                            color: "#000",
-                          }}
-                          value={confirmPass}
-                          onChange={(e) => {
-                            setConfirmPass(e.target.value);
-                          }}
-                          placeholder="Confirm Password  "
-                        />
+                        <>
+                          <input
+                            type="password"
+                            className="login-input --white-btn"
+                            style={{
+                              borderColor: "#4f709c",
+                              backgroundColor: "white",
+                              color: "#000",
+                            }}
+                            value={confirmPass}
+                            onChange={(e) => {
+                              setConfirmPass(e.target.value);
+                            }}
+                            placeholder="Confirm Password  "
+                          />
+
+                          <p
+                            style={{
+                              fontSize: "0.8rem",
+                              cursor: "pointer",
+                            }}
+                          >
+                            By signing up you agree to the
+                          </p>
+                          <p
+                            style={{
+                              fontSize: "0.8rem",
+                              textDecoration: "underline",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              setIsTermsConditionsOpen(true);
+                            }}
+                          >
+                            terms and conditions.
+                          </p>
+                        </>
                       )}
                     </>
                   ) : steps === 1 ? (
@@ -454,18 +477,6 @@ export default function Login({}) {
                         <option value={2}>ICT 12 - 2</option>
                         <option value={3}>PUPian</option>
                       </select>
-                      <p
-                        style={{
-                          fontSize: "0.9rem",
-                          textDecoration: "underline",
-                          cursor: "pointer",
-                        }}
-                        onClick={() => {
-                          setIsTermsConditionsOpen(true);
-                        }}
-                      >
-                        Terms and Conditions
-                      </p>
                     </>
                   ) : (
                     steps >= 2 && (

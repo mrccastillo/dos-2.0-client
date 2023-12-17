@@ -141,7 +141,6 @@ export default function Announce({
                   </p>
                 </div>
               </div>
-              <div className="report-post"></div>
             </div>
           </div>
           <div className="post-content --announce">

@@ -74,7 +74,7 @@ function App() {
           element={token ? <Dashboard user={user} /> : <Login />}
         />
         <Route
-          path="/dosannouncement"
+          path="/announcement"
           element={token ? <DosAnnouncement user={user} /> : <Login />}
         />
         <Route

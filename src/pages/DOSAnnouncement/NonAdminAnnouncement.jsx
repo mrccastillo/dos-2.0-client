@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import PostSkeleton from "../../reusable-components/skeletonloading/PostSkeleton";
 import { URL } from "../../App";
 import "../dashboard/stylesheets/Home.css";
+import CreateAnnouncement from "../../reusable-components/announcement/CreateAnnouncement";
 
 function NonAdminAnnouncement({ fullname, username, userId }) {
   const token = Cookies.get("token");
@@ -97,16 +98,7 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
               // console.log(postFilter);
             }}
           >
-            DOS is For You!
-          </span>
-          <span
-            className={postFilter === 0 ? "--chip active-chip" : "--chip"}
-            onClick={() => {
-              setPostFilter(0);
-              // console.log(postFilter);
-            }}
-          >
-            General
+            All
           </span>
           <span
             className={postFilter === 1 ? "--chip active-chip" : "--chip"}
@@ -124,7 +116,7 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
               // console.log(postFilter);
             }}
           >
-            Question
+            SHS
           </span>
           <span
             className={postFilter === 3 ? "--chip active-chip" : "--chip"}
@@ -133,16 +125,7 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
               // console.log(postFilter);
             }}
           >
-            Rant
-          </span>
-          <span
-            className={postFilter === 4 ? "--chip active-chip" : "--chip"}
-            onClick={() => {
-              setPostFilter(4);
-              // console.log(postFilter);
-            }}
-          >
-            Confession
+            ICT
           </span>
           <span
             className={postFilter === 5 ? "--chip active-chip" : "--chip"}
@@ -151,23 +134,23 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
               // console.log(postFilter);
             }}
           >
-            Anonymous
+            ICT 12 - 2
           </span>
         </div>
         <div className="post-container">
           <div className="create-post">
             <button
               className="post-btn"
-              onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
+              onClick={() => setIsCreateAnnounceOpen(!isCreateAnnounceOpen)}
             >
-              <i className="material-icons">add_circle_outline</i> Post
-              Something
+              <i className="material-icons">add_circle_outline</i> Make an
+              Announcement
             </button>
           </div>
           <div className="posts-list">
             {announcements.length === 0 ? (
               <PostSkeleton cards={2} />
-            ) : (
+            ) : postFilter === undefined ? (
               announcements.map((el) => (
                 <Announce
                   key={el._id}
@@ -185,6 +168,26 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
                   commentCount={el.commentCount}
                 />
               ))
+            ) : (
+              announcements
+                .filter((el) => el.category === postFilter)
+                .map((el) => (
+                  <Announce
+                    key={el._id}
+                    userUsername={username}
+                    userUserId={userId}
+                    userFullName={fullname}
+                    announceId={el._id}
+                    fullname={el.fullname}
+                    username={el.username}
+                    content={el.content}
+                    date={el.dateCreated}
+                    liked={el.liked}
+                    likeCount={el.likeCount}
+                    likeId={el.likeId}
+                    commentCount={el.commentCount}
+                  />
+                ))
             )}
             {/* {showLoading ? (
               <div ref={myRef}>
@@ -194,6 +197,17 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
           </div>
         </div>
       </div>
+      {isCreateAnnounceOpen && (
+        <CreateAnnouncement
+          fullname={fullname}
+          username={username}
+          userId={userId}
+          onAnnouncementCreated={handleAnnouncementCreated}
+          onModalClose={() => {
+            setIsCreateAnnounceOpen(!isCreateAnnounceOpen);
+          }}
+        />
+      )}
     </>
   );
 }
