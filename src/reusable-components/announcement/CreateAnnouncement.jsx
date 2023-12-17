@@ -100,7 +100,12 @@ export default function CreateAnnouncement({
                   setCategory(e.target.value);
                 }}
               >
-                <option value="4">ICT 12 - 2</option>
+                <option value="0">DOS</option>
+                <option value="1">PUP</option>
+                <option value="2">SHS</option>
+                <option value="3">ICT</option>
+                <option value="4">ICT 12 - 1</option>
+                <option value="5">ICT 12 - 2</option>
               </select>
             </div>
           </div>

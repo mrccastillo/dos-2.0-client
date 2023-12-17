@@ -73,9 +73,8 @@ export default function Nav({
             <div className="navlinks-container">
               <p className="navlink bell-icon" onClick={handleOpenNotAvail}></p>
               <Link
-                to="/dosannouncement"
+                to="/announcement"
                 className="navlink announcement-icon"
-                onClick={handleOpenNotAvail}
               ></Link>
               <Link
                 to="/home"

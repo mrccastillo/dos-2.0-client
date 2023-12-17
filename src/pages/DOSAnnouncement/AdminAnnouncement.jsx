@@ -11,7 +11,6 @@ export default function Announcements({ fullname, username, userId }) {
   const token = Cookies.get("token");
   const userUserId = Cookies.get("userId");
   const [announcements, setAnnouncements] = useState([]);
-  const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
 
   const fetchPosts = async () => {
     try {
@@ -85,57 +84,39 @@ export default function Announcements({ fullname, username, userId }) {
               className="announcement-header-text --chip --announce-btn"
               style={{ cursor: "auto" }}
             >
-              Announcements
+              DOS Announcements
             </p>
             {/* ung tatlong tuldok ewan ko kung ano to */}
           </div>
           <div className="announcements">
-            <div className="create-announcement">
-              <button
-                className="post-btn"
-                onClick={() => setIsCreateAnnounceOpen(!isCreateAnnounceOpen)}
-              >
-                <i className=" material-icons">add_circle_outline</i>
-                Make an Announcement
-              </button>
-            </div>
             <div className="announcement-list">
               {announcements.length === 0 ? (
                 <AnnouncementSkeleton cards={2} />
               ) : (
-                announcements.map((el) => (
-                  <Announce
-                    key={el._id}
-                    userUsername={username}
-                    userUserId={userId}
-                    userFullName={fullname}
-                    announceId={el._id}
-                    fullname={el.fullname}
-                    username={el.username}
-                    content={el.content}
-                    date={el.dateCreated}
-                    liked={el.liked}
-                    likeCount={el.likeCount}
-                    likeId={el.likeId}
-                    commentCount={el.commentCount}
-                  />
-                ))
+                announcements
+                  .filter((el) => el.category === 0)
+                  .map((el) => (
+                    <Announce
+                      key={el._id}
+                      userUsername={username}
+                      userUserId={userId}
+                      userFullName={fullname}
+                      announceId={el._id}
+                      fullname={el.fullname}
+                      username={el.username}
+                      content={el.content}
+                      date={el.dateCreated}
+                      liked={el.liked}
+                      likeCount={el.likeCount}
+                      likeId={el.likeId}
+                      commentCount={el.commentCount}
+                    />
+                  ))
               )}
             </div>
           </div>
         </div>
       </div>
-      {isCreateAnnounceOpen && (
-        <CreateAnnouncement
-          fullname={fullname}
-          username={username}
-          userId={userId}
-          onAnnouncementCreated={handleAnnouncementCreated}
-          onModalClose={() => {
-            setIsCreateAnnounceOpen(!isCreateAnnounceOpen);
-          }}
-        />
-      )}
     </>
   );
 }
