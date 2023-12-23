@@ -25,6 +25,7 @@ export default function Nav({
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
   const [isNotAvail, setIsNotAvail] = useState(false);
   const [isSupportDevsOpen, setIsSupportDevsOpen] = useState(false);
+  let width = window.innerWidth;
 
   const handleCloseNotAvail = () => {
     setIsNotAvail(false);
@@ -70,25 +71,55 @@ export default function Nav({
               style={{ textDecoration: "none" }}
               className="logo"
             ></Link>
-            <div className="navlinks-container">
-              <p className="navlink bell-icon" onClick={handleOpenNotAvail}></p>
-              <Link
-                to="/announcement"
-                className="navlink announcement-icon"
-              ></Link>
-              <Link
-                to="/home"
-                style={{ textDecoration: "none" }}
-                className="navlink home-icon"
-              ></Link>
-              <p
-                className="navlink feedback-icon"
-                onClick={() => {
-                  setIsFeedbackOpen(!isFeedbackOpen);
-                }}
-              ></p>
-            </div>
+            {width > 1200 ? (
+              <>
+                <div className="navlinks-container">
+                  <p
+                    className="navlink bell-icon"
+                    onClick={handleOpenNotAvail}
+                  ></p>
+                  <Link
+                    to="/announcement"
+                    className="navlink announcement-icon"
+                  ></Link>
+                  <Link
+                    to="/home"
+                    style={{ textDecoration: "none" }}
+                    className="navlink home-icon"
+                  ></Link>
+                  <p
+                    className="navlink feedback-icon"
+                    onClick={() => {
+                      setIsFeedbackOpen(!isFeedbackOpen);
+                    }}
+                  ></p>
+                </div>
+              </>
+            ) : (
+              <>
+                <p
+                  className="navlink bell-icon"
+                  onClick={handleOpenNotAvail}
+                ></p>
+                <Link
+                  to="/announcement"
+                  className="navlink announcement-icon"
+                ></Link>
+                <Link
+                  to="/home"
+                  style={{ textDecoration: "none" }}
+                  className="navlink home-icon"
+                ></Link>
+                <p
+                  className="navlink feedback-icon"
+                  onClick={() => {
+                    setIsFeedbackOpen(!isFeedbackOpen);
+                  }}
+                ></p>
+              </>
+            )}
           </div>
+
           <div
             className={
               isNavLinkOpen
@@ -97,37 +128,6 @@ export default function Nav({
             }
             style={{ zIndex: isNavLinkOpen ? 2 : "auto" }}
           >
-            <div className={isNavLinkOpen ? "links-active" : "links"}>
-              {user ? (
-                <Link to={`/${user}`} className="link">
-                  Profile
-                </Link>
-              ) : (
-                <Link to={null}>Profile</Link>
-              )}
-              <p
-                className="link"
-                onClick={() => {
-                  setIsNavLinkOpen(!isNavLinkOpen);
-                  setIsSettingsOpen(!isSettingsOpen);
-                }}
-              >
-                Account Settings
-              </p>
-              <p
-                className="link"
-                onClick={() => {
-                  setIsSupportDevsOpen(!isSupportDevsOpen);
-                  setIsNavLinkOpen(!isNavLinkOpen);
-                }}
-              >
-                Support DOS
-              </p>
-              <Link to="/" onClick={logOut} className="link --logout">
-                Log Out
-              </Link>
-            </div>
-
             <div
               className="profile-pic --nav-profile"
               style={{ backgroundColor: isNavLinkOpen && "#fff" }}
@@ -135,6 +135,36 @@ export default function Nav({
                 setIsNavLinkOpen(!isNavLinkOpen);
               }}
             ></div>
+            <div className={isNavLinkOpen ? "links-active" : "links"}>
+              {isNavLinkOpen ? (
+                <>
+                  <Link to={`/${user}`} className="link">
+                    Profile
+                  </Link>
+                  <p
+                    className="link"
+                    onClick={() => {
+                      setIsNavLinkOpen(!isNavLinkOpen);
+                      setIsSettingsOpen(!isSettingsOpen);
+                    }}
+                  >
+                    Account Settings
+                  </p>
+                  <p
+                    className="link"
+                    onClick={() => {
+                      setIsSupportDevsOpen(!isSupportDevsOpen);
+                      setIsNavLinkOpen(!isNavLinkOpen);
+                    }}
+                  >
+                    Support DOS
+                  </p>
+                  <Link to="/" onClick={logOut} className="link --logout">
+                    Log Out
+                  </Link>
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
       </nav>

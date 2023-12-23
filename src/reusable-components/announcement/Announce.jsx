@@ -18,6 +18,8 @@ export default function Announce({
   likeCount,
   likeId,
   commentCount,
+  isInDosAnnounce,
+  category,
 }) {
   const token = Cookies.get("token");
   const [isPostOpen, setIsPostOpen] = useState(false);
@@ -143,7 +145,23 @@ export default function Announce({
               </div>
             </div>
           </div>
-          <div className="post-content --announce">
+          <div
+            className={
+              isInDosAnnounce ? "post-content" : "post-content --announce"
+            }
+          >
+            <p className="category">
+              #
+              {category === 0
+                ? "DOS"
+                : category === 1
+                ? "PUP"
+                : category === 2
+                ? "SHS"
+                : category === 3
+                ? "ICT"
+                : category === 5 && "ICT 12-2"}
+            </p>
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
                 {isCollapsed ? line.slice(0, 119) : line}
@@ -207,6 +225,7 @@ export default function Announce({
             userFullName={userFullName}
             content={content}
             username={username}
+            category={category}
             date={formatDate(date)}
             fullname={fullname}
             onCloseExpandedPost={() => {

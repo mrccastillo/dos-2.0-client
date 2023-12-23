@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import NonAdminAnnouncement from "./NonAdminAnnouncement";
 import AdminAnnouncement from "./AdminAnnouncement";
 import Nav from "../nav/components/Nav";
@@ -9,6 +10,8 @@ import "../dashboard/stylesheets/Dashboard.css";
 function DosAnnouncement({ user }) {
   // const token = Cookies.get("token");
   // const userUserId = Cookies.get("userId");
+  // const [width, setWidth] = useState(window.innerWidth);
+  let width = window.innerWidth;
   return (
     <>
       <div className="container">
@@ -16,7 +19,7 @@ function DosAnnouncement({ user }) {
           user={user.username}
           email={user.email}
           bio={user.bio}
-          firstname={user.firstname}
+          firstname={user.firstnawme}
           lastname={user.lastname}
           fullname={user.fullname}
         />
@@ -33,16 +36,27 @@ function DosAnnouncement({ user }) {
             </h2>
           </div>
           <div className="posts-announcements-container">
-            <AdminAnnouncement
-              fullname={user.fullname}
-              username={user.username}
-              userId={user._id}
-            />
-            <NonAdminAnnouncement
-              fullname={user.fullname}
-              username={user.username}
-              userId={user._id}
-            />
+            {width < 1000 ? (
+              <NonAdminAnnouncement
+                fullname={user.fullname}
+                username={user.username}
+                userId={user._id}
+              />
+            ) : (
+              <>
+                <AdminAnnouncement
+                  fullname={user.fullname}
+                  username={user.username}
+                  userId={user._id}
+                />
+                <NonAdminAnnouncement
+                  fullname={user.fullname}
+                  username={user.username}
+                  userId={user._id}
+                  section={user.section}
+                />
+              </>
+            )}
           </div>
         </div>
       </div>

@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
-export default function Dashboard({ user, onDecodeUser }) {
+export default function Dashboard({ user }) {
   useEffect(() => {
     if (window.localStorage) {
       if (!localStorage.getItem("firstLoad")) {
