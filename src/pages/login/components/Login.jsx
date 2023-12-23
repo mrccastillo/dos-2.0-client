@@ -475,7 +475,28 @@ export default function Login({}) {
                         <option value={0}>Outsider</option>
                         <option value={1}>ICT 12 - 1</option>
                         <option value={2}>ICT 12 - 2</option>
-                        <option value={3}>PUPian</option>
+                        <option value={3}>STEM 11 - 1</option>
+                        <option value={4}>STEM 12 - 1</option>
+                        <option value={5}>STEM 12 - 2</option>
+                        <option value={6}>STEM 12 - 3</option>
+                        <option value={7}>STEM 12 - 4</option>
+                        <option value={8}>STEM 12 - 5</option>
+                        <option value={9}>STEM 12 - 6</option>
+                        <option value={10}>STEM 12 - 7</option>
+                        <option value={11}>STEM 12 - 8</option>
+                        <option value={12}>STEM 12 - 9</option>
+                        <option value={13}>STEM 12 - 10</option>
+                        <option value={14}>ABM 11 - 1</option>
+                        <option value={15}>ABM 12 - 1</option>
+                        <option value={16}>ABM 12 - 2</option>
+                        <option value={17}>ABM 12 - 3</option>
+                        <option value={18}>ABM 12 - 4</option>
+                        <option value={19}>ABM 12 - 5</option>
+                        <option value={20}>ABM 12 - 6</option>
+                        <option value={21}>ABM 12 - 7</option>
+                        <option value={22}>ABM 12 - 8</option>
+                        <option value={23}>HUMSS 12 - 1</option>
+                        <option value={24}>HUMSS 12 - 2</option>
                       </select>
                     </>
                   ) : (

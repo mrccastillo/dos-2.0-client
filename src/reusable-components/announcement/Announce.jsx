@@ -225,6 +225,7 @@ export default function Announce({
             userFullName={userFullName}
             content={content}
             username={username}
+            category={category}
             date={formatDate(date)}
             fullname={fullname}
             onCloseExpandedPost={() => {

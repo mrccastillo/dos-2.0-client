@@ -135,36 +135,35 @@ export default function Nav({
                 setIsNavLinkOpen(!isNavLinkOpen);
               }}
             ></div>
-
             <div className={isNavLinkOpen ? "links-active" : "links"}>
-              {user ? (
-                <Link to={`/${user}`} className="link">
-                  Profile
-                </Link>
-              ) : (
-                <Link to={null}>Profile</Link>
-              )}
-              <p
-                className="link"
-                onClick={() => {
-                  setIsNavLinkOpen(!isNavLinkOpen);
-                  setIsSettingsOpen(!isSettingsOpen);
-                }}
-              >
-                Account Settings
-              </p>
-              <p
-                className="link"
-                onClick={() => {
-                  setIsSupportDevsOpen(!isSupportDevsOpen);
-                  setIsNavLinkOpen(!isNavLinkOpen);
-                }}
-              >
-                Support DOS
-              </p>
-              <Link to="/" onClick={logOut} className="link --logout">
-                Log Out
-              </Link>
+              {isNavLinkOpen ? (
+                <>
+                  <Link to={`/${user}`} className="link">
+                    Profile
+                  </Link>
+                  <p
+                    className="link"
+                    onClick={() => {
+                      setIsNavLinkOpen(!isNavLinkOpen);
+                      setIsSettingsOpen(!isSettingsOpen);
+                    }}
+                  >
+                    Account Settings
+                  </p>
+                  <p
+                    className="link"
+                    onClick={() => {
+                      setIsSupportDevsOpen(!isSupportDevsOpen);
+                      setIsNavLinkOpen(!isNavLinkOpen);
+                    }}
+                  >
+                    Support DOS
+                  </p>
+                  <Link to="/" onClick={logOut} className="link --logout">
+                    Log Out
+                  </Link>
+                </>
+              ) : null}
             </div>
           </div>
         </div>

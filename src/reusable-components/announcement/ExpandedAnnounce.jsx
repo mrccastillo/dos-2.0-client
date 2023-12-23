@@ -25,6 +25,7 @@ export default function ExpandedAnnounce({
   hasComments,
   fetchedComments,
   onFetchedComments,
+  category,
 }) {
   const [comment, setComment] = useState("");
   const [commenting, setCommenting] = useState(false);
@@ -160,6 +161,18 @@ export default function ExpandedAnnounce({
         </div>
         <div className="post-content" style={{ padding: "1rem 0 0" }}>
           <div className="contents">
+            <p className="category">
+              #
+              {category === 0
+                ? "DOS"
+                : category === 1
+                ? "PUP"
+                : category === 2
+                ? "SHS"
+                : category === 3
+                ? "ICT"
+                : category === 5 && "ICT 12-2"}
+            </p>
             {content.split("\n").map((line, index) => (
               <p key={index} style={{ fontSize: "0.95rem" }}>
                 {line}

@@ -8,7 +8,7 @@ import { URL } from "../../App";
 import "../dashboard/stylesheets/Home.css";
 import CreateAnnouncement from "../../reusable-components/announcement/CreateAnnouncement";
 
-function NonAdminAnnouncement({ fullname, username, userId }) {
+function NonAdminAnnouncement({ fullname, username, userId, section }) {
   const token = Cookies.get("token");
   const userUserId = Cookies.get("userId");
   const [announcements, setAnnouncements] = useState([]);
@@ -16,10 +16,13 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
   const { ref: myRef, inView: fetchPost } = useInView();
   const [showLoading, setShowLoading] = useState(true);
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
+  const [strandName, setStrandName] = useState("");
+  const [strand, setStrand] = useState(0);
+  const [className, seClassName] = useState("");
+  const [classSection, setClassSection] = useState(0);
 
   const fetchPosts = async () => {
     try {
-      console.log(announcements);
       const announcement = await axios.get(`${URL}/announcement`, {
         headers: {
           Authorization: token,
@@ -68,7 +71,6 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
 
       const announcementsWithCounts = await Promise.all(getLikesPromises);
       setAnnouncements(announcementsWithCounts.reverse());
-      console.log(announcements);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -78,9 +80,131 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
     fetchPosts();
   };
 
+  const setStrandandClass = () => {
+    if (section === 1 || section === 2) {
+      setStrand(3);
+      setPostFilter(3);
+      setStrandName("ICT");
+    } else if (section >= 3 && section <= 13) {
+      setStrand(6);
+      setPostFilter(6);
+      setStrandName("STEM");
+    } else if (section >= 14 && section <= 22) {
+      setStrand(18);
+      setPostFilter(18);
+      setStrandName("ABM");
+    } else if (section === 23 || section === 24) {
+      setStrand(28);
+      setPostFilter(28);
+      setStrandName("HUMSS");
+    }
+
+    if (section === 1) {
+      setClassSection(4);
+      setPostFilter(4);
+      seClassName("ICT 12 - 1");
+    } else if (section === 2) {
+      setClassSection(5);
+      setPostFilter(5);
+      seClassName("ICT 12 - 2");
+    } else if (section === 3) {
+      setClassSection(7);
+      setPostFilter(7);
+      seClassName("STEM 11 - 1");
+    } else if (section === 4) {
+      setClassSection(8);
+      setPostFilter(8);
+      seClassName("STEM 12 - 1");
+    } else if (section === 5) {
+      setClassSection(9);
+      setPostFilter(9);
+      seClassName("STEM 12 - 2");
+    } else if (section === 6) {
+      setClassSection(10);
+      setPostFilter(10);
+      seClassName("STEM 12 - 3");
+    } else if (section === 7) {
+      setClassSection(11);
+      setPostFilter(11);
+      seClassName("STEM 12 - 4");
+    } else if (section === 8) {
+      setClassSection(12);
+      setPostFilter(12);
+      seClassName("STEM 12 - 5");
+    } else if (section === 9) {
+      setClassSection(13);
+      setPostFilter(13);
+      seClassName("STEM 12 - 6");
+    } else if (section === 10) {
+      setClassSection(14);
+      setPostFilter(14);
+      seClassName("STEM 12 - 7");
+    } else if (section === 11) {
+      setClassSection(15);
+      setPostFilter(15);
+      seClassName("STEM 12 - 8");
+    } else if (section === 12) {
+      setClassSection(16);
+      setPostFilter(16);
+      seClassName("STEM 12 - 9");
+    } else if (section === 13) {
+      setClassSection(17);
+      setPostFilter(17);
+      seClassName("STEM 12 - 10");
+    } else if (section === 14) {
+      setClassSection(19);
+      setPostFilter(19);
+      seClassName("ABM 11 - 1");
+    } else if (section === 15) {
+      setClassSection(20);
+      setPostFilter(20);
+      seClassName("ABM 12 - 1");
+    } else if (section === 16) {
+      setClassSection(21);
+      setPostFilter(21);
+      seClassName("ABM 12 - 2");
+    } else if (section === 17) {
+      setClassSection(22);
+      setPostFilter(22);
+      seClassName("ABM 12 - 3");
+    } else if (section === 18) {
+      setClassSection(23);
+      setPostFilter(23);
+      seClassName("ABM 12 - 4");
+    } else if (section === 19) {
+      setClassSection(24);
+      setPostFilter(24);
+      seClassName("ABM 12 - 5");
+    } else if (section === 20) {
+      setClassSection(25);
+      setPostFilter(25);
+      seClassName("ABM 12 - 6");
+    } else if (section === 21) {
+      setClassSection(26);
+      setPostFilter(26);
+      seClassName("ABM 12 - 7");
+    } else if (section === 22) {
+      setClassSection(27);
+      setPostFilter(27);
+      seClassName("ABM 12 - 8");
+    } else if (section === 23) {
+      setClassSection(29);
+      setPostFilter(29);
+      seClassName("HUMSS 12 - 1");
+    } else if (section === 24) {
+      setClassSection(30);
+      setPostFilter(30);
+      seClassName("HUMSS 12 - 2");
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    setStrandandClass();
+  }, [section]);
 
   return (
     <>
@@ -95,7 +219,6 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
             }
             onClick={() => {
               setPostFilter();
-              // console.log(postFilter);
             }}
           >
             All
@@ -104,7 +227,6 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
             className={postFilter === 1 ? "--chip active-chip" : "--chip"}
             onClick={() => {
               setPostFilter(1);
-              // console.log(postFilter);
             }}
           >
             PUP
@@ -113,28 +235,27 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
             className={postFilter === 2 ? "--chip active-chip" : "--chip"}
             onClick={() => {
               setPostFilter(2);
-              // console.log(postFilter);
             }}
           >
             SHS
           </span>
           <span
-            className={postFilter === 3 ? "--chip active-chip" : "--chip"}
+            className={postFilter === strand ? "--chip active-chip" : "--chip"}
             onClick={() => {
-              setPostFilter(3);
-              // console.log(postFilter);
+              setPostFilter(strand);
             }}
           >
-            ICT
+            {strandName}
           </span>
           <span
-            className={postFilter === 5 ? "--chip active-chip" : "--chip"}
+            className={
+              postFilter === classSection ? "--chip active-chip" : "--chip"
+            }
             onClick={() => {
-              setPostFilter(5);
-              // console.log(postFilter);
+              setPostFilter(classSection);
             }}
           >
-            ICT 12 - 2
+            {className}
           </span>
         </div>
         <div className="post-container">
@@ -151,25 +272,27 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
             {announcements.length === 0 ? (
               <PostSkeleton cards={2} />
             ) : postFilter === undefined ? (
-              announcements.map((el) => (
-                <Announce
-                  key={el._id}
-                  userUsername={username}
-                  userUserId={userId}
-                  userFullName={fullname}
-                  announceId={el._id}
-                  fullname={el.fullname}
-                  username={el.username}
-                  content={el.content}
-                  date={el.dateCreated}
-                  liked={el.liked}
-                  likeCount={el.likeCount}
-                  likeId={el.likeId}
-                  commentCount={el.commentCount}
-                  isInDosAnnounce={true}
-                  category={el.category}
-                />
-              ))
+              announcements
+                .filter((el) => el.category !== 0)
+                .map((el) => (
+                  <Announce
+                    key={el._id}
+                    userUsername={username}
+                    userUserId={userId}
+                    userFullName={fullname}
+                    announceId={el._id}
+                    fullname={el.fullname}
+                    username={el.username}
+                    content={el.content}
+                    date={el.dateCreated}
+                    liked={el.liked}
+                    likeCount={el.likeCount}
+                    likeId={el.likeId}
+                    commentCount={el.commentCount}
+                    isInDosAnnounce={true}
+                    category={el.category}
+                  />
+                ))
             ) : (
               announcements
                 .filter((el) => el.category === postFilter)
