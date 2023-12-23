@@ -166,6 +166,8 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
                   likeCount={el.likeCount}
                   likeId={el.likeId}
                   commentCount={el.commentCount}
+                  isInDosAnnounce={true}
+                  category={el.category}
                 />
               ))
             ) : (
@@ -186,6 +188,8 @@ function NonAdminAnnouncement({ fullname, username, userId }) {
                     likeCount={el.likeCount}
                     likeId={el.likeId}
                     commentCount={el.commentCount}
+                    isInDosAnnounce={true}
+                    category={el.category}
                   />
                 ))
             )}

@@ -1,4 +1,5 @@
 .container {
+  height: 100vh;
   display: flex;
 }
 
@@ -27,4 +28,25 @@
   color: #e6d283;
   font-family: Helvetica, sans-serif;
   text-decoration: none;
+}
+
+@media (max-width: 1200px) {
+  .container {
+    flex-direction: column-reverse;
+    justify-content: space-between;
+    /* padding: 1rem; */
+  }
+  /* .header {
+    height: rem;
+  } */
+  .dashboard {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+    padding: 1rem;
+  }
 }

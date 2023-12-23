@@ -111,3 +111,43 @@
 .--logout {
   background-color: #f4bfbf;
 }
+
+@media (max-width: 1200px) {
+  .nav {
+    height: 10rem;
+    width: 100vw;
+  }
+
+  .nav-content-container {
+    height: 100%;
+    flex-direction: row-reverse;
+    justify-content: space-evenly;
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .navlnk {
+    height: 1.5rem;
+    width: 1.5rem;
+  }
+
+  .logo,
+  .--nav-profile {
+    height: 3rem;
+    width: 3rem;
+  }
+
+  .--nav-profile {
+    position: static;
+  }
+
+  .navlinks-container {
+    height: 2rem;
+    width: 100%;
+    flex-direction: row;
+  }
+  .logo-navlinks {
+    flex-direction: row;
+    width: 90%;
+  }
+}
