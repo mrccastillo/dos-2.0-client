@@ -301,6 +301,8 @@ export default function Userprofile({ userLoggedIn }) {
                         likeCount={el.likeCount}
                         likeId={el.likeId}
                         commentCount={el.commentCount}
+                        category={el.category}
+                        isInDosAnnounce={true}
                       />
                     ))
                   ) : (
