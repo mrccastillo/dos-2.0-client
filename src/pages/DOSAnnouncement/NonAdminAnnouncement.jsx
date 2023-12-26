@@ -8,18 +8,16 @@ import { URL } from "../../App";
 import "../dashboard/stylesheets/Home.css";
 import CreateAnnouncement from "../../reusable-components/announcement/CreateAnnouncement";
 
-function NonAdminAnnouncement({ fullname, username, userId, section }) {
+function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
   const token = Cookies.get("token");
   const userUserId = Cookies.get("userId");
   const [announcements, setAnnouncements] = useState([]);
-  const [postFilter, setPostFilter] = useState();
-  const { ref: myRef, inView: fetchPost } = useInView();
-  const [showLoading, setShowLoading] = useState(true);
+  const [postFilter, setPostFilter] = useState(0);
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
   const [strandName, setStrandName] = useState("");
-  const [strand, setStrand] = useState(0);
+  const [strand, setStrand] = useState();
   const [className, seClassName] = useState("");
-  const [classSection, setClassSection] = useState(0);
+  const [classSection, setClassSection] = useState();
 
   const fetchPosts = async () => {
     try {
@@ -196,6 +194,12 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
       setPostFilter(30);
       seClassName("HUMSS 12 - 2");
     }
+
+    const isPostFilterSet = postFilter !== 0;
+
+    if (section !== 0 && !isPostFilterSet) {
+      setPostFilter(0);
+    }
   };
 
   useEffect(() => {
@@ -203,7 +207,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
   }, []);
 
   useEffect(() => {
-    setStrandandClass();
+    if(section !== 0) setStrandandClass();
   }, [section]);
 
   return (
@@ -215,10 +219,10 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
         <div className="filter-container">
           <span
             className={
-              postFilter === undefined ? "--chip active-chip" : "--chip"
+              postFilter === 0 ? "--chip active-chip" : "--chip"
             }
             onClick={() => {
-              setPostFilter();
+              setPostFilter(0);
             }}
           >
             All
@@ -239,6 +243,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
           >
             SHS
           </span>
+          {strand ? <>
           <span
             className={postFilter === strand ? "--chip active-chip" : "--chip"}
             onClick={() => {
@@ -257,6 +262,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
           >
             {className}
           </span>
+          </> : null}
         </div>
         <div className="post-container">
           <div className="create-post">
@@ -271,9 +277,9 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
           <div className="posts-list">
             {announcements.length === 0 ? (
               <PostSkeleton cards={2} />
-            ) : postFilter === undefined ? (
+            ) : postFilter === 0 ? (
               announcements
-                .filter((el) => el.category !== 0)
+                .filter((el) => el.category !== 0).filter((announce) => announce.category === 1 || announce.category === 2 || announce.category === strand || announce.category === classSection)
                 .map((el) => (
                   <Announce
                     key={el._id}
@@ -329,6 +335,8 @@ function NonAdminAnnouncement({ fullname, username, userId, section }) {
           fullname={fullname}
           username={username}
           userId={userId}
+          section={section}
+          admin={admin}
           onAnnouncementCreated={handleAnnouncementCreated}
           onModalClose={() => {
             setIsCreateAnnounceOpen(!isCreateAnnounceOpen);

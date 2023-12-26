@@ -7,11 +7,13 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { URL } from "../../../App";
 
-export default function Announcements({ fullname, username, userId }) {
+export default function Announcements({ fullname, username, userId, section, admin }) {
   const token = Cookies.get("token");
   const userUserId = Cookies.get("userId");
   const [announcements, setAnnouncements] = useState([]);
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
+  const [strand, setStrand] = useState();
+  const [classSection, setClassSection] = useState();
 
   const fetchPosts = async () => {
     try {
@@ -72,9 +74,75 @@ export default function Announcements({ fullname, username, userId }) {
     fetchPosts();
   };
 
+  const setStrandandClass = () => {
+    if (section === 1 || section === 2) {
+      setStrand(3)
+    } else if (section >= 3 && section <= 13) {
+      setStrand(6)
+    } else if (section >= 14 && section <= 22) {
+      setStrand(18);
+    } else if (section === 23 || section === 24) {
+      setStrand(28);
+    }
+
+    if (section === 1) {
+      setClassSection(4)
+    } else if (section === 2) {
+      setClassSection(5)
+    } else if (section === 3) {
+      setClassSection(7)
+    } else if (section === 4) {
+      setClassSection(8)
+    } else if (section === 5) {
+      setClassSection(9)
+    } else if (section === 6) {
+      setClassSection(10);
+    } else if (section === 7) {
+      setClassSection(11);
+    } else if (section === 8) {
+      setClassSection(12);
+    } else if (section === 9) {
+      setClassSection(13);
+    } else if (section === 10) {
+      setClassSection(14);
+    } else if (section === 11) {
+      setClassSection(15);
+    } else if (section === 12) {
+      setClassSection(16);
+    } else if (section === 13) {
+      setClassSection(17);
+    } else if (section === 14) {
+      setClassSection(19);
+    } else if (section === 15) {
+      setClassSection(20);
+    } else if (section === 16) {
+      setClassSection(21);
+    } else if (section === 17) {
+      setClassSection(22);
+    } else if (section === 18) {
+      setClassSection(23);
+    } else if (section === 19) {
+      setClassSection(24);
+    } else if (section === 20) {
+      setClassSection(25);
+    } else if (section === 21) {
+      setClassSection(26);
+    } else if (section === 22) {
+      setClassSection(27);
+    } else if (section === 23) {
+      setClassSection(29);
+    } else if (section === 24) {
+      setClassSection(30);
+    }
+  };
+
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    if(section !== 0) setStrandandClass();
+  }, [section]);
 
   return (
     <>
@@ -103,7 +171,7 @@ export default function Announcements({ fullname, username, userId }) {
               {announcements.length === 0 ? (
                 <AnnouncementSkeleton cards={2} />
               ) : (
-                announcements.map((el) => (
+                announcements.filter((announce) => announce.category === 0 || announce.category === 1 || announce.category === 2 || announce.category === strand || announce.category === classSection).map((el) => (
                   <Announce
                     key={el._id}
                     userUsername={username}
@@ -132,10 +200,13 @@ export default function Announcements({ fullname, username, userId }) {
           fullname={fullname}
           username={username}
           userId={userId}
+          section={section}
+          admin={admin}
           onAnnouncementCreated={handleAnnouncementCreated}
           onModalClose={() => {
             setIsCreateAnnounceOpen(!isCreateAnnounceOpen);
           }}
+          
         />
       )}
     </>

@@ -8,8 +8,6 @@ import { Helmet, HelmetProvider } from "react-helmet-async";
 import { Link } from "react-router-dom";
 
 export default function Dashboard({ user }) {
-  let width = window.innerWidth;
-
   useEffect(() => {
     if (window.localStorage) {
       if (!localStorage.getItem("firstLoad")) {
@@ -49,27 +47,18 @@ export default function Dashboard({ user }) {
             </h2>
           </div>
           <div className="posts-announcements-container">
-            {width > 700 ? (
-              <>
-                <Announcements
-                  fullname={user.fullname}
-                  username={user.username}
-                  userId={user._id}
-                />
-                <Home
-                  fullname={user.fullname}
-                  username={user.username}
-                  userId={user._id}
-                />
-              </>
-            ) : (
-              <Home
-                fullname={user.fullname}
-                username={user.username}
-                userId={user._id}
-              />
-            )}
-
+            <Announcements
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+              section={user.section}
+              admin={user.isAdmin}
+            />
+            <Home
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+            />
             {/* <DosAnnouncement
               fullname={user.fullname}
               username={user.username}

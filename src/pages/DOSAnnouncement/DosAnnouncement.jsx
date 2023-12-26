@@ -12,7 +12,7 @@ function DosAnnouncement({ user }) {
   // const userUserId = Cookies.get("userId");
   // const [width, setWidth] = useState(window.innerWidth);
   let width = window.innerWidth;
-  
+
   return (
     <>
       <div className="container">
@@ -55,6 +55,7 @@ function DosAnnouncement({ user }) {
                   username={user.username}
                   userId={user._id}
                   section={user.section}
+                  admin={user.isAdmin}
                 />
               </>
             )}
