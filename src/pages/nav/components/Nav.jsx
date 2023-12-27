@@ -148,7 +148,7 @@ export default function Nav({
                       setIsSettingsOpen(!isSettingsOpen);
                     }}
                   >
-                    Account Settings
+                    Settings
                   </p>
                   <p
                     className="link"

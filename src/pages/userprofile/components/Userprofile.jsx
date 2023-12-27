@@ -27,11 +27,15 @@ export default function Userprofile({ userLoggedIn }) {
   const [isCreateAnnounceOpen, setIsCreateAnnounceOpen] = useState(false);
   const [postFetched, setPostFetched] = useState(false);
   const [announcementFetched, setAnnouncementFetched] = useState(false);
+  const [strand, setStrand] = useState();
+  const [classSection, setClassSection] = useState();
+  const [section, setSection] = useState();
 
   const filteredPosts = posts.filter((el) => el.username === user.username);
   const filteredAnnouncements = announcements.filter(
     (el) => el.username === user.username
   );
+
 
   const fetchUser = async () => {
     try {
@@ -177,6 +181,74 @@ export default function Userprofile({ userLoggedIn }) {
     fetchPosts();
   };
 
+  
+  const setStrandandClass = () => {
+    if (section === 1 || section === 2) {
+      setStrand(3)
+    } else if (section >= 3 && section <= 13) {
+      setStrand(6)
+    } else if (section >= 14 && section <= 22) {
+      setStrand(18);
+    } else if (section === 23 || section === 24) {
+      setStrand(28);
+    }
+
+    if (section === 1) {
+      setClassSection(4)
+    } else if (section === 2) {
+      setClassSection(5)
+    } else if (section === 3) {
+      setClassSection(7)
+    } else if (section === 4) {
+      setClassSection(8)
+    } else if (section === 5) {
+      setClassSection(9)
+    } else if (section === 6) {
+      setClassSection(10);
+    } else if (section === 7) {
+      setClassSection(11);
+    } else if (section === 8) {
+      setClassSection(12);
+    } else if (section === 9) {
+      setClassSection(13);
+    } else if (section === 10) {
+      setClassSection(14);
+    } else if (section === 11) {
+      setClassSection(15);
+    } else if (section === 12) {
+      setClassSection(16);
+    } else if (section === 13) {
+      setClassSection(17);
+    } else if (section === 14) {
+      setClassSection(19);
+    } else if (section === 15) {
+      setClassSection(20);
+    } else if (section === 16) {
+      setClassSection(21);
+    } else if (section === 17) {
+      setClassSection(22);
+    } else if (section === 18) {
+      setClassSection(23);
+    } else if (section === 19) {
+      setClassSection(24);
+    } else if (section === 20) {
+      setClassSection(25);
+    } else if (section === 21) {
+      setClassSection(26);
+    } else if (section === 22) {
+      setClassSection(27);
+    } else if (section === 23) {
+      setClassSection(29);
+    } else if (section === 24) {
+      setClassSection(30);
+    }
+  };
+
+  useEffect(() => {
+    setSection(userLoggedIn.section)
+    if(section !== 0) setStrandandClass();
+  }, [userLoggedIn]);
+
   const handleAnnounceCreated = () => {
     fetchAnnouncements();
   };
@@ -286,7 +358,7 @@ export default function Userprofile({ userLoggedIn }) {
                   {!announcementFetched ? (
                     <AnnouncementSkeleton cards={2} />
                   ) : filteredAnnouncements.length > 0 ? (
-                    filteredAnnouncements.map((el) => (
+                    filteredAnnouncements.filter((announce) => announce.category === 0 || announce.category === 1 || announce.category === 2 || announce.category === strand || announce.category === classSection).map((el) => (
                       <Announce
                         key={el._id}
                         userUsername={userLoggedIn.username}
