@@ -37,28 +37,18 @@ function DosAnnouncement({ user }) {
             </h2>
           </div>
           <div className="posts-announcements-container">
-            {width < 1000 ? (
-              <NonAdminAnnouncement
-                fullname={user.fullname}
-                username={user.username}
-                userId={user._id}
-              />
-            ) : (
-              <>
-                <AdminAnnouncement
-                  fullname={user.fullname}
-                  username={user.username}
-                  userId={user._id}
-                />
-                <NonAdminAnnouncement
-                  fullname={user.fullname}
-                  username={user.username}
-                  userId={user._id}
-                  section={user.section}
-                  admin={user.isAdmin}
-                />
-              </>
-            )}
+            <AdminAnnouncement
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+            />
+            <NonAdminAnnouncement
+              fullname={user.fullname}
+              username={user.username}
+              userId={user._id}
+              section={user.section}
+              admin={user.isAdmin}
+            />
           </div>
         </div>
       </div>

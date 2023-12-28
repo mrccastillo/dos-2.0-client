@@ -1,4 +1,6 @@
 function SupportUs({ onCloseModal }) {
+  let windowsWidth = window.innerWidth;
+
   return (
     <div
       style={{
@@ -6,7 +8,7 @@ function SupportUs({ onCloseModal }) {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: "40rem",
+        width: windowsWidth > 700 ? "40rem" : "95%",
         height: "23rem",
         backgroundColor: "white",
         borderRadius: "1rem",

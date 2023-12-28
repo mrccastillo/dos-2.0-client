@@ -59,7 +59,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
 
         const [commentCount] = await Promise.all([commentCountResponse]);
 
-        setFetch(true)
+        setFetch(true);
         return {
           ...announcement,
           likeCount: likeCountResponse.data.likeCount,
@@ -209,11 +209,11 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
   }, []);
 
   useEffect(() => {
-    if(section !== 0) setStrandandClass();
+    if (section !== 0) setStrandandClass();
   }, [section]);
 
   useEffect(() => {
-    console.log(announcements.length, fetched)
+    console.log(announcements.length, fetched);
   }, [fetched]);
 
   return (
@@ -224,9 +224,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
       <div className="home-container">
         <div className="filter-container">
           <span
-            className={
-              postFilter === 0 ? "--chip active-chip" : "--chip"
-            }
+            className={postFilter === 0 ? "--chip active-chip" : "--chip"}
             onClick={() => {
               setPostFilter(0);
             }}
@@ -249,26 +247,30 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
           >
             SHS
           </span>
-          {strand ? <>
-          <span
-            className={postFilter === strand ? "--chip active-chip" : "--chip"}
-            onClick={() => {
-              setPostFilter(strand);
-            }}
-          >
-            {strandName}
-          </span>
-          <span
-            className={
-              postFilter === classSection ? "--chip active-chip" : "--chip"
-            }
-            onClick={() => {
-              setPostFilter(classSection);
-            }}
-          >
-            {className}
-          </span>
-          </> : null}
+          {strand ? (
+            <>
+              <span
+                className={
+                  postFilter === strand ? "--chip active-chip" : "--chip"
+                }
+                onClick={() => {
+                  setPostFilter(strand);
+                }}
+              >
+                {strandName}
+              </span>
+              <span
+                className={
+                  postFilter === classSection ? "--chip active-chip" : "--chip"
+                }
+                onClick={() => {
+                  setPostFilter(classSection);
+                }}
+              >
+                {className}
+              </span>
+            </>
+          ) : null}
         </div>
         <div className="post-container">
           <div className="create-post">
@@ -283,9 +285,16 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
           <div className="posts-list">
             {announcements.length === 0 && !fetched ? (
               <PostSkeleton cards={2} />
-            ) : postFilter === 0 && fetched? (
+            ) : postFilter === 0 && fetched ? (
               announcements
-                .filter((el) => el.category !== 0).filter((announce) => announce.category === 1 || announce.category === 2 || announce.category === strand || announce.category === classSection)
+                .filter((el) => el.category !== 0)
+                .filter(
+                  (announce) =>
+                    announce.category === 1 ||
+                    announce.category === 2 ||
+                    announce.category === strand ||
+                    announce.category === classSection
+                )
                 .map((el) => (
                   <Announce
                     key={el._id}
@@ -297,7 +306,7 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
                     username={el.username}
                     content={el.content}
                     date={el.dateCreated}
-                  liked={el.liked}
+                    liked={el.liked}
                     likeCount={el.likeCount}
                     likeId={el.likeId}
                     commentCount={el.commentCount}
@@ -305,11 +314,12 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
                     category={el.category}
                   />
                 ))
-            ) : (announcements
-              .filter((el) => el.category === postFilter).length < 1 && fetched ? 
-              <h2 style={{textAlign: "center"}}>
-              Nothing announced here yet... Announce one📢!
-              </h2> : 
+            ) : announcements.filter((el) => el.category === postFilter)
+                .length < 1 && fetched ? (
+              <h2 style={{ textAlign: "center" }}>
+                Nothing announced here yet... Announce one📢!
+              </h2>
+            ) : (
               announcements
                 .filter((el) => el.category === postFilter)
                 .map((el) => (
@@ -332,12 +342,12 @@ function NonAdminAnnouncement({ fullname, username, userId, section, admin }) {
                   />
                 ))
             )}
-            {announcements
-                .filter((el) => el.category !== 0).length < 1 && fetched &&
-            <h2 style={{textAlign: "center"}}>
-            Nothing announced here yet... Announce one📢!
-            </h2>
-            }
+            {announcements.filter((el) => el.category !== 0).length < 1 &&
+              fetched && (
+                <h2 style={{ textAlign: "center" }}>
+                  Nothing announced here yet... Announce one📢!
+                </h2>
+              )}
             {/* {showLoading ? (
               <div ref={myRef}>
                 <PostSkeleton cards={1} />

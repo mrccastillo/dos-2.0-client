@@ -69,3 +69,15 @@
 /* .reply-textarea::placeholder {
   transform: translateY(55%);
 } */
+@media (max-width: 700px) {
+  .expanded-post-modal-background {
+    width: 100vw;
+    height: auto;
+    border-radius: 1rem;
+  }
+
+  .expanded-post-modal {
+    border-radius: 1rem;
+    max-height: 85vh;
+  }
+}

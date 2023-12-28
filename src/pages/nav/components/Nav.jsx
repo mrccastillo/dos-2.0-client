@@ -66,11 +66,61 @@ export default function Nav({
       <nav className="nav">
         <div className="nav-content-container">
           <div className="logo-navlinks">
-            <Link
-              to="/home"
-              style={{ textDecoration: "none" }}
-              className="logo"
-            ></Link>
+            {width > 700 && (
+              <Link
+                to="/home"
+                style={{ textDecoration: "none" }}
+                className="logo"
+              ></Link>
+            )}
+            {width < 700 && (
+              <div
+                className={
+                  isNavLinkOpen
+                    ? "nav-profile-and-links-container navlink-active"
+                    : "nav-profile-and-links-container"
+                }
+                style={{ zIndex: isNavLinkOpen ? 2 : "auto" }}
+              >
+                <div
+                  className="profile-pic --nav-profile"
+                  style={{ backgroundColor: isNavLinkOpen && "#fff" }}
+                  onClick={() => {
+                    setIsNavLinkOpen(!isNavLinkOpen);
+                  }}
+                ></div>
+                <div className={isNavLinkOpen ? "links-active" : "links"}>
+                  {isNavLinkOpen ? (
+                    <>
+                      <Link to={`/${user}`} className="link">
+                        Profile
+                      </Link>
+                      <p
+                        className="link"
+                        onClick={() => {
+                          setIsNavLinkOpen(!isNavLinkOpen);
+                          setIsSettingsOpen(!isSettingsOpen);
+                        }}
+                      >
+                        Settings
+                      </p>
+                      <p
+                        className="link"
+                        onClick={() => {
+                          setIsSupportDevsOpen(!isSupportDevsOpen);
+                          setIsNavLinkOpen(!isNavLinkOpen);
+                        }}
+                      >
+                        Support DOS
+                      </p>
+                      <Link to="/" onClick={logOut} className="link --logout">
+                        Log Out
+                      </Link>
+                    </>
+                  ) : null}
+                </div>
+              </div>
+            )}
             {width > 1200 ? (
               <>
                 <div className="navlinks-container">
@@ -78,6 +128,7 @@ export default function Nav({
                     className="navlink bell-icon"
                     onClick={handleOpenNotAvail}
                   ></p>
+
                   <Link
                     to="/announcement"
                     className="navlink announcement-icon"
@@ -101,10 +152,17 @@ export default function Nav({
                   className="navlink bell-icon"
                   onClick={handleOpenNotAvail}
                 ></p>
-                <Link
+                {/* <Link
                   to="/announcement"
                   className="navlink announcement-icon"
+                ></Link> */}
+
+                <Link
+                  to="/home"
+                  style={{ textDecoration: "none" }}
+                  className="logo"
                 ></Link>
+
                 <Link
                   to="/home"
                   style={{ textDecoration: "none" }}
@@ -119,53 +177,54 @@ export default function Nav({
               </>
             )}
           </div>
-
-          <div
-            className={
-              isNavLinkOpen
-                ? "nav-profile-and-links-container navlink-active"
-                : "nav-profile-and-links-container"
-            }
-            style={{ zIndex: isNavLinkOpen ? 2 : "auto" }}
-          >
+          {width > 700 && (
             <div
-              className="profile-pic --nav-profile"
-              style={{ backgroundColor: isNavLinkOpen && "#fff" }}
-              onClick={() => {
-                setIsNavLinkOpen(!isNavLinkOpen);
-              }}
-            ></div>
-            <div className={isNavLinkOpen ? "links-active" : "links"}>
-              {isNavLinkOpen ? (
-                <>
-                  <Link to={`/${user}`} className="link">
-                    Profile
-                  </Link>
-                  <p
-                    className="link"
-                    onClick={() => {
-                      setIsNavLinkOpen(!isNavLinkOpen);
-                      setIsSettingsOpen(!isSettingsOpen);
-                    }}
-                  >
-                    Settings
-                  </p>
-                  <p
-                    className="link"
-                    onClick={() => {
-                      setIsSupportDevsOpen(!isSupportDevsOpen);
-                      setIsNavLinkOpen(!isNavLinkOpen);
-                    }}
-                  >
-                    Support DOS
-                  </p>
-                  <Link to="/" onClick={logOut} className="link --logout">
-                    Log Out
-                  </Link>
-                </>
-              ) : null}
+              className={
+                isNavLinkOpen
+                  ? "nav-profile-and-links-container navlink-active"
+                  : "nav-profile-and-links-container"
+              }
+              style={{ zIndex: isNavLinkOpen ? 2 : "auto" }}
+            >
+              <div
+                className="profile-pic --nav-profile"
+                style={{ backgroundColor: isNavLinkOpen && "#fff" }}
+                onClick={() => {
+                  setIsNavLinkOpen(!isNavLinkOpen);
+                }}
+              ></div>
+              <div className={isNavLinkOpen ? "links-active" : "links"}>
+                {isNavLinkOpen ? (
+                  <>
+                    <Link to={`/${user}`} className="link">
+                      Profile
+                    </Link>
+                    <p
+                      className="link"
+                      onClick={() => {
+                        setIsNavLinkOpen(!isNavLinkOpen);
+                        setIsSettingsOpen(!isSettingsOpen);
+                      }}
+                    >
+                      Settings
+                    </p>
+                    <p
+                      className="link"
+                      onClick={() => {
+                        setIsSupportDevsOpen(!isSupportDevsOpen);
+                        setIsNavLinkOpen(!isNavLinkOpen);
+                      }}
+                    >
+                      Support DOS
+                    </p>
+                    <Link to="/" onClick={logOut} className="link --logout">
+                      Log Out
+                    </Link>
+                  </>
+                ) : null}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </nav>
       {isSupportDevsOpen && (

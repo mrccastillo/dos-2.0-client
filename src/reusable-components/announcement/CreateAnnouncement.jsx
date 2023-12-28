@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./CreateAnnouncement.css";
+
 import Cookies from "js-cookie";
 import { URL } from "../../App";
 
@@ -25,10 +25,10 @@ export default function CreateAnnouncement({
 
   const setStrandandClass = () => {
     if (section === 1 || section === 2) {
-      setStrand(3)
+      setStrand(3);
       setStrandName("ICT");
     } else if (section >= 3 && section <= 13) {
-      setStrand(6)
+      setStrand(6);
       setStrandName("STEM");
     } else if (section >= 14 && section <= 22) {
       setStrand(18);
@@ -39,19 +39,19 @@ export default function CreateAnnouncement({
     }
 
     if (section === 1) {
-      setClassSection(4)
+      setClassSection(4);
       seClassName("ICT 12 - 1");
     } else if (section === 2) {
-      setClassSection(5)
+      setClassSection(5);
       seClassName("ICT 12 - 2");
     } else if (section === 3) {
-      setClassSection(7)
+      setClassSection(7);
       seClassName("STEM 11 - 1");
     } else if (section === 4) {
-      setClassSection(8)
+      setClassSection(8);
       seClassName("STEM 12 - 1");
     } else if (section === 5) {
-      setClassSection(9)
+      setClassSection(9);
       seClassName("STEM 12 - 2");
     } else if (section === 6) {
       setClassSection(10);
@@ -114,7 +114,7 @@ export default function CreateAnnouncement({
   };
 
   useEffect(() => {
-    if(section !== 0) setStrandandClass();
+    if (section !== 0) setStrandandClass();
   }, [section]);
 
   async function handleAnnouncementSubmit(e) {
@@ -204,7 +204,9 @@ export default function CreateAnnouncement({
                 <option value="1">PUP</option>
                 <option value="2">SHS</option>
                 {strand ? <option value={strand}>{strandName}</option> : null}
-                {classSection ? <option value={classSection}>{className}</option> : null}
+                {classSection ? (
+                  <option value={classSection}>{className}</option>
+                ) : null}
               </select>
             </div>
           </div>
